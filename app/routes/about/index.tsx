@@ -222,7 +222,7 @@ function About() {
           <p>
             I am a Software engineer, I have been working on converting ideas
             into software application for almost{" "}
-            {new Date().getFullYear() - 2017} + years. I am currently working at{" "}
+            {new Date().getFullYear() - 2021} + years. I am currently working at{" "}
             <a href="https://humanisys.ai" target="_blank">
               Humanisys Labs
             </a>
