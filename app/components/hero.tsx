@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import ProfilePic from "../assets/images/profile-pic.jpg";
 import { siteMetadata } from "../constants";
 

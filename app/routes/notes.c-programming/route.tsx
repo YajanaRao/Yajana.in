@@ -1,7 +1,6 @@
 title: "C Programming";
 
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 
 import * as Introduction from "./introduction.mdx";
 import * as Strings from "./strings-and-character-array.md";
@@ -62,7 +61,7 @@ export async function loader() {
   // Referencing the posts here instead of in the Index component down below
   // lets us avoid bundling the actual posts themselves in the bundle for the
   // index page.
-  return json([
+  return [
     postFromModule(Introduction),
     postFromModule(Arrays),
     postFromModule(Pointers),
@@ -72,7 +71,7 @@ export async function loader() {
     postFromModule(Looping),
     postFromModule(Strings),
     postFromModule(StructAndUnions),
-  ]);
+  ];
 }
 
 export default function Index() {

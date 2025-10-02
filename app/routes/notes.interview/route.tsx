@@ -1,5 +1,4 @@
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 
 import * as BinarySearch from "./binary-search.mdx";
 import * as TwoPointers from "./two-pointers.mdx";
@@ -19,12 +18,12 @@ export async function loader() {
   // Referencing the posts here instead of in the Index component down below
   // lets us avoid bundling the actual posts themselves in the bundle for the
   // index page.
-  return json([
+  return [
     postFromModule(BinarySearch),
     postFromModule(TwoPointers),
     postFromModule(JavascriptQuestions),
     postFromModule(CssQuestions),
-  ]);
+  ];
 }
 
 const ogImageUrl = "/images/interview.jpeg";

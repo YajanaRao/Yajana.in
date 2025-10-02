@@ -1,7 +1,4 @@
-title: "C Programming";
-
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 
 import * as introduction from "./introduction.mdx";
 import * as basics from "./basics.mdx";
@@ -21,14 +18,14 @@ export async function loader() {
   // Referencing the posts here instead of in the Index component down below
   // lets us avoid bundling the actual posts themselves in the bundle for the
   // index page.
-  return json([
+  return [
     postFromModule(introduction),
     postFromModule(basics),
     postFromModule(variables),
     postFromModule(arraysAndObjects),
     postFromModule(functions),
     postFromModule(events),
-  ]);
+  ];
 }
 
 const ogImageUrl = "/images/javascript.png";

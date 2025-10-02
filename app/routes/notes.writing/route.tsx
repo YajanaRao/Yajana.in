@@ -1,4 +1,4 @@
-import { json, MetaFunction } from "@remix-run/node";
+import { MetaFunction } from "react-router";
 
 import * as drafts from "./drafts.mdx";
 
@@ -13,7 +13,7 @@ export async function loader() {
   // Referencing the posts here instead of in the Index component down below
   // lets us avoid bundling the actual posts themselves in the bundle for the
   // index page.
-  return json([postFromModule(drafts)]);
+  return [postFromModule(drafts)];
 }
 
 export const meta: MetaFunction<typeof loader> = (args) => {

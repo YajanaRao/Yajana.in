@@ -4,10 +4,10 @@ import {
   MetaFunction,
   useLoaderData,
   useSearchParams,
-} from "@remix-run/react";
+  LoaderFunctionArgs,
+} from "react-router";
 import { getPosts } from "../lib/posts";
 import { useUpdateQueryStringValueWithoutNavigation } from "../lib/utils";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
 import dayjs from "dayjs";
 
 export const meta: MetaFunction<typeof loader> = (args) => {
@@ -57,7 +57,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const posts = getPosts();
 
-  return json({ siteUrl, posts });
+  return { siteUrl, posts };
 };
 
 const BlogIndex = () => {
@@ -140,7 +140,9 @@ const BlogIndex = () => {
           <article key={node.slug} className="mb-8">
             <header>
               <h2 className="text-2xl mb-0 not-prose">
-                <Link prefetch="intent" to={`/${node.slug}`}>{title}</Link>
+                <Link prefetch="intent" to={`/${node.slug}`}>
+                  {title}
+                </Link>
               </h2>
               <small className="text-gray-500 dark:text-gray-300">
                 {dayjs(date).format("MMMM D, YYYY")}

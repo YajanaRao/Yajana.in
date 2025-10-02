@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "@remix-run/react";
+import { Link, useLocation } from "react-router";
 import Hero from "./hero";
 import Switch from "./switch";
 

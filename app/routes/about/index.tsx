@@ -1,6 +1,5 @@
 import * as React from "react";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { MetaFunction } from "@remix-run/react";
+import { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { projects, skills } from "./data";
 import WebLink from "@/assets/svg/WebLink";
 import Github from "@/assets/svg/Github";
@@ -184,7 +183,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   let requestUrl = new URL(request.url);
   let siteUrl = requestUrl.protocol + "//" + requestUrl.host;
-  return json({ siteUrl });
+  return { siteUrl };
 };
 
 function About() {

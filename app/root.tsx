@@ -1,14 +1,17 @@
-import { Links, Meta, Outlet, Scripts, useLoaderData } from "@remix-run/react";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  useLoaderData,
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from "react-router";
 import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 import Layout from "@/components/layout";
 import { themeCookie } from "@/lib/theme";
-import {
-  ActionFunctionArgs,
-  json,
-  LinksFunction,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
 
 export const links: LinksFunction = () => {
   return [
@@ -37,10 +40,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const theme = formData.get("theme") as string;
-  return json(
-    { theme },
-    { headers: { "Set-Cookie": await themeCookie.serialize(theme) } }
-  );
+  return new Response(JSON.stringify({ theme }), {
+    headers: {
+      "Set-Cookie": await themeCookie.serialize(theme),
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 export default function App() {
