@@ -12,6 +12,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 import Layout from "@/components/layout";
 import { themeCookie } from "@/lib/theme";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 export const links: LinksFunction = () => {
   return [
@@ -47,6 +48,8 @@ export async function action({ request }: ActionFunctionArgs) {
     },
   });
 }
+
+export { ErrorBoundary };
 
 export default function App() {
   const theme = useLoaderData<string>();
