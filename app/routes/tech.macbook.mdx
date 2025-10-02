@@ -6,8 +6,10 @@ categories: tech
 ---
 
 import Info from "@/components/info";
+import { getMetaTags } from '@/lib/utils';
 
 <Info {...frontmatter} />
+export const meta = getMetaTags(frontmatter);
 
 ## Install Homebrew
 
@@ -17,34 +19,68 @@ import Info from "@/components/info";
 
 ## Install Applications
 
-- Ghostty Terminal
- `brew install --cask ghostty`
+### Aerospace
+inspired tiling window manager for macOS
+```sh 
+brew install --cask nikitabobko/tab/aerospace
+```
+
+### Ghostty Terminal
+Fast, native, feature-rich terminal emulator for macOS
+```sh 
+brew install --cask ghostty
+```
   
-- Starship Crosss-shell prompt
- `brew install starship`
+#### Starship Crosss-shell prompt
+Modrern terminal with GPU acceleration
+```sh
+brew install starship	
+```
 
-- Geist Mono Nerd fonts
- `brew install --cash font-geist-mono-nerd-font`
- `brew install --cash font-maplo-mono-nerd-font`
-- Brave Browser
- `brew install --cask brave-browser`
+#### Geist Mono Nerd fonts
+ ```sh
+ brew install --cash font-geist-mono-nerd-font
+ brew install --cash font-maplo-mono-nerd-font
+ ```
 
-- Bitwarden Password Manager Browser Extension
+#### Neovim
+Modern Vim editor
+```sh
+brew install neovim
+```
 
-- Neovim
- `brew install neovim`
+#### Zoxide
+Smarter cd command
 
-- Zoxide
- `brew install zoxide`
+```sh
+brew install zoxide
+```
 
-- Github CLI
- `brew install gh`
+#### Github CLI
+Github command line tool
+```sh
+brew install gh
+```
 
-- Bun
- `brew install oven-sh/bun/bun`
+#### Bun
+The fast all-in-one JavaScript runtime
+ ```sh
+ brew install oven-sh/bun/bun
+ ```
 
-- Lazygit
- `brew install lazygit`
+#### Lazygit
+Simple terminal UI for git commands
 
-- Aerospace
- `brew install --cask nikitabobko/tab/aerospace`
+ ```sh
+ brew install lazygit
+ ```
+
+
+
+### Brave Browser
+Fast private and secure web browser
+ ```sh
+ brew install --cask brave-browser
+ ```
+
+#### Bitwarden Password Manager Browser Extension

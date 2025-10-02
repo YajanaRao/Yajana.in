@@ -7,7 +7,6 @@
 
 @layer base {
   html {
-
     font-family: "Bricolage Grotesque", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -36,6 +35,10 @@
 
 ::selection {
   background: #6ee7b7;
+}
+
+html {
+  overscroll-behavior-y: none;
 }
 
 input:checked~.dot {

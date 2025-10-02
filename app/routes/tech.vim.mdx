@@ -6,8 +6,10 @@ categories: tech
 ---
 
 import Info from "@/components/info";
+import { getMetaTags } from '@/lib/utils';
 
 <Info {...frontmatter} />
+export const meta = getMetaTags(frontmatter);
 
 Link to Nvim dotfiles: https://github.com/YajanaRao/kickstart.nvim
 
