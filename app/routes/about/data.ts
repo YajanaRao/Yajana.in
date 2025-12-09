@@ -335,40 +335,6 @@ export const projects = [
     ],
   },
   {
-    key: "wandergals",
-    title: "WanderGals",
-    cover: "https://www.wandergals.com/images/about_us_1.png",
-    link: "https://www.wandergals.com",
-    description:
-      "the premier global network tailored exclusively for women travelers. At the heart of WanderGals lies a vibrant community where women from all walks of life come together to share their love for exploration, adventure, and the boundless beauty of our world.",
-    source: [
-      {
-        key: "wandergalsWebsite",
-        link: "https://wandergals.com",
-        type: "web",
-        text: "wandergals.com",
-      },
-    ],
-    tags: [
-      {
-        text: "Expo",
-        key: "expo",
-      },
-      {
-        text: "React Query",
-        key: "react-query",
-      },
-      {
-        text: "Supabase",
-        key: "supabase",
-      },
-      {
-        text: "Llama",
-        key: "llama",
-      },
-    ],
-  },
-  {
     key: "react-track-player",
     title: "React Track Player",
     cover: ReactTrackPlayer,
