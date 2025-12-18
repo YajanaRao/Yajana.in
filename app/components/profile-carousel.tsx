@@ -1,13 +1,11 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProfilePic from "@/assets/images/profile-pic.jpg";
+import MeInNature from "@/assets/images/me/nature.jpg";
+import MeInFerry from "@/assets/images/me/ferry.jpg";
+import MeWithWings from "@/assets/images/me/wings.jpg";
 
-const IMAGES: string[] = [
-  ProfilePic,
-  "https://images.unsplash.com/photo-1517841905240-472988babdf9",
-  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6",
-  "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea",
-];
+const IMAGES: string[] = [ProfilePic, MeInNature, MeWithWings, MeInFerry];
 
 // Random rotation helper for natural card movement
 const randomRotateY = () => {
