@@ -27,7 +27,7 @@ const Header = React.memo(function Header() {
             <h2 className="justify-center flex sm:justify-start mb-0 mt-0 border-0">
               <Link
                 prefetch="intent"
-                className="text-2xl font-black text-black dark:text-white no-underline"
+                className="text-3xl font-freehand text-black dark:text-white no-underline"
                 to={`/`}
               >
                 Yajana Rao
@@ -36,13 +36,25 @@ const Header = React.memo(function Header() {
           )}
         </div>
         <div className="grid grid-cols-4 gap-4 mb-1 justify-center items-center">
-          <Link prefetch="intent" to={`/`} className="text-lg no-underline hover:underline">
+          <Link
+            prefetch="intent"
+            to={`/`}
+            className="text-lg no-underline hover:underline"
+          >
             Blogs
           </Link>
-          <Link prefetch="intent" to={`/notes/`} className="text-lg no-underline hover:underline">
+          <Link
+            prefetch="intent"
+            to={`/notes/`}
+            className="text-lg no-underline hover:underline"
+          >
             Notes
           </Link>
-          <Link prefetch="intent" to={`/about`} className="text-lg no-underline hover:underline">
+          <Link
+            prefetch="intent"
+            to={`/about`}
+            className="text-lg no-underline hover:underline"
+          >
             About
           </Link>
           <Switch />

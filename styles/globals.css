@@ -1,17 +1,17 @@
 /* ./src/styles/global.css */
 
+@import url("https://fonts.googleapis.com/css2?family=Freehand&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 @layer base {
   html {
     font-family: "Bricolage Grotesque", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-    font-variation-settings:
-      "wdth" 100;
+    font-variation-settings: "wdth" 100;
   }
 
   /* Heading Styles */
@@ -22,7 +22,7 @@
     font-weight: 900;
   }
 
-  p>a {
+  p > a {
     color: #059669 !important;
     text-decoration: none;
   }
@@ -41,7 +41,7 @@ html {
   overscroll-behavior-y: none;
 }
 
-input:checked~.dot {
+input:checked ~ .dot {
   transform: translateX(100%);
   background-color: #48bb78;
 }

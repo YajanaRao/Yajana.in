@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Link } from "react-router";
 import ProfilePic from "../assets/images/profile-pic.jpg";
 import { siteMetadata } from "../constants";
@@ -23,8 +23,11 @@ const Hero = () => {
       </div>
 
       <div className="justify-center items-center flex flex-col">
-        <h1 className="font-black mb-0 mt-2 text-green-700">
-          <Link className="text-4xl font-black no-underline" to={`/`}>
+        <h1 className="font-black mt-2 text-green-700 mb-3">
+          <Link
+            className="text-5xl font-freehand font-black no-underline"
+            to={`/`}
+          >
             {title}
           </Link>
         </h1>

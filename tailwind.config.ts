@@ -8,6 +8,7 @@ export default {
     fontFamily: {
       "Fira Sans": ["Fira Sans", "sans-serif"],
       "Montserrat": ["Montserrat", "sans-serif"],
+      "freehand": ["Freehand", "cursive"],
     },
     extend: {
       typography: () => ({
