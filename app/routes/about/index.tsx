@@ -1,6 +1,6 @@
 import * as React from "react";
 import { LoaderFunctionArgs, MetaFunction } from "react-router";
-import { projects, skills } from "./data";
+import { projects } from "./data";
 import FollowMe from "@/components/follow-me";
 import ProfileCarousel from "@/components/profile-carousel";
 import ProjectCard from "@/components/project-card";
@@ -93,11 +93,7 @@ function About() {
           <FollowMe />
         </div>
       </div>
-      <h2>Skills</h2>
-      <p>
-        I have spent most of my career building user experiences. I see frontend
-        as the canvas I am painting and code as poetry.
-      </p>
+      <h2>About me</h2>
       <p>
         I keep a <a href="/uses"> uses</a> page updated with the stuff I use.
       </p>
