@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ProfilePic from "@/assets/images/profile-pic.jpg";
 import MeInNature from "@/assets/images/me/nature.jpg";
 import MeInFerry from "@/assets/images/me/ferry.jpg";
-import MeWithWings from "@/assets/images/me/wings.jpg";
+import MeWithWings from "@/assets/images/me/wings.png";
 
 const IMAGES: string[] = [ProfilePic, MeInNature, MeWithWings, MeInFerry];
 
