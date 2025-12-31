@@ -1,5 +1,13 @@
-import React from "react";
-import Editor from "./editor.png";
+import * as React from "react";
+
+export const meta = () => {
+  return [
+    {
+      title: "Uses - Yajana Rao",
+      description: "My Hardware and Software Setup",
+    },
+  ];
+};
 
 const UsesPage = () => {
   return (
@@ -14,22 +22,26 @@ const UsesPage = () => {
         <ul>
           <li>React.js</li>
           <li>
-            <b>Remix</b>- Framework of choice for buidling web apps
+            <b>Remix / React Router V7</b>- Framework of choice for buidling web
+            apps
           </li>
+          <li>TypeScript - Superset of JavaScript</li>
           <li>
             <b>React Native</b>- Framework of choice for buildling mobile
             applications
           </li>
-          <li>
-            <b>Vue.js</b>- We use it for at mammoth.io
-          </li>
           <li>Vitest - Testing framework</li>
           <li>Tailwind CSS - Utility first CSS framework</li>
+          <li>ShadCN - Component Library</li>
+          <li>Zustand - State management library</li>
+          <li>Framer Motion - Animation library</li>
+          <li>Tan Stack Query</li>
         </ul>
         <h3>Coding setup</h3>
-        <img src={Editor} alt="editor" className="rounded text-center" />
         <ul>
-          <li>Wezterm - Cross platform feature rich terminal</li>
+          <li>Homebrew - Package manager for MacOS</li>
+          <li>Aerospace - Tiling Window Manager</li>
+          <li>Ghostty - Cross platform feature rich terminal</li>
           <li>
             NVIM - Hackable Personal Development Environment.
             <a
@@ -40,24 +52,27 @@ const UsesPage = () => {
             </a>
           </li>
           <li>
-            <a href="https://github.com/YajanaRao/everforest">
-              Evergreen - Colorscheme
+            <a href="https://github.com/YajanaRao/forestflower">
+              Forestflower - Colorscheme
             </a>
           </li>
-          <li>Jetbrains and Maplo font</li>
+          <li>Giest and Maplo font</li>
           <li>Lazygit</li>
-          <li>fzf</li>
+          <li>Starship Crosss-shell prompt</li>
+          <li>Fish Shell</li>
         </ul>
         <h3>Desktop Apps</h3>
         <ul>
           <li>Spotify</li>
-          <li>Zen / Arc / Brave / Edge Browser</li>
-          <p>
-            I love zen but debugging is better in chromium based browsers also
-            some applications does not support Firefox so looking for a chromium
-            alternative
-          </p>
+          <li>Brave Browser</li>
           <li>Bitwarden</li>
+        </ul>
+        <h3>Services</h3>
+        <ul>
+          <li>Vercel - Hosting platform</li>
+          <li>Github - Code hosting platform</li>
+          <li>ChatGPT - AI assistant</li>
+          <li>Claude - AI assistant</li>
         </ul>
       </div>
     </div>
