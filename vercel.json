@@ -1,5 +1,9 @@
 {
   "buildCommand": "bun run build",
   "installCommand": "bun install",
-  "devCommand": "bun run dev"
+  "devCommand": "bun run dev",
+  "redirects": [
+    { "source": "/2025", "destination": "/review/2025", "permanent": false },
+    { "source": "/kerala", "destination": "/travel/kerala", "permanent": false }
+  ]
 }
