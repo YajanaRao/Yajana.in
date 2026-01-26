@@ -149,14 +149,19 @@ const SkyBirds = () => {
     left: 0,
     width: 0,
   });
+  const containerRef = React.useRef<Element | null>(null);
 
   React.useEffect(() => {
     setIsMounted(true);
+    setScrollY(window.scrollY);
+
+    containerRef.current =
+      document.querySelector("[data-sky-container]") ||
+      document.querySelector(".container.max-w-screen-md");
 
     const updateBounds = () => {
-      const container = document.querySelector(".container.max-w-screen-md");
-      if (container) {
-        const rect = container.getBoundingClientRect();
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
         setContainerBounds({ left: rect.left, width: rect.width });
       }
     };
@@ -164,7 +169,6 @@ const SkyBirds = () => {
     const handleScroll = () => {
       requestAnimationFrame(() => {
         setScrollY(window.scrollY);
-        updateBounds();
       });
     };
 
@@ -200,7 +204,7 @@ const SkyBirds = () => {
           src={getImageSrc(element.type)}
           alt=""
           aria-hidden="true"
-          className="absolute transition-transform duration-75 ease-out"
+          className="absolute"
           style={{
             left: `${leftPx}px`,
             top: `${element.topPercent}%`,
@@ -216,10 +220,10 @@ const SkyBirds = () => {
 
   return (
     <>
-      <div className="fixed inset-0 pointer-events-none z-[1] dark:hidden">
+      <div className="fixed inset-0 pointer-events-none z-0 dark:hidden">
         {renderElements(SKY_ELEMENTS)}
       </div>
-      <div className="fixed inset-0 pointer-events-none z-[1] hidden dark:block">
+      <div className="fixed inset-0 pointer-events-none z-0 hidden dark:block">
         {renderElements(NIGHT_SKY_ELEMENTS)}
       </div>
     </>
