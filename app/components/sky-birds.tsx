@@ -2,7 +2,7 @@ import * as React from "react";
 
 interface SkyElement {
   id: number;
-  type: "bird" | "cloud" | "star-bright" | "star-twinkle" | "planet-dark";
+  type: "bird" | "cloud" | "star-bright" | "star-twinkle";
   leftPercent: number;
   topPercent: number;
   size: number;
@@ -84,17 +84,17 @@ const NIGHT_SKY_ELEMENTS: SkyElement[] = [
     opacity: 0.8,
   },
   {
-    id: 104,
-    type: "planet-dark",
+    id: 103,
+    type: "star-bright",
     leftPercent: -2,
     topPercent: 65,
-    size: 60,
+    size: 22,
     parallaxSpeed: 0.015,
     maxOffset: 40,
-    opacity: 0.6,
+    opacity: 0.85,
   },
   {
-    id: 105,
+    id: 104,
     type: "star-bright",
     leftPercent: 98,
     topPercent: 45,
@@ -104,7 +104,7 @@ const NIGHT_SKY_ELEMENTS: SkyElement[] = [
     opacity: 0.85,
   },
   {
-    id: 106,
+    id: 105,
     type: "star-twinkle",
     leftPercent: 95,
     topPercent: 80,
@@ -114,7 +114,7 @@ const NIGHT_SKY_ELEMENTS: SkyElement[] = [
     opacity: 0.75,
   },
   {
-    id: 107,
+    id: 106,
     type: "star-twinkle",
     leftPercent: 3,
     topPercent: 50,
@@ -135,8 +135,6 @@ const getImageSrc = (type: SkyElement["type"]): string => {
       return "/images/star-bright.svg";
     case "star-twinkle":
       return "/images/star-twinkle.svg";
-    case "planet-dark":
-      return "/images/planet-dark.svg";
     default:
       return "";
   }
