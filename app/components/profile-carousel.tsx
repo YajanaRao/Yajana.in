@@ -7,9 +7,10 @@ import MeWithWings from "@/assets/images/me/wings.png";
 
 const IMAGES: string[] = [ProfilePic, MeInNature, MeWithWings, MeInFerry];
 
-// Random rotation helper for natural card movement
-const randomRotateY = () => {
-  return Math.floor(Math.random() * 21) - 10; // -10 to +10 degrees
+// Deterministic rotation values for natural card movement (avoids hydration mismatch)
+const getRotation = (index: number) => {
+  const rotations = [-8, 5, -3, 7]; // Pre-defined values for each card position
+  return rotations[index % rotations.length];
 };
 
 const ProfileCarousel = () => {
@@ -47,13 +48,13 @@ const ProfileCarousel = () => {
               opacity: 0,
               scale: 0.9,
               z: -100,
-              rotate: randomRotateY(),
+              rotate: getRotation(index),
             }}
             animate={{
               opacity: isActive(index) ? 1 : 0.7,
               scale: isActive(index) ? 1 : 0.95,
               z: isActive(index) ? 0 : -100,
-              rotate: isActive(index) ? 0 : randomRotateY(),
+              rotate: isActive(index) ? 0 : getRotation(index),
               zIndex: isActive(index) ? 40 : IMAGES.length + 2 - index,
               y: isActive(index) ? [0, -80, 0] : 0,
             }}
@@ -61,7 +62,7 @@ const ProfileCarousel = () => {
               opacity: 0,
               scale: 0.9,
               z: 100,
-              rotate: randomRotateY(),
+              rotate: getRotation(index),
             }}
             transition={{
               duration: 0.4,
