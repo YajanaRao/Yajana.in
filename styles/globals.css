@@ -1,5 +1,3 @@
-/* ./src/styles/global.css */
-
 @import url("https://fonts.googleapis.com/css2?family=Freehand&display=swap");
 
 @tailwind base;
@@ -14,7 +12,6 @@
     font-variation-settings: "wdth" 100;
   }
 
-  /* Heading Styles */
   h1,
   h2,
   h3 {
@@ -29,7 +26,6 @@
 }
 
 ::-moz-selection {
-  /* Code for Firefox */
   background: #6ee7b7;
 }
 
@@ -39,6 +35,24 @@
 
 html {
   overscroll-behavior-y: none;
+}
+
+.sky-bg {
+  background-color: #e8f4fc;
+  background-image: url("/images/cloud-4a.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.dark .sky-bg {
+  background-color: #050508;
+  background-image: url("/images/night-sky.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 input:checked ~ .dot {
