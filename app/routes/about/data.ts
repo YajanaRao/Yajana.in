@@ -262,7 +262,7 @@ export const projects = [
       "https://raw.githubusercontent.com/YajanaRao/Serenity/develop/screenshots/banner.png",
     link: "https://github.com/YajanaRao/Serenity",
     description:
-      "A Open source music player built using react native as an alternative to spotify. It allows to configure audio sources from local, network and cloud. It also supports playlist, queue, repeat, shuffle and many more features.",
+      "Open source music player with 355+ GitHub stars, 111 forks, and 10 contributors. Built using React Native as an alternative to Spotify with 24 releases and 1000+ commits. Supports local, network, and cloud audio sources with playlist, queue, repeat, and shuffle features.",
     tags: [
       {
         text: "React Native",
@@ -296,7 +296,7 @@ export const projects = [
     cover: Shortmic,
     link: "https://shortmic.com",
     description:
-      " Audio first social media platform where users can share their thoughts, ideas, stories, jokes, poems, and more in audio format. It is built using react native and supabase.",
+      "Audio-first social media platform with 1000+ downloads and 4.6 rating on Play Store. Users can share thoughts, ideas, stories, jokes, and poems in audio format. Built using React Native and Supabase.",
     source: [
       {
         key: "playstore",

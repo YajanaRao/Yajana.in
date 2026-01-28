@@ -134,9 +134,34 @@ function Resume() {
           </h2>
           <div>
             <h3 className="font-semibold text-zinc-910 dark:text-zinc-100">
-              Frontend Engineer at{" "}
-              <a href="https://mammoth.io">Mammoth Analytics</a> (2023 -
+              Founding Software Engineer at{" "}
+              <a href="https://interactlabs.ai">Interact AI</a> (Jun 2025 -
               Present)
+            </h3>
+            <ul className="list-disc ml-4 text-zinc-600 dark:text-zinc-400 mb-0">
+              <li className="my-0">
+                Owned the entire frontend for AI-powered marketing and sales
+                products, leading development and mentoring an intern.
+              </li>
+              <li className="my-0">
+                Built and shipped three production applications in under 8
+                months: interactgen.ai, interactpitch.ai, and interactlabs.ai.
+              </li>
+              <li className="my-0">
+                Interactpitch achieved #1 Product of the Day on Product Hunt at
+                launch.
+              </li>
+              <li className="my-0">
+                Developed real-time AI-driven communication features using
+                LiveKit and WebRTC for seamless customer interactions.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-zinc-910 dark:text-zinc-100">
+              Frontend Engineer at{" "}
+              <a href="https://mammoth.io">Mammoth Analytics</a> (Jul 2023 - Jun
+              2025)
             </h3>
             <ul className="list-disc ml-4 text-zinc-600 dark:text-zinc-400 mb-0">
               <li className="my-0">
@@ -218,19 +243,19 @@ function Resume() {
 
             <ul className="list-disc ml-4 text-zinc-600 dark:text-zinc-400 mb-0">
               <li className="my-0">
-                Audio-first social media application using Expo, Supabase, and
-                Firebase.
+                Audio-first social media application with 1000+ downloads and
+                4.6 rating on Play Store.
               </li>
               <li className="my-0">
-                Link to{" "}
+                Built using Expo, Supabase, and Firebase. Available on{" "}
                 <a href="https://play.google.com/store/apps/details?id=com.echodrop">
                   Google Play
                 </a>{" "}
                 and{" "}
                 <a href="https://apps.apple.com/us/app/short-mic/id6481114995">
                   App Store
-                </a>{" "}
-                For Download
+                </a>
+                .
               </li>
             </ul>
           </div>
@@ -242,18 +267,16 @@ function Resume() {
             </h3>
             <ul className="list-disc ml-4 text-zinc-600 dark:text-zinc-400 mb-0">
               <li className="my-0">
-                Modern music player app for mobile devices ( Android and IOS ).
+                Open source music player app for Android and iOS with 355+
+                GitHub stars, 111 forks, and 10 contributors.
               </li>
               <li className="my-0">
-                Built using react native, realm DB, redux toolkit and react
-                query..
+                Built using React Native, Realm DB, Redux Toolkit, and React
+                Query with 24 releases and 1000+ commits.
               </li>
               <li className="my-0">
-                CI/ CD integration using Github, Github Actions, Appcenter and
-                Firebase App distribution
-              </li>
-              <li className="my-0">
-                Backend is built using Supabase, Firebase and AWS amplify
+                CI/CD integration using GitHub Actions and Firebase App
+                Distribution for automated builds and testing.
               </li>
             </ul>
           </div>
