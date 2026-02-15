@@ -5,6 +5,12 @@ description: "Deep dive into TFS: India's leading airport F&B operator with 26% 
 categories: ["business", "analysis", "aviation"]
 ---
 
+import Info from "@/components/info";
+import { getMetaTags } from "@/lib/utils";
+
+<Info {...frontmatter} />
+export const meta = getMetaTags(frontmatter);
+
 # Travel Food Services - Analysis of India's Dominant Airport F&B Operator
 
 ## Introduction: India's Aviation Growth Story
