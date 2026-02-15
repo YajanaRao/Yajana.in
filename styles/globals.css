@@ -33,6 +33,17 @@
   background: #6ee7b7;
 }
 
+/* Dark mode: darker selection background for readability with white text */
+.dark ::-moz-selection {
+  background: #047857;
+  color: #ffffff;
+}
+
+.dark ::selection {
+  background: #047857;
+  color: #ffffff;
+}
+
 html {
   overscroll-behavior-y: none;
 }
