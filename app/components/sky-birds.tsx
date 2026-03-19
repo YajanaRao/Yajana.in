@@ -2,7 +2,7 @@ import * as React from "react";
 
 interface SkyElement {
   id: number;
-  type: "bird" | "cloud" | "star-bright" | "star-twinkle";
+  type: "cloud" | "star-bright" | "star-twinkle";
   leftPercent: number;
   topPercent: number;
   size: number;
@@ -12,24 +12,6 @@ interface SkyElement {
 }
 
 const SKY_ELEMENTS: SkyElement[] = [
-  {
-    id: 1,
-    type: "bird",
-    leftPercent: 2,
-    topPercent: 25,
-    size: 26,
-    parallaxSpeed: 0.03,
-    maxOffset: 150,
-  },
-  {
-    id: 2,
-    type: "bird",
-    leftPercent: 98,
-    topPercent: 75,
-    size: 32,
-    parallaxSpeed: 0.05,
-    maxOffset: 100,
-  },
   {
     id: 3,
     type: "cloud",
@@ -127,8 +109,6 @@ const NIGHT_SKY_ELEMENTS: SkyElement[] = [
 
 const getImageSrc = (type: SkyElement["type"]): string => {
   switch (type) {
-    case "bird":
-      return "/images/bird-5.png";
     case "cloud":
       return "/images/cloud-3a.png";
     case "star-bright":

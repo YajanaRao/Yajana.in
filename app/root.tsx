@@ -13,6 +13,7 @@ import "../styles/globals.css";
 import Layout from "@/components/layout";
 import { themeCookie } from "@/lib/theme";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 export const links: LinksFunction = () => {
   return [
@@ -71,6 +72,7 @@ export default function App() {
         <Layout>
           <Outlet />
         </Layout>
+        <SpeedInsights />
         <Scripts />
         <Analytics />
       </body>
