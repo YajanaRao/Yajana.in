@@ -26,7 +26,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
   };
   return (
     <div className="lg:w-1/2 p-1">
-      <div className="rounded overflow-hidden shadow-lg bg-white dark:bg-[#1e1e1e]">
+      <div className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-[#1e1e1e]">
         {project.cover ? (
           <img
             className="w-full h-64 mt-0 mb-4"
@@ -68,16 +68,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
               ))}
             </div>
           )}
-        </div>
-        <div className="px-6 pb-2">
-          {project.tags.map((tag) => (
-            <span
-              key={`${project.key}-${tag.key}`}
-              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-            >
-              #{tag.key}
-            </span>
-          ))}
         </div>
       </div>
     </div>
