@@ -28,3 +28,7 @@ build/
 
 # React Router
 .react-router/
+
+# Service account keys — NEVER commit these
+*-service-account*.json
+model-night-*.json
