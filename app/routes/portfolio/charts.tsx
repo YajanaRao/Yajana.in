@@ -294,21 +294,11 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
     },
     {
       name: "Emergency",
-      returnPct:
-        snapshot.inv_emergency_fund > 0
-          ? ((snapshot.curr_emergency_fund - snapshot.inv_emergency_fund) /
-              snapshot.inv_emergency_fund) *
-            100
-          : 0,
+      returnPct: 6.5, // IDFC First Bank savings rate
     },
     {
       name: "Savings",
-      returnPct:
-        snapshot.inv_savings_account > 0
-          ? ((snapshot.curr_savings_account - snapshot.inv_savings_account) /
-              snapshot.inv_savings_account) *
-            100
-          : 0,
+      returnPct: 2.5, // SBI savings rate
     },
     {
       name: "FDs",
