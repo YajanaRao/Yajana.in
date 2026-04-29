@@ -100,15 +100,17 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
   const baseVal = data[0].total_val;
   const baseNifty = data[0].nifty50_value;
 
-  const chartData = data.map((s) => ({
-    date: formatDate(s.snapshot_date),
-    "Portfolio": baseVal > 0
-      ? ((s.total_val - baseVal) / baseVal) * 100
-      : 0,
-    "Nifty 50": baseNifty > 0
-      ? ((s.nifty50_value - baseNifty) / baseNifty) * 100
-      : 0,
-  }));
+  // Build Nifty series with carry-forward for missing/zero values
+  let lastKnownNifty = baseNifty;
+  const chartData = data.map((s) => {
+    const nifty = s.nifty50_value > 0 ? s.nifty50_value : lastKnownNifty;
+    if (s.nifty50_value > 0) lastKnownNifty = s.nifty50_value;
+    return {
+      date: formatDate(s.snapshot_date),
+      Portfolio: baseVal > 0 ? ((s.total_val - baseVal) / baseVal) * 100 : 0,
+      "Nifty 50": baseNifty > 0 ? ((nifty - baseNifty) / baseNifty) * 100 : 0,
+    };
+  });
 
   return (
     <div>
@@ -170,6 +172,116 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
             iconSize={8}
           />
         </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// --- Asset Class Performance Comparison ---
+// Rebases each asset class, portfolio total, and Nifty 50 to 0% at the first snapshot
+
+const PERFORMANCE_COLORS: Record<string, string> = {
+  Portfolio: "#10b981",
+  "Nifty 50": "#f59e0b",
+  "Mutual Funds": "#3b82f6",
+  "Gold & Silver": "#eab308",
+  Crypto: "#f97316",
+  Stocks: "#6366f1",
+};
+
+export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
+  if (data.length < 2) return null;
+
+  const base = data[0];
+  let lastKnownNifty = base.nifty50_value;
+
+  // Pure market return: (current_gain - base_gain) / base_invested
+  // where gain = curr - inv, stripping out the effect of new money added
+  const baseGain = {
+    portfolio: base.total_val - base.total_inv,
+    mf: base.curr_mutual_funds - base.inv_mutual_funds,
+    gold: base.curr_gold_silver - base.inv_gold_silver,
+    crypto: base.curr_crypto - base.inv_crypto,
+    stocks: base.curr_stocks - base.inv_stocks,
+  };
+
+  const chartData = data.map((s) => {
+    const nifty = s.nifty50_value > 0 ? s.nifty50_value : lastKnownNifty;
+    if (s.nifty50_value > 0) lastKnownNifty = s.nifty50_value;
+
+    const gainPortfolio = s.total_val - s.total_inv;
+    const gainMf = s.curr_mutual_funds - s.inv_mutual_funds;
+    const gainGold = s.curr_gold_silver - s.inv_gold_silver;
+    const gainCrypto = s.curr_crypto - s.inv_crypto;
+    const gainStocks = s.curr_stocks - s.inv_stocks;
+
+    // Return = change in gain as % of base invested amount
+    const pctReturn = (gain: number, baseG: number, baseInv: number) =>
+      baseInv > 0 ? ((gain - baseG) / baseInv) * 100 : 0;
+
+    return {
+      date: formatDate(s.snapshot_date),
+      Portfolio: pctReturn(gainPortfolio, baseGain.portfolio, base.total_inv),
+      "Nifty 50":
+        base.nifty50_value > 0
+          ? ((nifty - base.nifty50_value) / base.nifty50_value) * 100
+          : 0,
+      "Mutual Funds": pctReturn(gainMf, baseGain.mf, base.inv_mutual_funds),
+      "Gold & Silver": pctReturn(gainGold, baseGain.gold, base.inv_gold_silver),
+      Crypto: pctReturn(gainCrypto, baseGain.crypto, base.inv_crypto),
+      Stocks: pctReturn(gainStocks, baseGain.stocks, base.inv_stocks),
+    };
+  });
+
+  return (
+    <div>
+      <h3 className="mb-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        Asset Class Performance
+      </h3>
+      <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+        Pure market return since {formatDate(data[0].snapshot_date)} (excludes
+        new investments)
+      </p>
+      <ResponsiveContainer width="100%" height={360}>
+        <LineChart
+          data={chartData}
+          margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            tickFormatter={(v) => `${v > 0 ? "+" : ""}${v.toFixed(0)}%`}
+            tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={false}
+            width={55}
+          />
+          <Tooltip content={<ChartTooltip />} />
+          <ReferenceLine y={0} stroke="#a3a3a3" strokeDasharray="3 3" />
+          {Object.entries(PERFORMANCE_COLORS).map(([key, color]) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={color}
+              strokeWidth={key === "Portfolio" ? 2.5 : 1.5}
+              strokeDasharray={key === "Nifty 50" ? "6 3" : undefined}
+              dot={false}
+              activeDot={{ r: 4 }}
+            />
+          ))}
+          <Legend
+            verticalAlign="top"
+            height={36}
+            iconType="circle"
+            iconSize={8}
+          />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );
@@ -262,7 +374,8 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
       name: "Stocks",
       returnPct:
         snapshot.inv_stocks > 0
-          ? ((snapshot.curr_stocks - snapshot.inv_stocks) / snapshot.inv_stocks) *
+          ? ((snapshot.curr_stocks - snapshot.inv_stocks) /
+              snapshot.inv_stocks) *
             100
           : 0,
     },
@@ -288,7 +401,8 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
       name: "Crypto",
       returnPct:
         snapshot.inv_crypto > 0
-          ? ((snapshot.curr_crypto - snapshot.inv_crypto) / snapshot.inv_crypto) *
+          ? ((snapshot.curr_crypto - snapshot.inv_crypto) /
+              snapshot.inv_crypto) *
             100
           : 0,
     },
@@ -336,10 +450,7 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
             width={50}
           />
           <Tooltip
-            formatter={(value) => [
-              `${Number(value).toFixed(1)}%`,
-              "Return",
-            ]}
+            formatter={(value) => [`${Number(value).toFixed(1)}%`, "Return"]}
           />
           <Bar dataKey="returnPct" name="Return %">
             {assets.map((entry, i) => (
@@ -361,19 +472,27 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
 export function GrowthChart({ data }: { data: Snapshot[] }) {
   if (data.length < 2) return null;
 
+  // Carry forward zero nifty values so period-over-period calc isn't distorted
+  let prevNifty = data[0].nifty50_value;
   const chartData = data.slice(1).map((s, i) => {
     const prev = data[i];
+    const prevNiftyEffective = prev.nifty50_value > 0 ? prev.nifty50_value : prevNifty;
+    const currNifty = s.nifty50_value > 0 ? s.nifty50_value : prevNiftyEffective;
+
     const portfolioGrowth =
       prev.total_val > 0
         ? ((s.total_val - prev.total_val) / prev.total_val) * 100
         : 0;
     const niftyGrowth =
-      prev.nifty50_value > 0
-        ? ((s.nifty50_value - prev.nifty50_value) / prev.nifty50_value) * 100
+      prevNiftyEffective > 0
+        ? ((currNifty - prevNiftyEffective) / prevNiftyEffective) * 100
         : 0;
+
+    if (s.nifty50_value > 0) prevNifty = s.nifty50_value;
+
     return {
       date: formatDate(s.snapshot_date),
-      "Portfolio": Number(portfolioGrowth.toFixed(2)),
+      Portfolio: Number(portfolioGrowth.toFixed(2)),
       "Nifty 50": Number(niftyGrowth.toFixed(2)),
     };
   });
@@ -442,8 +561,8 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
 export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
   const chartData: Array<{
     date: string;
-    "Invested": number;
-    "Expenses": number;
+    Invested: number;
+    Expenses: number;
     "Cash Δ": number;
   }> = [];
 
@@ -455,7 +574,8 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
     // Change in pure investment assets (stocks, MFs, gold, crypto, FDs)
     const investDelta =
-      (curr.inv_stocks - prev.inv_stocks) +
+      curr.inv_stocks -
+      prev.inv_stocks +
       (curr.inv_mutual_funds - prev.inv_mutual_funds) +
       (curr.inv_gold_silver - prev.inv_gold_silver) +
       (curr.inv_crypto - prev.inv_crypto) +
@@ -463,7 +583,8 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
     // Change in cash pool (savings + emergency fund)
     const cashDelta =
-      (curr.inv_savings_account - prev.inv_savings_account) +
+      curr.inv_savings_account -
+      prev.inv_savings_account +
       (curr.inv_emergency_fund - prev.inv_emergency_fund);
 
     const expense = curr.inc_month - investDelta - cashDelta;
@@ -474,8 +595,8 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
     const salary = curr.inc_month;
     chartData.push({
       date: formatDate(curr.snapshot_date),
-      "Invested": Number(((investDelta / salary) * 100).toFixed(0)),
-      "Expenses": Number(((expense / salary) * 100).toFixed(0)),
+      Invested: Number(((investDelta / salary) * 100).toFixed(0)),
+      Expenses: Number(((expense / salary) * 100).toFixed(0)),
       "Cash Δ": Number(((cashDelta / salary) * 100).toFixed(0)),
     });
   }
@@ -516,11 +637,7 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
             iconType="circle"
             iconSize={8}
           />
-          <ReferenceLine
-            y={0}
-            stroke="#94a3b8"
-            strokeOpacity={0.4}
-          />
+          <ReferenceLine y={0} stroke="#94a3b8" strokeOpacity={0.4} />
           <Bar dataKey="Invested" fill="#10b981" radius={[4, 4, 0, 0]} />
           <Bar dataKey="Expenses" fill="#f87171" radius={[4, 4, 0, 0]} />
           <Bar dataKey="Cash Δ" fill="#6366f1" radius={[4, 4, 0, 0]} />

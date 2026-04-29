@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase.server";
 import { xirr, cagr } from "@/lib/xirr";
 import {
   CumulativeReturnsChart,
+  AssetClassPerformanceChart,
   AssetAllocationChart,
   AssetReturnsChart,
   GrowthChart,
@@ -85,12 +86,16 @@ function computeMetrics(snapshots: Snapshot[]): PortfolioMetrics {
   const xirrRate = xirr(flows);
   const xirrPct = xirrRate !== null ? xirrRate * 100 : null;
 
-  // Nifty 50 CAGR over the same period (same start date as baseline)
+  // Find the last snapshot with a valid (non-zero) Nifty 50 value
+  const latestNiftySnapshot = [...snapshots]
+    .reverse()
+    .find((s) => s.nifty50_value > 0) ?? latest;
+
   const niftyCagrRate = cagr(
     first.nifty50_value,
-    latest.nifty50_value,
+    latestNiftySnapshot.nifty50_value,
     new Date(first.snapshot_date),
-    new Date(latest.snapshot_date),
+    new Date(latestNiftySnapshot.snapshot_date),
   );
   const niftyCagrPct = niftyCagrRate * 100;
 
@@ -454,6 +459,10 @@ export default function PortfolioPage() {
       <div className="space-y-10">
         <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
           <CumulativeReturnsChart data={snapshots} />
+        </div>
+
+        <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+          <AssetClassPerformanceChart data={snapshots} />
         </div>
 
         <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
