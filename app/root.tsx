@@ -63,7 +63,7 @@ export default function App() {
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#000000" />
-        <link rel="apple-touch-icon" href="/logo.jpg" />
+        <link rel="apple-touch-icon" href="/profile-picture.jpg" />
         <link rel="manifest" href="/site.webmanifest" />
         <Meta />
         <Links />

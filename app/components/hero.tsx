@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router";
-import ProfilePic from "../assets/images/profile-pic.jpg";
 import { siteMetadata } from "../constants";
 
 const Hero = () => {
@@ -10,7 +9,7 @@ const Hero = () => {
     <div className="flex flex-col sm:flex-row mt-10">
       <div className="justify-center items-center flex">
         <img
-          src={ProfilePic}
+          src="/profile-picture.jpg"
           alt={author.name}
           height={100}
           width={100}

@@ -21,7 +21,7 @@ export const meta: MetaFunction<typeof loader> = (args) => {
       name: "description",
     },
     {
-      content: `${siteUrl}/logo.jpg`,
+      content: `${siteUrl}/profile-picture.jpg`,
       property: "image",
     },
     {
@@ -33,7 +33,7 @@ export const meta: MetaFunction<typeof loader> = (args) => {
       name: "og:description",
     },
     {
-      content: `${siteUrl}/logo.jpg`,
+      content: `${siteUrl}/profile-picture.jpg`,
       property: "og:image",
     },
     {

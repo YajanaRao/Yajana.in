@@ -13,7 +13,7 @@ const Bio = () => {
   return (
     <div className="mb-2 flex items-center flex-row">
       <img
-        src={"/assets/profile-pic.jpg"}
+        src="/profile-picture.jpg"
         alt={author.name}
         className="mr-4 mb-1"
         style={{

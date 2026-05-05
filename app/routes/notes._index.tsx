@@ -10,7 +10,7 @@ export const meta = [
     name: "description",
   },
   {
-    content: "/logo.jpg",
+    content: "/profile-picture.jpg",
     property: "image",
   },
   {
@@ -22,7 +22,7 @@ export const meta = [
     name: "og:description",
   },
   {
-    content: "/logo.jpg",
+    content: "/profile-picture.jpg",
     property: "og:image",
   },
   {
