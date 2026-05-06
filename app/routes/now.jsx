@@ -54,13 +54,10 @@ function StartHerePage() {
         <h1 className="text-black dark:text-white">What am I reading now</h1>
         <ul>
           <li className="text-black dark:text-white">
-            Thinking, Fast and Slow by Daniel Kahneman
+            Determined: A Science of Life Without Free Will by Robert Sapolsky
           </li>
           <li className="text-black dark:text-white">
-            Krishnamurti's Notebook by Jiddu Krishnamurti
-          </li>
-          <li className="text-black dark:text-white">
-            Skin in the Game by Nassim Nicholas Taleb
+            Genome: The Autobiography of a Species in 23 Chapters by Matt Ridley
           </li>
         </ul>
         <p className="text-black dark:text-white">
@@ -68,10 +65,15 @@ function StartHerePage() {
           <Link to="/notes" className="underline">
             /notes
           </Link>
-          and collect passages that resonate in my{" "}
-          <Link to="/quotes" className="underline mx-1">
-            /quotes
-          </Link>
+          and collect passages that resonate in my
+          <a
+            target="_blank"
+            className="mx-1"
+            href="https://www.goodreads.com/yajanarao
+"
+          >
+            reading
+          </a>
           .
         </p>
       </div>
