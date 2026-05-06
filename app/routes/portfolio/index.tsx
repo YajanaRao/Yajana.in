@@ -43,6 +43,51 @@ interface FireMetrics {
   latestExpenseMonth: string | null;
 }
 
+const SNAPSHOT_CURRENT_FIELDS = [
+  ["inv_stocks", "curr_stocks"],
+  ["inv_mutual_funds", "curr_mutual_funds"],
+  ["inv_gold_silver", "curr_gold_silver"],
+  ["inv_crypto", "curr_crypto"],
+  ["inv_emergency_fund", "curr_emergency_fund"],
+  ["inv_savings_account", "curr_savings_account"],
+  ["inv_fixed_deposits", "curr_fixed_deposits"],
+] as const satisfies ReadonlyArray<readonly [keyof Snapshot, keyof Snapshot]>;
+
+function normalizeSnapshots(snapshots: Snapshot[]): Snapshot[] {
+  if (snapshots.length < 2) return snapshots;
+
+  const normalized: Snapshot[] = [snapshots[0]];
+
+  for (let i = 1; i < snapshots.length; i++) {
+    const previous = normalized[i - 1];
+    const current = { ...snapshots[i] };
+
+    for (const [investedField, currentField] of SNAPSHOT_CURRENT_FIELDS) {
+      const invested = current[investedField] as number;
+      const currentValue = current[currentField] as number;
+      const previousValue = previous[currentField] as number;
+
+      // Weekend/failed quotes can arrive as zero even when the position still exists.
+      if (invested > 0 && currentValue === 0 && previousValue > 0) {
+        current[currentField] = previousValue as Snapshot[typeof currentField];
+      }
+    }
+
+    current.total_val =
+      current.curr_stocks +
+      current.curr_mutual_funds +
+      current.curr_gold_silver +
+      current.curr_crypto +
+      current.curr_emergency_fund +
+      current.curr_savings_account +
+      current.curr_fixed_deposits;
+
+    normalized.push(current);
+  }
+
+  return normalized;
+}
+
 function computeMetrics(snapshots: Snapshot[]): PortfolioMetrics {
   if (snapshots.length < 2) {
     return {
@@ -230,7 +275,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw new Response("Failed to load portfolio data", { status: 500 });
   }
 
-  const snapshots = (snapshotResult.data ?? []) as Snapshot[];
+  const snapshots = normalizeSnapshots((snapshotResult.data ?? []) as Snapshot[]);
   const expenses = (expenseResult.data ?? []) as MonthlyExpense[];
   const metrics = computeMetrics(snapshots);
   const fireMetrics = computeFireMetrics(snapshots, expenses);
@@ -485,7 +530,8 @@ export default function PortfolioPage() {
           CAGR is the compound annual growth over the same date range. Alpha =
           XIRR − Nifty CAGR. The cumulative returns chart uses simple % change
           from the first snapshot (not XIRR), so it may differ from the headline
-          number.
+          number. The asset-class performance chart shows current return versus
+          invested amount for each snapshot.
         </p>
       </div>
     </div>

@@ -182,7 +182,6 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
 
 const PERFORMANCE_COLORS: Record<string, string> = {
   Portfolio: "#10b981",
-  "Nifty 50": "#f59e0b",
   "Mutual Funds": "#3b82f6",
   "Gold & Silver": "#eab308",
   Crypto: "#f97316",
@@ -192,44 +191,23 @@ const PERFORMANCE_COLORS: Record<string, string> = {
 export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
   if (data.length < 2) return null;
 
-  const base = data[0];
-  let lastKnownNifty = base.nifty50_value;
-
-  // Pure market return: (current_gain - base_gain) / base_invested
-  // where gain = curr - inv, stripping out the effect of new money added
-  const baseGain = {
-    portfolio: base.total_val - base.total_inv,
-    mf: base.curr_mutual_funds - base.inv_mutual_funds,
-    gold: base.curr_gold_silver - base.inv_gold_silver,
-    crypto: base.curr_crypto - base.inv_crypto,
-    stocks: base.curr_stocks - base.inv_stocks,
-  };
+  const currentReturnPct = (currentValue: number, investedValue: number) =>
+    investedValue > 0 ? ((currentValue - investedValue) / investedValue) * 100 : 0;
 
   const chartData = data.map((s) => {
-    const nifty = s.nifty50_value > 0 ? s.nifty50_value : lastKnownNifty;
-    if (s.nifty50_value > 0) lastKnownNifty = s.nifty50_value;
-
-    const gainPortfolio = s.total_val - s.total_inv;
-    const gainMf = s.curr_mutual_funds - s.inv_mutual_funds;
-    const gainGold = s.curr_gold_silver - s.inv_gold_silver;
-    const gainCrypto = s.curr_crypto - s.inv_crypto;
-    const gainStocks = s.curr_stocks - s.inv_stocks;
-
-    // Return = change in gain as % of base invested amount
-    const pctReturn = (gain: number, baseG: number, baseInv: number) =>
-      baseInv > 0 ? ((gain - baseG) / baseInv) * 100 : 0;
-
     return {
       date: formatDate(s.snapshot_date),
-      Portfolio: pctReturn(gainPortfolio, baseGain.portfolio, base.total_inv),
-      "Nifty 50":
-        base.nifty50_value > 0
-          ? ((nifty - base.nifty50_value) / base.nifty50_value) * 100
-          : 0,
-      "Mutual Funds": pctReturn(gainMf, baseGain.mf, base.inv_mutual_funds),
-      "Gold & Silver": pctReturn(gainGold, baseGain.gold, base.inv_gold_silver),
-      Crypto: pctReturn(gainCrypto, baseGain.crypto, base.inv_crypto),
-      Stocks: pctReturn(gainStocks, baseGain.stocks, base.inv_stocks),
+      Portfolio: currentReturnPct(s.total_val, s.total_inv),
+      "Mutual Funds": currentReturnPct(
+        s.curr_mutual_funds,
+        s.inv_mutual_funds,
+      ),
+      "Gold & Silver": currentReturnPct(
+        s.curr_gold_silver,
+        s.inv_gold_silver,
+      ),
+      Crypto: currentReturnPct(s.curr_crypto, s.inv_crypto),
+      Stocks: currentReturnPct(s.curr_stocks, s.inv_stocks),
     };
   });
 
@@ -239,8 +217,8 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
         Asset Class Performance
       </h3>
       <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
-        Pure market return since {formatDate(data[0].snapshot_date)} (excludes
-        new investments)
+        Current return % at each snapshot. The last point shows how much each
+        asset class is up or down right now.
       </p>
       <ResponsiveContainer width="100%" height={360}>
         <LineChart
