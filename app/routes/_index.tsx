@@ -73,11 +73,10 @@ const BlogIndex = () => {
   let categories = React.useMemo(
     () =>
       allPosts
-        .map((post) => post.frontmatter.categories)
-        .filter((value, index, self) => {
-          return self.indexOf(value) === index && value !== null;
-        })
-        .filter((c) => c),
+        .flatMap((post) => post.frontmatter.categories ?? [])
+        .map((category) => category.trim())
+        .filter(Boolean)
+        .filter((value, index, self) => self.indexOf(value) === index),
     [allPosts]
   );
 
@@ -87,9 +86,9 @@ const BlogIndex = () => {
         .filter((post) => {
           const { title, categories } = post.frontmatter;
           return (
-            title.toLowerCase().includes(query?.toLowerCase() || "") ||
+            title?.toLowerCase().includes(query?.toLowerCase() || "") ||
             (categories &&
-              categories.toLowerCase().includes(query?.toLowerCase() || ""))
+              categories?.toLowerCase().includes(query?.toLowerCase() || ""))
           );
         })
         .filter((post) => post),
@@ -108,7 +107,7 @@ const BlogIndex = () => {
             autoFocus
             defaultValue={query}
             onChange={(event) =>
-              setQuery(event.currentTarget.value.toLowerCase())
+              setQuery(event.currentTarget.value?.toLowerCase())
             }
             className="shadow dark:bg-[#282c35] border-[#ecc94b] appearance-none w-full py-4 pl-7 pr-3 leading-tight w-full rounded-full border focus:ring-[#ecc94b]"
           />

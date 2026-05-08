@@ -5,7 +5,7 @@ import SkyBirds from "./sky-birds";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="sky-bg dark:bg-[#16181b] min-h-screen overflow-hidden">
+    <div className="sky-bg dark:bg-[#16181b] min-h-screen overflow-x-hidden">
       <SkyBirds />
       <div
         data-sky-container
