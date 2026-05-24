@@ -21,6 +21,14 @@ import {
 
 export interface Snapshot {
   snapshot_date: string;
+  inv_stocks_india: number;
+  curr_stocks_india: number;
+  inv_stocks_us: number;
+  curr_stocks_us: number;
+  inv_etfs_india: number;
+  curr_etfs_india: number;
+  inv_etfs_us: number;
+  curr_etfs_us: number;
   inv_stocks: number;
   curr_stocks: number;
   inv_mutual_funds: number;
@@ -49,7 +57,10 @@ export interface Snapshot {
 // --- Helpers ---
 
 const ASSET_COLORS: Record<string, string> = {
-  Stocks: "#10b981",
+  "Stocks - India": "#10b981",
+  "Stocks - US": "#059669",
+  "ETFs - India": "#14b8a6",
+  "ETFs - US": "#0d9488",
   "Mutual Funds": "#3b82f6",
   "Gold & Silver": "#eab308",
   Crypto: "#f97316",
@@ -182,10 +193,13 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
 
 const PERFORMANCE_COLORS: Record<string, string> = {
   Portfolio: "#10b981",
+  "Stocks - India": "#6366f1",
+  "Stocks - US": "#818cf8",
+  "ETFs - India": "#14b8a6",
+  "ETFs - US": "#0d9488",
   "Mutual Funds": "#3b82f6",
   "Gold & Silver": "#eab308",
   Crypto: "#f97316",
-  Stocks: "#6366f1",
 };
 
 export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
@@ -198,6 +212,10 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
     return {
       date: formatDate(s.snapshot_date),
       Portfolio: currentReturnPct(s.total_val, s.total_inv),
+      "Stocks - India": currentReturnPct(s.curr_stocks_india, s.inv_stocks_india),
+      "Stocks - US": currentReturnPct(s.curr_stocks_us, s.inv_stocks_us),
+      "ETFs - India": currentReturnPct(s.curr_etfs_india, s.inv_etfs_india),
+      "ETFs - US": currentReturnPct(s.curr_etfs_us, s.inv_etfs_us),
       "Mutual Funds": currentReturnPct(
         s.curr_mutual_funds,
         s.inv_mutual_funds,
@@ -207,7 +225,6 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
         s.inv_gold_silver,
       ),
       Crypto: currentReturnPct(s.curr_crypto, s.inv_crypto),
-      Stocks: currentReturnPct(s.curr_stocks, s.inv_stocks),
     };
   });
 
@@ -269,7 +286,10 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
 
 export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
   const assets = [
-    { name: "Stocks", value: snapshot.curr_stocks },
+    { name: "Stocks - India", value: snapshot.curr_stocks_india },
+    { name: "Stocks - US", value: snapshot.curr_stocks_us },
+    { name: "ETFs - India", value: snapshot.curr_etfs_india },
+    { name: "ETFs - US", value: snapshot.curr_etfs_us },
     { name: "Mutual Funds", value: snapshot.curr_mutual_funds },
     { name: "Gold & Silver", value: snapshot.curr_gold_silver },
     { name: "Crypto", value: snapshot.curr_crypto },
@@ -347,42 +367,37 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
 // --- Asset-wise Returns (%) Bar Chart ---
 
 export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
+  const returnPct = (curr: number, inv: number) =>
+    inv > 0 ? ((curr - inv) / inv) * 100 : 0;
+
   const assets = [
     {
-      name: "Stocks",
-      returnPct:
-        snapshot.inv_stocks > 0
-          ? ((snapshot.curr_stocks - snapshot.inv_stocks) /
-              snapshot.inv_stocks) *
-            100
-          : 0,
+      name: "Stocks IN",
+      returnPct: returnPct(snapshot.curr_stocks_india, snapshot.inv_stocks_india),
+    },
+    {
+      name: "Stocks US",
+      returnPct: returnPct(snapshot.curr_stocks_us, snapshot.inv_stocks_us),
+    },
+    {
+      name: "ETFs IN",
+      returnPct: returnPct(snapshot.curr_etfs_india, snapshot.inv_etfs_india),
+    },
+    {
+      name: "ETFs US",
+      returnPct: returnPct(snapshot.curr_etfs_us, snapshot.inv_etfs_us),
     },
     {
       name: "MFs",
-      returnPct:
-        snapshot.inv_mutual_funds > 0
-          ? ((snapshot.curr_mutual_funds - snapshot.inv_mutual_funds) /
-              snapshot.inv_mutual_funds) *
-            100
-          : 0,
+      returnPct: returnPct(snapshot.curr_mutual_funds, snapshot.inv_mutual_funds),
     },
     {
       name: "Gold",
-      returnPct:
-        snapshot.inv_gold_silver > 0
-          ? ((snapshot.curr_gold_silver - snapshot.inv_gold_silver) /
-              snapshot.inv_gold_silver) *
-            100
-          : 0,
+      returnPct: returnPct(snapshot.curr_gold_silver, snapshot.inv_gold_silver),
     },
     {
       name: "Crypto",
-      returnPct:
-        snapshot.inv_crypto > 0
-          ? ((snapshot.curr_crypto - snapshot.inv_crypto) /
-              snapshot.inv_crypto) *
-            100
-          : 0,
+      returnPct: returnPct(snapshot.curr_crypto, snapshot.inv_crypto),
     },
     {
       name: "Emergency",
@@ -394,14 +409,9 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
     },
     {
       name: "FDs",
-      returnPct:
-        snapshot.inv_fixed_deposits > 0
-          ? ((snapshot.curr_fixed_deposits - snapshot.inv_fixed_deposits) /
-              snapshot.inv_fixed_deposits) *
-            100
-          : 0,
+      returnPct: returnPct(snapshot.curr_fixed_deposits, snapshot.inv_fixed_deposits),
     },
-  ];
+  ].filter((a) => a.returnPct !== 0 || a.name === "Emergency" || a.name === "Savings");
 
   return (
     <div>
@@ -550,10 +560,12 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
     if (curr.inc_month <= 0) continue;
 
-    // Change in pure investment assets (stocks, MFs, gold, crypto, FDs)
+    // Change in pure investment assets (stocks, ETFs, MFs, gold, crypto, FDs)
     const investDelta =
       curr.inv_stocks -
       prev.inv_stocks +
+      (curr.inv_etfs_india - prev.inv_etfs_india) +
+      (curr.inv_etfs_us - prev.inv_etfs_us) +
       (curr.inv_mutual_funds - prev.inv_mutual_funds) +
       (curr.inv_gold_silver - prev.inv_gold_silver) +
       (curr.inv_crypto - prev.inv_crypto) +

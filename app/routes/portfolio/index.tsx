@@ -44,6 +44,10 @@ interface FireMetrics {
 }
 
 const SNAPSHOT_CURRENT_FIELDS = [
+  ["inv_stocks_india", "curr_stocks_india"],
+  ["inv_stocks_us", "curr_stocks_us"],
+  ["inv_etfs_india", "curr_etfs_india"],
+  ["inv_etfs_us", "curr_etfs_us"],
   ["inv_stocks", "curr_stocks"],
   ["inv_mutual_funds", "curr_mutual_funds"],
   ["inv_gold_silver", "curr_gold_silver"],
@@ -75,6 +79,8 @@ function normalizeSnapshots(snapshots: Snapshot[]): Snapshot[] {
 
     current.total_val =
       current.curr_stocks +
+      current.curr_etfs_india +
+      current.curr_etfs_us +
       current.curr_mutual_funds +
       current.curr_gold_silver +
       current.curr_crypto +
