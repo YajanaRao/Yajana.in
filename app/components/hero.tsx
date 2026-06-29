@@ -29,7 +29,7 @@ const Hero = ({ titleSlot }: HeroProps) => {
         <h1 className="font-black my-0 h-[58px] leading-none flex items-center">
           {titleSlot === undefined ? (
             <Link
-              className="text-5xl font-freehand font-black leading-none no-underline"
+              className="text-5xl font-freehand font-black leading-none no-underline text-primary"
               to={`/`}
             >
               {siteTitle}
@@ -38,7 +38,7 @@ const Hero = ({ titleSlot }: HeroProps) => {
             titleSlot
           )}
         </h1>
-        <p className="text-black dark:text-white mb-0 mt-1">
+        <p className="text-foreground mb-0 mt-1">
           {author.summary}
         </p>
       </div>

@@ -1,7 +1,7 @@
 import * as React from "react";
 const Playstore = () => (
   <svg
-    className="h-6 w-6 fill-zinc-500 transition group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300"
+    className="h-6 w-6 fill-muted-foreground transition group-hover:fill-primary"
     viewBox="0 0 24 24"
     role="img"
     xmlns="http://www.w3.org/2000/svg"

@@ -57,16 +57,16 @@ export interface Snapshot {
 // --- Helpers ---
 
 const ASSET_COLORS: Record<string, string> = {
-  "Stocks - India": "#10b981",
-  "Stocks - US": "#059669",
-  "ETFs - India": "#14b8a6",
-  "ETFs - US": "#0d9488",
-  "Mutual Funds": "#3b82f6",
-  "Gold & Silver": "#eab308",
-  Crypto: "#f97316",
-  "Emergency Fund": "#8b5cf6",
-  Savings: "#06b6d4",
-  "Fixed Deposits": "#ec4899",
+  "Stocks - India": "hsl(var(--chart-1))",
+  "Stocks - US": "hsl(var(--chart-2))",
+  "ETFs - India": "hsl(var(--chart-3))",
+  "ETFs - US": "hsl(var(--chart-4))",
+  "Mutual Funds": "hsl(var(--chart-5))",
+  "Gold & Silver": "hsl(var(--chart-3))",
+  Crypto: "hsl(var(--chart-4))",
+  "Emergency Fund": "hsl(var(--chart-2))",
+  Savings: "hsl(var(--chart-5))",
+  "Fixed Deposits": "hsl(var(--chart-1))",
 };
 
 function formatDate(dateStr: string): string {
@@ -85,14 +85,14 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
-      <p className="mb-1 text-xs text-neutral-500 dark:text-neutral-400">
+    <div className="rounded-lg bg-card px-3 py-2">
+      <p className="mb-1 text-xs text-muted-foreground">
         {label}
       </p>
       {payload.map((entry, i) => (
         <p
           key={i}
-          className="text-sm font-medium"
+          className="text-sm font-medium text-card-foreground"
           style={{ color: entry.color }}
         >
           {entry.name}: {Number(entry.value).toFixed(1)}%
@@ -125,10 +125,10 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
 
   return (
     <div>
-      <h3 className="mb-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-1 text-lg font-semibold text-foreground">
         Portfolio vs Nifty 50
       </h3>
-      <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <p className="mb-4 text-xs text-muted-foreground">
         Cumulative % return since {formatDate(data[0].snapshot_date)}
       </p>
       <ResponsiveContainer width="100%" height={320}>
@@ -138,40 +138,43 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
         >
           <defs>
             <linearGradient id="gradPortfolio" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity={0.2} />
-              <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+              <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1} />
             </linearGradient>
             <linearGradient id="gradNifty" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.15} />
-              <stop offset="100%" stopColor="#f59e0b" stopOpacity={0} />
+              <stop offset="0%" stopColor="hsl(var(--chart-3))" stopOpacity={0.4} />
+              <stop offset="100%" stopColor="hsl(var(--chart-3))" stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
             tickFormatter={(v) => `${v > 0 ? "+" : ""}${v.toFixed(0)}%`}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             width={55}
           />
           <Tooltip content={<ChartTooltip />} />
           <Area
             type="monotone"
             dataKey="Portfolio"
-            stroke="#10b981"
+            stroke="hsl(var(--chart-1))"
             strokeWidth={2.5}
             fill="url(#gradPortfolio)"
           />
           <Area
             type="monotone"
             dataKey="Nifty 50"
-            stroke="#f59e0b"
+            stroke="hsl(var(--chart-3))"
             strokeWidth={2}
             strokeDasharray="6 3"
             fill="url(#gradNifty)"
@@ -181,6 +184,7 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
             height={36}
             iconType="circle"
             iconSize={8}
+            wrapperStyle={{ color: "hsl(var(--foreground))" }}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -192,14 +196,14 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
 // Rebases each asset class, portfolio total, and Nifty 50 to 0% at the first snapshot
 
 const PERFORMANCE_COLORS: Record<string, string> = {
-  Portfolio: "#10b981",
-  "Stocks - India": "#6366f1",
-  "Stocks - US": "#818cf8",
-  "ETFs - India": "#14b8a6",
-  "ETFs - US": "#0d9488",
-  "Mutual Funds": "#3b82f6",
-  "Gold & Silver": "#eab308",
-  Crypto: "#f97316",
+  Portfolio: "hsl(var(--chart-1))",
+  "Stocks - India": "hsl(var(--chart-2))",
+  "Stocks - US": "hsl(var(--chart-5))",
+  "ETFs - India": "hsl(var(--chart-3))",
+  "ETFs - US": "hsl(var(--chart-4))",
+  "Mutual Funds": "hsl(var(--chart-5))",
+  "Gold & Silver": "hsl(var(--chart-3))",
+  Crypto: "hsl(var(--chart-4))",
 };
 
 export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
@@ -230,10 +234,10 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
 
   return (
     <div>
-      <h3 className="mb-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-1 text-lg font-semibold text-foreground">
         Asset Class Performance
       </h3>
-      <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <p className="mb-4 text-xs text-muted-foreground">
         Current return % at each snapshot. The last point shows how much each
         asset class is up or down right now.
       </p>
@@ -242,22 +246,25 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
             tickFormatter={(v) => `${v > 0 ? "+" : ""}${v.toFixed(0)}%`}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             width={55}
           />
           <Tooltip content={<ChartTooltip />} />
-          <ReferenceLine y={0} stroke="#a3a3a3" strokeDasharray="3 3" />
+          <ReferenceLine y={0} stroke="hsl(var(--border))" strokeDasharray="3 3" />
           {Object.entries(PERFORMANCE_COLORS).map(([key, color]) => (
             <Line
               key={key}
@@ -275,6 +282,7 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
             height={36}
             iconType="circle"
             iconSize={8}
+            wrapperStyle={{ color: "hsl(var(--foreground))" }}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -302,7 +310,7 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
 
   return (
     <div>
-      <h3 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-4 text-lg font-semibold text-foreground">
         Asset Allocation
       </h3>
       <ResponsiveContainer width="100%" height={280}>
@@ -320,7 +328,7 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
             {assets.map((entry) => (
               <Cell
                 key={entry.name}
-                fill={ASSET_COLORS[entry.name] ?? "#94a3b8"}
+                fill={ASSET_COLORS[entry.name] ?? "hsl(var(--muted-foreground))"}
               />
             ))}
           </Pie>
@@ -330,11 +338,11 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
               const { name, value } = payload[0].payload;
               const pct = ((value / total) * 100).toFixed(1);
               return (
-                <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
-                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                <div className="rounded-lg bg-card px-3 py-2">
+                  <p className="text-sm font-medium text-card-foreground">
                     {name}
                   </p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  <p className="text-sm text-muted-foreground">
                     {pct}% of portfolio
                   </p>
                 </div>
@@ -343,18 +351,18 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
           />
         </PieChart>
       </ResponsiveContainer>
-      <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+          <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
         {assets.map((a) => (
           <div
             key={a.name}
-            className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400"
+            className="flex items-center gap-1.5 text-xs text-muted-foreground"
           >
             <span
               className="inline-block h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: ASSET_COLORS[a.name] ?? "#94a3b8" }}
+              style={{ backgroundColor: ASSET_COLORS[a.name] ?? "hsl(var(--muted-foreground))" }}
             />
             {a.name}{" "}
-            <span className="font-medium text-neutral-800 dark:text-neutral-200">
+            <span className="font-medium text-foreground">
               {((a.value / total) * 100).toFixed(1)}%
             </span>
           </div>
@@ -415,7 +423,7 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
 
   return (
     <div>
-      <h3 className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-4 text-lg font-semibold text-foreground">
         Returns by Asset Class
       </h3>
       <ResponsiveContainer width="100%" height={280}>
@@ -423,18 +431,21 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
           data={assets}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="name"
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
             tickFormatter={(v) => `${v}%`}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             width={50}
           />
           <Tooltip
@@ -444,7 +455,7 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
             {assets.map((entry, i) => (
               <Cell
                 key={i}
-                fill={entry.returnPct >= 0 ? "#10b981" : "#ef4444"}
+                fill={entry.returnPct >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--destructive))"}
                 radius={[4, 4, 0, 0] as unknown as number}
               />
             ))}
@@ -487,10 +498,10 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
 
   return (
     <div>
-      <h3 className="mb-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-1 text-lg font-semibold text-foreground">
         Period-over-Period Growth
       </h3>
-      <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <p className="mb-4 text-xs text-muted-foreground">
         % change between consecutive snapshots
       </p>
       <ResponsiveContainer width="100%" height={280}>
@@ -498,18 +509,21 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
             tickFormatter={(v) => `${v > 0 ? "+" : ""}${v}%`}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             width={55}
           />
           <Tooltip content={<ChartTooltip />} />
@@ -518,21 +532,22 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
             height={36}
             iconType="circle"
             iconSize={8}
+            wrapperStyle={{ color: "hsl(var(--foreground))" }}
           />
           <Line
             type="monotone"
             dataKey="Portfolio"
-            stroke="#10b981"
+            stroke="hsl(var(--chart-1))"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: "#10b981" }}
+            dot={{ r: 4, fill: "hsl(var(--chart-1))" }}
           />
           <Line
             type="monotone"
             dataKey="Nifty 50"
-            stroke="#f59e0b"
+            stroke="hsl(var(--chart-3))"
             strokeWidth={2}
             strokeDasharray="6 3"
-            dot={{ r: 3, fill: "#f59e0b" }}
+            dot={{ r: 3, fill: "hsl(var(--chart-3))" }}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -595,10 +610,10 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
   return (
     <div>
-      <h3 className="mb-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="mb-1 text-lg font-semibold text-foreground">
         Income Allocation
       </h3>
-      <p className="mb-4 text-xs text-neutral-500 dark:text-neutral-400">
+      <p className="mb-4 text-xs text-muted-foreground">
         Where each month's salary went — investments, expenses, or cash reserves
       </p>
       <ResponsiveContainer width="100%" height={300}>
@@ -606,18 +621,21 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="hsl(var(--border))"
+          />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
           />
           <YAxis
             tickFormatter={(v) => `${v}%`}
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
             tickLine={false}
-            axisLine={false}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             width={55}
           />
           <Tooltip content={<ChartTooltip />} />
@@ -626,11 +644,12 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
             height={36}
             iconType="circle"
             iconSize={8}
+            wrapperStyle={{ color: "hsl(var(--foreground))" }}
           />
-          <ReferenceLine y={0} stroke="#94a3b8" strokeOpacity={0.4} />
-          <Bar dataKey="Invested" fill="#10b981" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Expenses" fill="#f87171" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Cash Δ" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          <ReferenceLine y={0} stroke="hsl(var(--border))" />
+          <Bar dataKey="Invested" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Cash Δ" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

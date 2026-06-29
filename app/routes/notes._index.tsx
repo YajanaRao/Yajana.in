@@ -73,11 +73,11 @@ const Courses = ({}) => {
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
         {categories.map((category, index) => {
           return (
             <article key={index}>
-              <div className="bg-white relative shadow-lg hover:shadow-xl transition duration-500 rounded-lg flex flex-col">
+              <div className="bg-card relative transition duration-500 rounded-lg flex flex-col">
                 <div className="">
                   <img
                     className="rounded-t-lg mb-0 min-h-60"
@@ -89,14 +89,14 @@ const Courses = ({}) => {
                   />
                 </div>
                 <div className="px-4 py-6">
-                  <h3 className="text-gray-700 font-bold text-2xl mb-3 hover:text-gray-900 hover:cursor-pointer mt-0">
+                  <h3 className="text-foreground font-bold text-2xl mb-3 hover:text-primary hover:cursor-pointer mt-0">
                     {category.title}
                   </h3>
-                  <p className="text-gray-700 tracking-wide mb-2">
+                  <p className="text-muted-foreground tracking-wide mb-2">
                     {category.description}
                   </p>
                   <Link
-                    className="bg-green-600 hover:shadow-lg transition duration-300 text-white font-bold py-2 px-4 rounded-lg shadow-md "
+                    className="bg-primary transition duration-300 text-primary-foreground font-bold py-2 px-4 rounded-lg"
                     to={`/notes/${category.link}`}
                   >
                     Visit

@@ -32,3 +32,6 @@ build/
 # Service account keys — NEVER commit these
 *-service-account*.json
 model-night-*.json
+
+# opencode
+.opencode

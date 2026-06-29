@@ -13,11 +13,11 @@ const UsesPage = () => {
   return (
     <div>
       <div>
-        <h1 className="text-black dark:text-white">Uses</h1>
-        <h3 className="text-black dark:text-white">
+        <h1 className="text-foreground">Uses</h1>
+        <h3 className="text-foreground">
           My Hardware and Software Setup
         </h3>
-        <p className="text-black dark:text-white">What I use everyday</p>
+        <p className="text-foreground">What I use everyday</p>
         <h3>Tech</h3>
         <ul>
           <li>React.js</li>

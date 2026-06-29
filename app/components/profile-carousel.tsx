@@ -83,11 +83,6 @@ const ProfileCarousel = () => {
               draggable={false}
               className="w-64 h-64 rounded-2xl object-cover object-center"
               style={{
-                boxShadow: `
-                  0 ${10 + index * 4}px ${20 + index * 8}px rgba(0, 0, 0, ${
-                  0.4 + index * 0.1
-                })
-                `,
                 filter: "contrast(1.02) saturate(0.98)",
               }}
             />

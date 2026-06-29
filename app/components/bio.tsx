@@ -23,7 +23,7 @@ const Bio = () => {
         width={"50"}
         height={"50"}
       />
-      <p className="text-black dark:text-white">
+      <p className="text-foreground">
         Personal blog by{" "}
         <a href={`https://twitter.com/${social.twitter}`}>
           <strong>{author.name}</strong>

@@ -1,7 +1,7 @@
 import * as React from "react";
 const WebLink = () => (
   <svg
-    className="h-6 w-6 fill-none stroke-zinc-500 transition group-hover:stroke-zinc-600 dark:stroke-zinc-400 dark:group-hover:stroke-zinc-300"
+    className="h-6 w-6 fill-none stroke-muted-foreground transition group-hover:stroke-primary"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >

@@ -5,6 +5,83 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 44 87% 94%; /* canvas #FDF6E3 */
+    --foreground: 202 11% 40%; /* ink #5C6A72 */
+    --card: 51 55% 90%; /* surface #F4F0D9 */
+    --card-foreground: 202 11% 40%;
+    --popover: 51 55% 90%;
+    --popover-foreground: 202 11% 40%;
+    --primary: 150 88% 14%; /* deep forest green #044123 */
+    --primary-foreground: 44 87% 94%; /* cream */
+    --secondary: 51 34% 85%; /* surface-raised #E6E2CC */
+    --secondary-foreground: 202 11% 40%;
+    --muted: 51 34% 85%;
+    --muted-foreground: 106 8% 39%; /* muted-strong #606D5C (AA) */
+    --accent: 51 34% 85%;
+    --accent-foreground: 202 11% 40%;
+    --destructive: 3 63% 36%; /* error #942822 */
+    --destructive-foreground: 44 87% 94%; /* cream on deep red (AA) */
+    --border: 51 34% 85%;
+    --input: 51 34% 85%;
+    --ring: 150 88% 14%;
+    --radius: 0.375rem; /* rounded.md 6px */
+
+    --chart-1: 73 84% 27%; /* syntax-keyword green */
+    --chart-2: 212 68% 39%; /* syntax-type blue */
+    --chart-3: 22 80% 41%; /* syntax-function orange */
+    --chart-4: 259 42% 43%; /* syntax-regex purple */
+    --chart-5: 175 57% 33%; /* syntax-string cyan */
+
+    --sidebar-background: 51 55% 90%;
+    --sidebar-foreground: 106 8% 39%; /* muted-strong */
+    --sidebar-primary: 150 88% 14%;
+    --sidebar-primary-foreground: 44 87% 94%;
+    --sidebar-accent: 51 34% 85%;
+    --sidebar-accent-foreground: 202 11% 40%;
+    --sidebar-border: 51 34% 85%;
+    --sidebar-ring: 150 88% 14%;
+  }
+
+  .dark {
+    --background: 206 13% 20%; /* canvas #2D353B */
+    --foreground: 41 32% 75%; /* ink #D3C6AA */
+    --card: 202 14% 16%; /* surface #232A2E */
+    --card-foreground: 41 32% 75%;
+    --popover: 202 14% 16%;
+    --popover-foreground: 41 32% 75%;
+    --primary: 47 100% 50%; /* Cobalt 2 gold #FFC600 */
+    --primary-foreground: 150 88% 14%; /* forest green on gold */
+    --secondary: 199 12% 27%; /* surface-raised #3D484D */
+    --secondary-foreground: 41 32% 75%;
+    --muted: 199 12% 27%;
+    --muted-foreground: 97 9% 66%; /* muted-strong #A6B0A0 (AA) */
+    --accent: 199 12% 27%;
+    --accent-foreground: 41 32% 75%;
+    --destructive: 9 89% 76%; /* error #F89A8A */
+    --destructive-foreground: 207 13% 13%; /* surface-deep on soft red (AA) */
+    --border: 199 12% 27%;
+    --input: 199 12% 27%;
+    --ring: 47 100% 50%;
+
+    --chart-1: 70 36% 51%;
+    --chart-2: 204 47% 59%;
+    --chart-3: 24 81% 61%;
+    --chart-4: 254 37% 71%;
+    --chart-5: 170 43% 55%;
+
+    --sidebar-background: 202 14% 16%;
+    --sidebar-foreground: 97 9% 66%;
+    --sidebar-primary: 47 100% 50%;
+    --sidebar-primary-foreground: 205 49% 19%;
+    --sidebar-accent: 199 12% 27%;
+    --sidebar-accent-foreground: 41 32% 75%;
+    --sidebar-border: 199 12% 27%;
+    --sidebar-ring: 47 100% 50%;
+  }
+}
+
+@layer base {
   html {
     font-family: "Bricolage Grotesque", sans-serif;
     font-optical-sizing: auto;
@@ -12,69 +89,62 @@
     font-variation-settings: "wdth" 100;
   }
 
+  /* One face throughout: Bricolage Grotesque. Headings carry weight, not a
+     different family. */
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: "Bricolage Grotesque", sans-serif;
     font-weight: 900;
+    font-style: normal;
   }
 
-  p > a {
-    color: #059669 !important;
-    text-decoration: none;
+  /* Subheadings step one tonal stop under ink (DESIGN.md). */
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: hsl(var(--muted-foreground));
   }
 }
 
+/* Selection colors from DESIGN.md tokens */
 ::-moz-selection {
-  background: #6ee7b7;
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
 }
 
 ::selection {
-  background: #6ee7b7;
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
 }
 
-/* Dark mode: darker selection background for readability with white text */
 .dark ::-moz-selection {
-  background: #047857;
-  color: #ffffff;
+  background: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
 }
 
 .dark ::selection {
-  background: #047857;
-  color: #ffffff;
+  background: hsl(var(--primary) / 0.25);
+  color: hsl(var(--foreground));
 }
 
 html {
   overscroll-behavior-y: none;
+  /* Clip horizontal overflow at the root so it doesn't establish a scroll
+     container on descendants (which would break position: sticky headers). */
+  overflow-x: hidden;
 }
 
-.sky-bg {
-  background-color: #e8f4fc;
-  background-image: url("/images/cloud-4a.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-.dark .sky-bg {
-  background-color: #050508;
-  background-image: url("/images/night-sky.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
-
-input:checked ~ .dot {
-  transform: translateX(100%);
-  background-color: #48bb78;
-}
-
+/* Theme-aware collapsible details (used in MDX notes) */
 details {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
   padding: 4px;
   width: 100%;
 }
@@ -82,11 +152,12 @@ details {
 summary {
   padding-top: 4px;
   padding-bottom: 4px;
-  border-bottom: 1px solid #f0f0f0;
-  background-color: #f7f7f7;
+  border-bottom: 1px solid hsl(var(--border));
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
 
   &:hover {
     cursor: pointer;
-    background-color: white;
+    background-color: hsl(var(--accent));
   }
 }

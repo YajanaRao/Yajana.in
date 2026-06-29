@@ -10,6 +10,7 @@ export const siteMetadata = {
     twitter: `yajanarao`,
     github: "yajanarao",
     medium: "@yajanarao",
+    substack: "https://yajanarao.substack.com/",
     discord: "https://discord.gg/qYZPqpQ",
     linkedin: "yajanarao",
   },

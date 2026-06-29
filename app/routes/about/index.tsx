@@ -62,7 +62,7 @@ function About() {
           </div>
         </div>
         <div className="lg:order-first lg:row-span-2">
-          <h1 className="text-4xl font-light font-freehand tracking-tight text-zinc-800 mb-0 sm:text-5xl dark:text-zinc-100">
+          <h1 className="text-4xl font-light font-freehand tracking-tight mb-0 sm:text-5xl">
             Hello,
           </h1>
           <p>I'm Yajana Rao.</p>
@@ -78,8 +78,8 @@ function About() {
             I am a Software engineer, I have been working on converting ideas
             into software application for almost{" "}
             {new Date().getFullYear() - 2021} + years. I am currently working at{" "}
-            <a href="https://humanisys.ai" target="_blank">
-              Humanisys Labs
+            <a href="https://interactlabs.ai" target="_blank">
+              Interact Labs
             </a>
             . I have completed B. Sc in Electronics and Communication.
           </p>
