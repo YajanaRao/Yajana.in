@@ -1,12 +1,7 @@
-import * as React from "react";
 import { Link } from "react-router";
 import { siteMetadata } from "../constants";
 
-type HeroProps = {
-  titleSlot?: React.ReactNode;
-};
-
-const Hero = ({ titleSlot }: HeroProps) => {
+const Hero = () => {
   const { author, title: siteTitle } = siteMetadata;
 
   return (
@@ -26,21 +21,10 @@ const Hero = ({ titleSlot }: HeroProps) => {
       </div>
 
       <div className="justify-center items-center flex h-[100px] flex-col">
-        <h1 className="font-black my-0 h-[58px] leading-none flex items-center">
-          {titleSlot === undefined ? (
-            <Link
-              className="text-5xl font-freehand font-black leading-none no-underline text-primary"
-              to={`/`}
-            >
-              {siteTitle}
-            </Link>
-          ) : (
-            titleSlot
-          )}
+        <h1 className="my-0 h-[58px] leading-none flex items-center text-5xl font-freehand text-primary">
+          {siteTitle}
         </h1>
-        <p className="text-foreground mb-0 mt-1">
-          {author.summary}
-        </p>
+        <p className="text-foreground mb-0 mt-1">{author.summary}</p>
       </div>
     </div>
   );

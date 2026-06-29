@@ -68,17 +68,22 @@ function About() {
           <p>I'm Yajana Rao.</p>
           <p>
             My aspiration is to bring wellbeing into people lives through
-            Technology and other means. I currently live in{" "}
-            <a href="https://maps.app.goo.gl/nbyDvrEhSXjcjFSL9" target="_blank">
+            Technology and other means. I currently live in
+            <a
+              href="https://maps.app.goo.gl/nbyDvrEhSXjcjFSL9"
+              target="_blank"
+              className="ml-1"
+            >
               Sagar
             </a>
             , Karnataka, India 🇮🇳 .
           </p>
           <p>
             I am a Software engineer, I have been working on converting ideas
-            into software application for almost{" "}
-            {new Date().getFullYear() - 2021} + years. I am currently working at{" "}
-            <a href="https://interactlabs.ai" target="_blank">
+            into software application for almost
+            <span className="ml-1">{new Date().getFullYear() - 2021}</span>+
+            years. I am currently working at
+            <a href="https://interactlabs.ai" target="_blank" className="ml-1">
               Interact Labs
             </a>
             . I have completed B. Sc in Electronics and Communication.
