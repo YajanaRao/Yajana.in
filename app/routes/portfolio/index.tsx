@@ -304,21 +304,21 @@ function StatCard({
 }) {
   const trendColor =
     trend === "up"
-      ? "text-emerald-600 dark:text-emerald-400"
+      ? "text-chart-1"
       : trend === "down"
-        ? "text-red-500 dark:text-red-400"
-        : "text-neutral-900 dark:text-neutral-50";
+        ? "text-destructive"
+        : "text-foreground";
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60">
-      <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+    <div className="rounded-xl bg-card p-4">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
       <p className={`mt-1 text-2xl font-bold tabular-nums ${trendColor}`}>
         {value}
       </p>
       {subtitle && (
-        <p className="mt-0.5 text-xs text-neutral-400 dark:text-neutral-500">
+        <p className="mt-0.5 text-xs text-muted-foreground/80">
           {subtitle}
         </p>
       )}
@@ -333,12 +333,12 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
   const progressBarWidth = `${progressClamped.toFixed(0)}%`;
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white/60 p-5 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60">
+    <div className="rounded-xl bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           FIRE Forecast
         </h3>
-        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">
+        <span className="text-[10px] text-muted-foreground/80">
           {FIRE_CONFIG.expectedAnnualReturn * 100}% return ·{" "}
           {FIRE_CONFIG.inflationRate * 100}% inflation · 4% rule ·{" "}
           {(FIRE_CONFIG.targetMonthlyExpense / 1000).toFixed(0)}K/mo lifestyle
@@ -349,16 +349,16 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
         {/* Progress bar */}
         <div>
           <div className="mb-1 flex items-baseline justify-between">
-            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            <span className="text-xs text-muted-foreground">
               Progress
             </span>
-            <span className="text-lg font-bold tabular-nums text-neutral-900 dark:text-neutral-50">
+            <span className="text-lg font-bold tabular-nums text-foreground">
               {fire.progressPct.toFixed(1)}%
             </span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-emerald-500 transition-all duration-500 dark:bg-emerald-400"
+              className="h-full rounded-full bg-chart-1 transition-all duration-500"
               style={{ width: progressBarWidth }}
             />
           </div>
@@ -367,21 +367,21 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
         {/* Metrics row */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
               Years to FIRE
             </p>
-            <p className="mt-0.5 text-lg font-bold tabular-nums text-neutral-900 dark:text-neutral-50">
+            <p className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
               {fire.yearsToFire !== null
                 ? `~${fire.yearsToFire.toFixed(1)}`
                 : "—"}
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
               Coast FIRE
             </p>
             <p
-              className={`mt-0.5 text-lg font-bold ${fire.coastFireAchieved ? "text-emerald-600 dark:text-emerald-400" : "text-neutral-900 dark:text-neutral-50"}`}
+              className={`mt-0.5 text-lg font-bold ${fire.coastFireAchieved ? "text-chart-1" : "text-foreground"}`}
             >
               {fire.coastFireAchieved
                 ? "Achieved"
@@ -391,14 +391,14 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
               Savings Rate
             </p>
             <p
               className={`mt-0.5 text-lg font-bold tabular-nums ${
                 fire.savingsRatePct !== null && fire.savingsRatePct >= 50
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-neutral-900 dark:text-neutral-50"
+                  ? "text-chart-1"
+                  : "text-foreground"
               }`}
             >
               {fire.savingsRatePct !== null
@@ -406,7 +406,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
                 : "—"}
             </p>
             {fire.latestExpenseMonth && (
-              <p className="text-[10px] text-neutral-400 dark:text-neutral-500">
+              <p className="text-[10px] text-muted-foreground/80">
                 {fire.latestExpenseMonth}
               </p>
             )}
@@ -427,7 +427,7 @@ export default function PortfolioPage() {
 
   if (!snapshots.length) {
     return (
-      <div className="py-16 text-center text-neutral-500">
+      <div className="py-16 text-center text-muted-foreground">
         No portfolio data available yet.
       </div>
     );
@@ -453,10 +453,10 @@ export default function PortfolioPage() {
     <div className="not-prose">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Portfolio
         </h1>
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="mt-1 text-sm text-muted-foreground">
           Last updated: {lastUpdated}
         </p>
       </div>
@@ -508,30 +508,30 @@ export default function PortfolioPage() {
 
       {/* Charts */}
       <div className="space-y-10">
-        <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+        <div className="rounded-xl bg-card p-4 sm:p-6">
           <CumulativeReturnsChart data={snapshots} />
         </div>
 
-        <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+        <div className="rounded-xl bg-card p-4 sm:p-6">
           <AssetClassPerformanceChart data={snapshots} />
         </div>
 
-        <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+        <div className="rounded-xl bg-card p-4 sm:p-6">
           <AssetAllocationChart snapshot={latest} />
         </div>
 
-        <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+        <div className="rounded-xl bg-card p-4 sm:p-6">
           <AssetReturnsChart snapshot={latest} />
         </div>
 
         {snapshots.length > 1 && (
-          <div className="rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm dark:border-neutral-700/50 dark:bg-neutral-800/60 sm:p-6">
+          <div className="rounded-xl bg-card p-4 sm:p-6">
             <GrowthChart data={snapshots} />
           </div>
         )}
 
         {/* Methodology note */}
-        <p className="text-xs text-neutral-400 dark:text-neutral-500">
+        <p className="text-xs text-muted-foreground/80">
           XIRR accounts for the timing and size of each investment. Nifty 50
           CAGR is the compound annual growth over the same date range. Alpha =
           XIRR − Nifty CAGR. The cumulative returns chart uses simple % change

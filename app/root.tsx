@@ -62,7 +62,7 @@ export default function App() {
         <meta property="og:url" content="https://yajana.in" />
         <meta property="og:type" content="website" />
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content={theme === "dark" ? "#2D353B" : "#FDF6E3"} />
         <link rel="apple-touch-icon" href="/profile-picture.jpg" />
         <link rel="manifest" href="/site.webmanifest" />
         <Meta />

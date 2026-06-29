@@ -345,7 +345,7 @@ export const projects = [
       {
         key: "npm",
         type: "npm",
-        text: "react-track-player",
+        text: "npm",
         link: "https://www.npmjs.com/package/react-track-player",
       },
       {

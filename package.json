@@ -2,7 +2,7 @@
   "name": "yajana-blog",
   "private": true,
   "sideEffects": false,
-  "description": "A starter for a blog powered by React Router and Markdown",
+  "description": "Personal blog of Yajana N Rao",
   "version": "0.1.0",
   "author": "Yajana N Rao <yajananrao@gmail.com>",
   "type": "module",

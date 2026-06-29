@@ -101,7 +101,7 @@ function DarkModeToggle() {
       />
       <button
         aria-label="Toggle Dark Mode"
-        className="border-[#ecc94b] inline-flex items-center justify-center overflow-hidden rounded-full border-2 p-1 transition focus:outline-none"
+        className="border-primary inline-flex items-center justify-center overflow-hidden rounded-full border-2 p-1 transition focus:outline-none"
       >
         {/* note that the duration is longer then the one on body, controlling the bg-color */}
         <div className="relative h-8 w-8">

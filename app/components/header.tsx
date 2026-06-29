@@ -1,84 +1,86 @@
 import React from "react";
 import { Link, useLocation } from "react-router";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
 import Hero from "./hero";
 import Switch from "./switch";
+import { siteMetadata } from "../constants";
 
-const HOME_HEADER_SCROLL_DISTANCE = 180;
+const BRAND = siteMetadata.title;
+const SCROLL_DISTANCE = 180;
+const brandClass =
+  "font-freehand font-black leading-none text-primary no-underline";
 
-type NameMetrics = {
-  fontSize: number;
-  left: number;
-  top: number;
-};
-
-type AnimatedNameStyle = NameMetrics & {
-  progress: number;
-};
+const MotionLink = motion.create(Link);
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function interpolate(start: number, end: number, progress: number) {
-  return start + (end - start) * progress;
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+const navLinkBase =
+  "relative text-lg no-underline transition-colors after:absolute after:bottom-[-3px] after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-[width] after:duration-300 hover:after:w-full";
+const navLinkInactive = "text-foreground hover:text-foreground";
+const navLinkActive = "text-primary";
+
+function navLinkClass(active: boolean) {
+  return `${navLinkBase} ${active ? navLinkActive : navLinkInactive}`;
 }
 
-const navLinkClassName = "text-lg no-underline hover:underline";
-
 type AppBarProps = {
-  isRoot: boolean;
   pathname: string;
-  targetNameRef?: React.Ref<HTMLSpanElement>;
+  titleNode: React.ReactNode;
 };
 
-function AppBar({ isRoot, pathname, targetNameRef }: AppBarProps) {
+function AppBar({ pathname, titleNode }: AppBarProps) {
+  const blogsActive = pathname === `/`;
+  const notesActive = pathname.startsWith(`/notes`);
+  const aboutActive = pathname.startsWith(`/about`);
+
   return (
     <div className="grid w-full grid-cols-1 sm:grid-cols-2">
       <div className="flex items-center justify-center sm:justify-start">
         <h2 className="justify-center flex sm:justify-start mb-0 mt-0 border-0">
-          {isRoot ? (
-            <span
-              ref={targetNameRef}
-              className="block text-3xl font-freehand font-black leading-none text-black opacity-0 dark:text-white"
-            >
-              Yajana Rao
-            </span>
-          ) : (
-            <Link
-              prefetch="intent"
-              className="text-3xl font-freehand text-black dark:text-white no-underline"
-              to={`/`}
-            >
-              Yajana Rao
-            </Link>
-          )}
+          {titleNode}
         </h2>
       </div>
       <div className="grid grid-cols-4 gap-4 mb-1 justify-center items-center">
-        <Link
-          prefetch="intent"
-          to={`/`}
-          aria-current={pathname === `/` ? "page" : undefined}
-          className={navLinkClassName}
-        >
-          Blogs
-        </Link>
-        <Link
-          prefetch="intent"
-          to={`/notes/`}
-          aria-current={pathname.startsWith(`/notes`) ? "page" : undefined}
-          className={navLinkClassName}
-        >
-          Notes
-        </Link>
-        <Link
-          prefetch="intent"
-          to={`/about`}
-          aria-current={pathname.startsWith(`/about`) ? "page" : undefined}
-          className={navLinkClassName}
-        >
-          About
-        </Link>
+        <div>
+          <Link
+            prefetch="intent"
+            to={`/`}
+            aria-current={blogsActive ? "page" : undefined}
+            className={navLinkClass(blogsActive)}
+          >
+            Blogs
+          </Link>
+        </div>
+        <div>
+          <Link
+            prefetch="intent"
+            to={`/now/`}
+            aria-current={notesActive ? "page" : undefined}
+            className={navLinkClass(notesActive)}
+          >
+            Now
+          </Link>
+        </div>
+        <div>
+          <Link
+            prefetch="intent"
+            to={`/about`}
+            aria-current={aboutActive ? "page" : undefined}
+            className={navLinkClass(aboutActive)}
+          >
+            About
+          </Link>
+        </div>
         <Switch />
       </div>
     </div>
@@ -86,184 +88,134 @@ function AppBar({ isRoot, pathname, targetNameRef }: AppBarProps) {
 }
 
 const Header = React.memo(function Header() {
-  const rootPath = `/`;
   const { pathname } = useLocation();
-  const isRoot = pathname === rootPath;
-  const sourceNameRef = React.useRef<HTMLAnchorElement>(null);
-  const targetNameRef = React.useRef<HTMLSpanElement>(null);
-  const sourceMetricsRef = React.useRef<NameMetrics | null>(null);
-  const [animatedNameStyle, setAnimatedNameStyle] =
-    React.useState<AnimatedNameStyle | null>(null);
-  const scrollProgress = animatedNameStyle?.progress ?? 0;
+  const isRoot = pathname === `/`;
 
-  React.useEffect(() => {
-    if (!isRoot) {
-      sourceMetricsRef.current = null;
-      setAnimatedNameStyle(null);
-      return;
-    }
+  const titleRef = React.useRef<HTMLAnchorElement>(null);
+  const heroAnchorRef = React.useRef<HTMLSpanElement>(null);
+  const deltaRef = React.useRef({ dx: 0, dy: 0, scale: 1 });
 
-    let frameId = 0;
+  const { scrollY } = useScroll();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const scale = useMotionValue(1);
+  const titleOpacity = useMotionValue(0);
+  const heroOpacity = useMotionValue(1);
+  const heroY = useMotionValue(0);
 
-    const resetSourceMetrics = () => {
-      sourceMetricsRef.current = null;
-    };
+  const applyScroll = React.useCallback(
+    (value: number) => {
+      const progress = clamp(value / SCROLL_DISTANCE, 0, 1);
+      const rest = 1 - progress;
+      const { dx, dy, scale: s } = deltaRef.current;
+      x.set(dx * rest);
+      y.set(dy * rest);
+      scale.set(1 + (s - 1) * rest);
+      heroOpacity.set(clamp(1 - value / (SCROLL_DISTANCE * 0.8), 0, 1));
+      heroY.set(-24 * progress);
+    },
+    [x, y, scale, heroOpacity, heroY]
+  );
 
-    const updateNamePosition = () => {
-      frameId = 0;
+  useMotionValueEvent(scrollY, "change", applyScroll);
 
-      if (!sourceNameRef.current || !targetNameRef.current) {
-        return;
-      }
+  useIsomorphicLayoutEffect(() => {
+    if (!isRoot) return;
 
-      const sourceRect = sourceNameRef.current.getBoundingClientRect();
-      const targetRect = targetNameRef.current.getBoundingClientRect();
-      const sourceFontSize = Number.parseFloat(
-        window.getComputedStyle(sourceNameRef.current).fontSize
+    const measure = () => {
+      const title = titleRef.current;
+      const anchor = heroAnchorRef.current;
+      if (!title || !anchor) return;
+
+      const t = title.getBoundingClientRect();
+      const a = anchor.getBoundingClientRect();
+      const dockFont = Number.parseFloat(
+        window.getComputedStyle(title).fontSize
       );
-      const targetFontSize = Number.parseFloat(
-        window.getComputedStyle(targetNameRef.current).fontSize
+      const targetFont = Number.parseFloat(
+        window.getComputedStyle(anchor).fontSize
       );
+      const dockedCx = t.left + t.width / 2 - x.get();
+      const dockedCy = t.top + t.height / 2 - y.get();
 
-      sourceMetricsRef.current ||= {
-        fontSize: sourceFontSize,
-        left: sourceRect.left,
-        top: sourceRect.top + window.scrollY,
+      deltaRef.current = {
+        dx: a.left + a.width / 2 - dockedCx,
+        dy: a.top + a.height / 2 - dockedCy,
+        scale: dockFont ? targetFont / dockFont : 1,
       };
 
-      const sourceMetrics = sourceMetricsRef.current;
-      const progress = clamp(window.scrollY / HOME_HEADER_SCROLL_DISTANCE, 0, 1);
+      applyScroll(window.scrollY);
+    };
 
-      setAnimatedNameStyle({
-        fontSize: interpolate(
-          sourceMetrics.fontSize,
-          targetFontSize,
-          progress
-        ),
-        left: interpolate(sourceMetrics.left, targetRect.left, progress),
-        progress,
-        top: interpolate(sourceMetrics.top, targetRect.top, progress),
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      measure();
+      raf2 = requestAnimationFrame(() => {
+        measure();
+        titleOpacity.set(1);
       });
-    };
-
-    const requestNamePositionUpdate = () => {
-      if (frameId) {
-        return;
-      }
-
-      frameId = window.requestAnimationFrame(updateNamePosition);
-    };
-
-    requestNamePositionUpdate();
-    window.addEventListener("scroll", requestNamePositionUpdate, {
-      passive: true,
     });
-    const handleResize = () => {
-      resetSourceMetrics();
-      requestNamePositionUpdate();
-    };
 
-    window.addEventListener("resize", handleResize);
-
-    document.fonts?.ready.then(() => {
-      resetSourceMetrics();
-      requestNamePositionUpdate();
-    });
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(document.body);
+    window.addEventListener("load", measure);
+    document.fonts?.ready.then(measure);
 
     return () => {
-      if (frameId) {
-        window.cancelAnimationFrame(frameId);
-      }
-      window.removeEventListener("scroll", requestNamePositionUpdate);
-      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      ro.disconnect();
+      window.removeEventListener("load", measure);
     };
-  }, [isRoot]);
+  }, [isRoot, applyScroll, x, y, titleOpacity]);
+
+  const titleNode = isRoot ? (
+    <MotionLink
+      ref={titleRef}
+      prefetch="intent"
+      to={`/`}
+      className={`block text-3xl ${brandClass}`}
+      style={{
+        x,
+        y,
+        scale,
+        opacity: titleOpacity,
+        transformOrigin: "center",
+        willChange: "transform",
+      }}
+    >
+      {BRAND}
+    </MotionLink>
+  ) : (
+    <Link prefetch="intent" to={`/`} className={`text-3xl ${brandClass}`}>
+      {BRAND}
+    </Link>
+  );
 
   if (!isRoot) {
     return (
-      <header
-        className="mb-1"
-        style={{
-          display: `flex`,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <AppBar isRoot={isRoot} pathname={pathname} />
+      <header className="mb-1 flex flex-col items-center justify-center not-prose">
+        <AppBar pathname={pathname} titleNode={titleNode} />
       </header>
     );
   }
 
-  const heroOpacity = clamp(1 - scrollProgress * 1.25, 0, 1);
-  const heroTranslateY = -24 * scrollProgress;
-
   return (
     <>
-      <header
-        className="fixed left-1/2 top-0 z-30 w-full max-w-screen-md -translate-x-1/2 px-8 pt-4 pb-0 backdrop-blur-sm"
-        style={{
-          display: `flex`,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <AppBar
-          isRoot={isRoot}
-          pathname={pathname}
-          targetNameRef={targetNameRef}
-        />
+      <header className="sticky top-0 z-30 mb-1 flex w-full flex-col items-center justify-center bg-background/95 pt-4 pb-0 not-prose">
+        <AppBar pathname={pathname} titleNode={titleNode} />
       </header>
-      <header
-        aria-hidden="true"
-        className="invisible mb-1 w-full px-8 pt-4 pb-0"
-        style={{
-          display: `flex`,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <AppBar isRoot={isRoot} pathname={pathname} />
-      </header>
-      {animatedNameStyle ? (
-        <Link
-          prefetch="intent"
-          className="fixed z-40 font-freehand font-black leading-none text-black no-underline dark:text-white"
-          style={{
-            fontSize: animatedNameStyle.fontSize,
-            left: animatedNameStyle.left,
-            top: animatedNameStyle.top,
-            willChange: "font-size, left, top",
-          }}
-          to={`/`}
-        >
-          Yajana Rao
-        </Link>
-      ) : null}
-      <div
-        aria-hidden={scrollProgress === 1}
-        className={scrollProgress === 1 ? "pointer-events-none" : ""}
-        style={{
-          opacity: heroOpacity,
-          transform: `translateY(${heroTranslateY}px)`,
-        }}
-      >
+      <motion.div style={{ opacity: heroOpacity, y: heroY }}>
         <Hero
           titleSlot={
-            <Link
-              ref={sourceNameRef}
-              className={`text-5xl font-freehand font-black leading-none no-underline ${
-                animatedNameStyle ? "opacity-0" : ""
-              }`}
-              to={`/`}
-            >
-              Yajana Rao
-            </Link>
+            <span
+              ref={heroAnchorRef}
+              aria-hidden="true"
+              className="block h-[58px] text-5xl leading-none"
+            />
           }
         />
-      </div>
+      </motion.div>
     </>
   );
 });

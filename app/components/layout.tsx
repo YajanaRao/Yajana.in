@@ -1,14 +1,11 @@
 import React from "react";
 import Footer from "./footer";
 import Header from "./header";
-import SkyBirds from "./sky-birds";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="sky-bg dark:bg-[#16181b] min-h-screen overflow-x-hidden">
-      <SkyBirds />
+    <div className="bg-background min-h-screen">
       <div
-        data-sky-container
         className="container max-w-screen-md mx-auto p-8 prose dark:prose-invert relative z-10"
       >
         <Header />

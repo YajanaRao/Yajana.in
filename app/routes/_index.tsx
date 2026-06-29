@@ -109,7 +109,7 @@ const BlogIndex = () => {
             onChange={(event) =>
               setQuery(event.currentTarget.value?.toLowerCase())
             }
-            className="shadow dark:bg-[#282c35] border-[#ecc94b] appearance-none w-full py-4 pl-7 pr-3 leading-tight w-full rounded-full border focus:ring-[#ecc94b]"
+            className="bg-background text-foreground border-border placeholder:text-muted-foreground appearance-none w-full py-4 pl-7 pr-3 leading-tight rounded-full border focus:ring-primary"
           />
         </div>
       </form>
@@ -120,8 +120,8 @@ const BlogIndex = () => {
               key={category}
               className={
                 query === category
-                  ? "m-1 px-4 py-1 rounded-full bg-[#ecc94b] text-[#000000]"
-                  : "m-1 px-4 py-1 rounded-full bg-white dark:bg-[#2e3039] text-inverse"
+                  ? "m-1 px-4 py-1 rounded-full bg-primary text-primary-foreground"
+                  : "m-1 px-4 py-1 rounded-full bg-secondary text-secondary-foreground"
               }
               type="button"
               onClick={() => {
@@ -136,14 +136,14 @@ const BlogIndex = () => {
       {posts.map((node) => {
         const { title, date, description } = node.frontmatter;
         return (
-          <article key={node.slug} className="mb-8">
+          <article key={node.slug} className="p-6 rounded-lg mb-6">
             <header>
               <h2 className="text-2xl mb-0 not-prose">
                 <Link prefetch="intent" to={`/${node.slug}`}>
                   {title}
                 </Link>
               </h2>
-              <small className="text-gray-500 dark:text-gray-300">
+              <small className="text-muted-foreground">
                 {dayjs(date).format("MMMM D, YYYY")}
               </small>
             </header>
@@ -152,7 +152,7 @@ const BlogIndex = () => {
                 dangerouslySetInnerHTML={{
                   __html: description,
                 }}
-                className="text-black dark:text-white mt-0 mb-0"
+                className="mt-2 mb-0"
               />
             </section>
           </article>

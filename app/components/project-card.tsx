@@ -25,8 +25,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
     if (source === "appstore") return <Appstore />;
   };
   return (
-    <div className="lg:w-1/2 p-1">
-      <div className="rounded-lg overflow-hidden shadow-lg bg-white dark:bg-[#1e1e1e]">
+    <div className="lg:w-1/2 p-1 not-prose">
+      <div className="rounded-lg overflow-hidden bg-card">
         {project.cover ? (
           <img
             className="w-full h-64 mt-0 mb-4"
@@ -46,9 +46,9 @@ const ProjectCard = ({ project }: { project: Project }) => {
         )}
         <div className="px-6">
           <a target="_blank" href={project.link}>
-            <div className="font-bold text-xl mb-2">{project.title}</div>
+            <h3 className="font-bold text-xl mb-2">{project.title}</h3>
           </a>
-          <p className="text-gray-700 dark:text-white text-base">
+          <p className="text-muted-foreground text-base">
             {project.description}
           </p>
           {project?.source?.length && (
@@ -61,7 +61,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
                   href={source.link}
                 >
                   {renderSourceIcon(source.type)}
-                  <span className="text-zinc-600 dark:text-zinc-400 ml-2">
+                  <span className="text-muted-foreground ml-2">
                     {source.text}
                   </span>
                 </a>
