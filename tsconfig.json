@@ -1,5 +1,12 @@
 {
-  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", ".react-router/types/**/*"],
+  "include": [
+    "env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".react-router/types/**/*",
+    "app/routes/blog.mental-caching-and-mindfulness/route.mdx"
+  ],
+  "exclude": ["supabase/functions/**"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,

@@ -3,19 +3,39 @@ import * as React from "react";
 
 import { Frontmatter } from "./posts";
 
+const SITE_URL = "https://yajana.in";
+const AUTHOR = "Yajana N Rao";
+
 export function getMetaTags(frontmatter: Frontmatter) {
-  return [
-    { title: frontmatter.title },
-    { name: "description", content: frontmatter.description },
-    {
-      content: frontmatter.title,
-      property: "og:title",
-    },
-    {
-      content: frontmatter.description,
-      name: "og:description",
-    },
-  ];
+  return ({ location }: { location: { pathname: string } }) => {
+    const url = `${SITE_URL}${location.pathname}`;
+    return [
+      { title: frontmatter.title },
+      { name: "description", content: frontmatter.description },
+      { property: "og:title", content: frontmatter.title },
+      { name: "og:description", content: frontmatter.description },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: url },
+      { tagName: "link", rel: "canonical", href: url },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: frontmatter.title,
+          description: frontmatter.description,
+          datePublished: frontmatter.date,
+          dateModified: frontmatter.date,
+          ...(frontmatter.categories
+            ? { articleSection: frontmatter.categories }
+            : {}),
+          author: { "@type": "Person", name: AUTHOR, url: SITE_URL },
+          publisher: { "@type": "Person", name: AUTHOR, url: SITE_URL },
+          mainEntityOfPage: { "@type": "WebPage", "@id": url },
+          url,
+        },
+      },
+    ];
+  };
 }
 
 export function useUpdateQueryStringValueWithoutNavigation(
@@ -35,7 +55,6 @@ export function useUpdateQueryStringValueWithoutNavigation(
     const newUrl = [window.location.pathname, currentSearchParams.toString()]
       .filter(Boolean)
       .join("?");
-    // alright, let's talk about this...
     // Normally with remix, you'd update the params via useSearchParams from react-router-dom
     // and updating the search params will trigger the search to update for you.
     // However, it also triggers a navigation to the new url, which will trigger

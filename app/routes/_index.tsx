@@ -48,6 +48,44 @@ export const meta: MetaFunction<typeof loader> = (args) => {
       content: "image/jpeg",
       property: "og:image:type",
     },
+    { tagName: "link", rel: "canonical", href: siteUrl || "https://yajana.in" },
+    {
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Yajana N Rao",
+        alternateName: "Yajana's Blog",
+        url: "https://yajana.in",
+        description:
+          "Yajana Rao's blog on Programming, Spirituality and Books",
+        author: { "@type": "Person", name: "Yajana N Rao" },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: "https://yajana.in/?q={search_term_string}",
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+    },
+    {
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Yajana N Rao",
+        url: "https://yajana.in",
+        image: "https://yajana.in/profile-picture.jpg",
+        jobTitle: "Software Engineer",
+        sameAs: [
+          "https://github.com/yajanarao",
+          "https://twitter.com/yajanarao",
+          "https://www.linkedin.com/in/yajanarao",
+          "https://medium.com/@yajanarao",
+          "https://yajanarao.substack.com/",
+        ],
+      },
+    },
   ];
 };
 

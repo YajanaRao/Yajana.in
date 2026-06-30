@@ -9,10 +9,11 @@ export const meta: MetaFunction<typeof loader> = (args) => {
   let { siteUrl } = args.data || {};
   return [
     {
-      title: "Yajana's Blog",
+      title: "About — Yajana N Rao",
     },
     {
-      content: "Yajana Rao's blog on Programming, Spirituality and Books",
+      content:
+        "About Yajana N Rao — software engineer, and the projects, writing and ideas behind this site.",
       name: "description",
     },
     {
