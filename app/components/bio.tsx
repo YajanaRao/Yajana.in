@@ -1,35 +1,24 @@
-/**
- * Bio component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.org/docs/use-static-query/
- */
-
 import React from "react";
 import { siteMetadata } from "../constants";
 
 const Bio = () => {
   const { author, social } = siteMetadata;
   return (
-    <div className="mb-2 flex items-center flex-row">
+    <div className="mb-4 flex flex-row items-center gap-4">
       <img
         src="/profile-picture.jpg"
         alt={author.name}
-        className="mr-4 mb-1"
-        style={{
-          minWidth: 50,
-          borderRadius: `50%`,
-        }}
-        width={"50"}
-        height={"50"}
+        className="my-0 h-[50px] w-[50px] shrink-0 rounded-full object-cover"
+        width={50}
+        height={50}
       />
-      <p className="text-foreground">
+      <p className="my-0 text-ink-primary">
         Personal blog by{" "}
         <a href={`https://twitter.com/${social.twitter}`}>
           <strong>{author.name}</strong>
         </a>
         <br />
-        {author.summary}
+        <span className="text-ink-secondary">{author.summary}</span>
       </p>
     </div>
   );

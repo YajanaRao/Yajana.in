@@ -1,135 +1,259 @@
-@import url("https://fonts.googleapis.com/css2?family=Freehand&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------------------------------------------
+   Forest Flower — semantic token layer (see DESIGN.md)
+   Elevation · Ink · Attention · Status · State. Light and dark are one system:
+   the same token names, only the resolved values flip.
+
+   Naming note: shadcn's `--accent` means "subtle hover surface", which collides
+   with DESIGN.md's `accent.*` (= attention). We keep shadcn's meaning for
+   `--accent` and expose DESIGN.md's attention channels as `--primary` (gold,
+   accent.action) and `--resting` (green, accent.resting).
+
+   Three mappings deliberately deviate from DESIGN.md's literal text in order to
+   satisfy its own rule — "validate all color pairs against WCAG AA". Each is
+   marked [AA] with the measured ratio.
+
+   IMPORTANT: the shadcn aliases below are `var()` indirections onto the surface
+   and ink tokens, so `.dark` only needs to restate the primitives. This works
+   because custom properties are substituted at computed-value time, and the
+   theme class lands on <html> — the same element as :root (see root.tsx). If
+   the theme class ever moves to <body> or a wrapper div, every alias would
+   compute against the light primitives and dark mode would silently break.
+   --------------------------------------------------------------------------- */
+
 @layer base {
   :root {
-    --background: 44 87% 94%; /* canvas #FDF6E3 */
-    --foreground: 202 11% 40%; /* ink #5C6A72 */
-    --card: 51 55% 90%; /* surface #F4F0D9 */
-    --card-foreground: 202 11% 40%;
-    --popover: 51 55% 90%;
-    --popover-foreground: 202 11% 40%;
-    --primary: 47 100% 22%; /* deep gold #6F5800 (accent.action light) */
-    --primary-foreground: 44 87% 94%; /* cream #FDF6E3 (ink.on_action light) */
-    --secondary: 51 34% 85%; /* surface-raised #E6E2CC */
-    --secondary-foreground: 202 11% 40%;
-    --muted: 51 34% 85%;
-    --muted-foreground: 106 8% 39%; /* muted-strong #606D5C (AA) */
-    --accent: 51 34% 85%;
-    --accent-foreground: 202 11% 40%;
-    --destructive: 3 63% 36%; /* error #942822 */
-    --destructive-foreground: 44 87% 94%; /* cream on deep red (AA) */
-    --border: 51 34% 85%;
-    --input: 51 34% 85%;
-    --ring: 47 100% 22%; /* deep gold #6F5800 */
-    --radius: 0.375rem; /* rounded.md 6px */
+    /* Typography roles ---------------------------------------------------- */
+    --font-heading: "Fraunces", "Newsreader", Georgia, serif;
+    --font-content: "Fraunces", "Newsreader", "Source Serif 4", Georgia,
+      Cambria, "Times New Roman", serif;
+    --font-ui: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans",
+      "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-code: "JetBrains Mono", "Victor Mono", "Operator Mono", "Fira Code",
+      ui-monospace, Menlo, Monaco, monospace;
+    /* Wordmark only — the single handmade mark. Never body, heading, or chrome. */
+    --font-wordmark: "Freehand", "Brush Script MT", cursive;
 
-    --chart-1: 73 84% 27%; /* syntax-keyword green */
-    --chart-2: 212 68% 39%; /* syntax-type blue */
-    --chart-3: 22 80% 41%; /* syntax-function orange */
-    --chart-4: 259 42% 43%; /* syntax-regex purple */
-    --chart-5: 175 57% 33%; /* syntax-string cyan */
+    /* Icons drawn as masks so they inherit a token colour rather than shipping
+       a fill. Used for chrome the browser would otherwise style itself. */
+    --icon-clear: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 4 L12 12 M12 4 L4 12' stroke='black' stroke-width='2' stroke-linecap='round'/></svg>");
 
-    --sidebar-background: 51 55% 90%;
-    --sidebar-foreground: 106 8% 39%; /* muted-strong */
-    --sidebar-primary: 47 100% 22%; /* deep gold #6F5800 */
-    --sidebar-primary-foreground: 44 87% 94%;
-    --sidebar-accent: 51 34% 85%;
-    --sidebar-accent-foreground: 202 11% 40%;
-    --sidebar-border: 51 34% 85%;
-    --sidebar-ring: 47 100% 22%; /* deep gold #6F5800 */
+    /* Shape — two values only: square and circular ------------------------
+       Rounding was removed because warmth is already carried by colour and
+       type (cream/forest surfaces, gold, Fraunces, the script wordmark). A
+       radius would be a second mechanism for a job already done — the same
+       argument that bans shadows. 3px was the worst of both: too small to
+       read as soft, too large to read as deliberate geometry.
+
+       sm/md/lg are retained as aliases so existing markup keeps working, but
+       all three resolve to 0. There is no partial rounding in this system;
+       prefer `rounded-none` in new code, and `rounded-full` only for things
+       that are actually circular (avatar, toggle knob). */
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+    --radius: 0px;
+
+    /* Elevation (`--surface-*`) and Ink (`--ink-*`) are GENERATED into
+       tokens.css from design.md. Do not redefine them here — change the hex in
+       design.md and run `bun run tokens`. Note light `ink.comment` converges
+       with `ink.secondary`: on a canvas this bright, no tone is both AA against
+       recessed1 and clearly quieter, so light has three readable tiers. */
+
+    /* shadcn surface aliases --------------------------------------------- */
+    --background: var(--surface-base);
+    --foreground: var(--ink-primary);
+
+    /* [AA] 1 — DESIGN.md maps card → surface.raised, but ink.primary on light
+       raised is 4.29:1, below AA for card body copy. recessed1 gives 4.87 light
+       / 8.62 dark and still reads as its own plane. raised is kept for hover. */
+    --card: var(--surface-recessed1);
+    --card-foreground: var(--ink-primary);
+
+    --popover: var(--surface-overlay);
+    --popover-foreground: var(--ink-primary);
+
+    --muted: var(--surface-raised);
+    /* [AA] 2 — DESIGN.md assigns captions/bylines to ink.comment and claims AA,
+       but light ink.comment is 3.08 on base / 2.55 on raised. Per the doc's own
+       fallback ("if you need a quiet tone on text a reader actually reads, use
+       ink.secondary"), muted text resolves to ink.secondary. --ink-comment
+       stays defined above for genuinely decorative marks. */
+    --muted-foreground: var(--ink-secondary);
+
+    --accent: var(--surface-raised); /* = state.hover */
+    --accent-foreground: var(--ink-primary);
+
+    /* [AA] 3 — surface.recessed2 vs base is only 1.11:1, invisible as a rule.
+       Fine for decorative dividers (WCAG-exempt); interactive controls must not
+       depend on it, so Input carries a recessed1 fill + gold focus ring. */
+    --border: var(--surface-recessed2);
+    --input: var(--ink-faint);
+    --ring: var(--primary);
+
+    /* Attention — gold acts, green rests -------------------------------- */
+    --primary: var(--accent-action);
+    --primary-foreground: var(--ink-on-action);
+    --primary-container: var(--accent-action-container);
+
+    --resting: var(--accent-resting);
+    --resting-container: var(--accent-resting-container);
+
+    --secondary: var(--resting-container);
+    --secondary-foreground: var(--resting); /* 4.56 on container */
+
+    /* Status — outcome / condition ------------------------------------- */
+    --destructive: var(--status-danger);
+    --destructive-foreground: var(--ink-on-action);
+    --warning: var(--status-warning);
+    --success: var(--status-success);
+    --info: var(--status-info);
+
+    /* State — derived washes; the blends are computed in the generator -- */
+    --selection: var(--state-selection);
+    --match-all: var(--state-match-all);
+
+    /* Charts alias the code palette rather than duplicating it, so the
+       syntax hues are first-class tokens instead of chart-only literals. */
+    --chart-1: var(--code-keyword);
+    --chart-2: var(--code-type);
+    --chart-3: var(--code-function);
+    --chart-4: var(--code-regex);
+    --chart-5: var(--code-string);
   }
 
-  .dark {
-    --background: 206 13% 20%; /* canvas #2D353B */
-    --foreground: 41 32% 75%; /* ink #D3C6AA */
-    --card: 202 14% 16%; /* surface #232A2E */
-    --card-foreground: 41 32% 75%;
-    --popover: 202 14% 16%;
-    --popover-foreground: 41 32% 75%;
-    --primary: 47 100% 50%; /* Cobalt 2 gold #FFC600 */
-    --primary-foreground: 150 88% 14%; /* forest green on gold */
-    --secondary: 199 12% 27%; /* surface-raised #3D484D */
-    --secondary-foreground: 41 32% 75%;
-    --muted: 199 12% 27%;
-    --muted-foreground: 97 9% 66%; /* muted-strong #A6B0A0 (AA) */
-    --accent: 199 12% 27%;
-    --accent-foreground: 41 32% 75%;
-    --destructive: 9 89% 76%; /* error #F89A8A */
-    --destructive-foreground: 207 13% 13%; /* surface-deep on soft red (AA) */
-    --border: 199 12% 27%;
-    --input: 199 12% 27%;
-    --ring: 47 100% 50%;
-
-    --chart-1: 70 36% 51%;
-    --chart-2: 204 47% 59%;
-    --chart-3: 24 81% 61%;
-    --chart-4: 254 37% 71%;
-    --chart-5: 170 43% 55%;
-
-    --sidebar-background: 202 14% 16%;
-    --sidebar-foreground: 97 9% 66%;
-    --sidebar-primary: 47 100% 50%;
-    --sidebar-primary-foreground: 205 49% 19%;
-    --sidebar-accent: 199 12% 27%;
-    --sidebar-accent-foreground: 41 32% 75%;
-    --sidebar-border: 199 12% 27%;
-    --sidebar-ring: 47 100% 50%;
-  }
+  /* No `.dark` block here: every alias above is a var() indirection onto a
+     generated primitive, and tokens.css restates those primitives under .dark.
+     Adding a dark override here would reintroduce exactly the drift the
+     generator exists to prevent. */
 }
+
+/* ---------------------------------------------------------------------------
+   Type roles. Chrome is the system-UI stack (renders instantly, no web font);
+   the reading surface is Fraunces.
+   --------------------------------------------------------------------------- */
 
 @layer base {
   html {
-    font-family: "Bricolage Grotesque", sans-serif;
+    font-family: var(--font-ui);
     font-optical-sizing: auto;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
   }
 
-  /* One face throughout: Bricolage Grotesque. Headings carry weight, not a
-     different family. */
+  /* Headlines are the "action" pole of the weight duality: italic + heavy. */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: "Bricolage Grotesque", sans-serif;
-    font-weight: 900;
-    font-style: normal;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-style: italic;
+    font-optical-sizing: auto;
   }
 
-  /* Subheadings step one tonal stop under ink (DESIGN.md). */
+  /* Hierarchy from tone, never hue: h1/h2 full ink, h3–h6 one step down. */
   h3,
   h4,
   h5,
   h6 {
-    color: hsl(var(--muted-foreground));
+    color: hsl(var(--ink-secondary));
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-code);
   }
 }
 
-/* Selection colors from DESIGN.md tokens */
-::-moz-selection {
-  background: hsl(var(--primary) / 0.2);
-  color: hsl(var(--foreground));
+/* Unlayered so it wins over @tailwindcss/typography's .prose component rules
+   (font-size/line-height), which sit in the components layer above base.
+   Scoped to copy elements, not the .prose container itself — that div also
+   wraps the header/nav/search/pills (see layout.tsx), which must stay on
+   --font-ui. */
+.prose
+  :where(p, li, blockquote, td, th, dd):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  ) {
+  font-family: var(--font-content);
+  font-size: 19px;
+  line-height: 1.7;
 }
+
+/* Code keeps the mono stack even inside prose. */
+.prose :where(code, pre) {
+  font-family: var(--font-code);
+  font-size: 14px;
+  line-height: 1.65;
+  letter-spacing: 0.5px;
+}
+
+/* The wordmark — the system's one handmade mark: a gold script signature,
+   used for the name and nowhere else. Gold, not the resting green: DESIGN.md
+   names the wordmark a *gold* signature and one of the three carriers of
+   "playful" alongside the accent and Fraunces' italics. The name is the warm,
+   celebratory heart of a personal masthead — the resting green makes it recede
+   into the canvas exactly where the site should feel most like a person made
+   it. "Gold = act here" governs *chrome*; a once-per-page cursive masthead is
+   never mistaken for a button, so spending gold here concentrates it on the
+   single most identifying mark rather than diluting it. 6.34:1 light /
+   7.92:1 dark. Unlayered because it sits on an h1 inside .prose, whose
+   `:where(h1)` rules set font-family/style/weight and would otherwise win over
+   utility classes. */
+.wordmark {
+  font-family: var(--font-wordmark);
+  font-style: normal;
+  font-weight: 400;
+  color: hsl(var(--primary));
+}
+
+/* The native search-clear glyph renders in the OS accent — a saturated blue,
+   the one hue this palette uses nowhere in chrome. Replace it with a masked ×
+   tinted to ink.secondary so it recedes like the rest of the chrome. Plain CSS
+   rather than a Tailwind arbitrary variant: the data-URI mask doesn't survive
+   Tailwind's arbitrary-value parser (it silently drops the declaration). */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0.875rem;
+  width: 0.875rem;
+  cursor: pointer;
+  background-color: hsl(var(--ink-secondary));
+  -webkit-mask: var(--icon-clear) center / contain no-repeat;
+  mask: var(--icon-clear) center / contain no-repeat;
+}
+
+input[type="search"]:hover::-webkit-search-cancel-button {
+  background-color: hsl(var(--ink-primary));
+}
+
+/* Small-caps eyebrow — the accent's one content touchpoint. */
+.kicker {
+  color: hsl(var(--primary));
+  font-family: var(--font-ui);
+  font-variant-caps: all-small-caps;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* ---------------------------------------------------------------------------
+   Selection is a passive state, so it takes the derived resting-green wash —
+   never the gold action accent (DESIGN.md, "Selected text").
+   --------------------------------------------------------------------------- */
 
 ::selection {
-  background: hsl(var(--primary) / 0.2);
-  color: hsl(var(--foreground));
+  background: hsl(var(--selection));
+  color: hsl(var(--ink-primary));
 }
 
-.dark ::-moz-selection {
-  background: hsl(var(--primary) / 0.25);
-  color: hsl(var(--foreground));
-}
-
-.dark ::selection {
-  background: hsl(var(--primary) / 0.25);
-  color: hsl(var(--foreground));
+::-moz-selection {
+  background: hsl(var(--selection));
+  color: hsl(var(--ink-primary));
 }
 
 html {
@@ -144,20 +268,22 @@ details {
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
-  border-radius: var(--radius);
-  padding: 4px;
+  border-radius: var(--radius-md);
+  padding: 8px;
   width: 100%;
 }
 
 summary {
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid hsl(var(--border));
   background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
+  border-radius: var(--radius-sm);
+}
 
-  &:hover {
-    cursor: pointer;
-    background-color: hsl(var(--accent));
-  }
+summary:hover {
+  cursor: pointer;
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }

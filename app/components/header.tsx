@@ -8,12 +8,13 @@ import {
 } from "framer-motion";
 import Hero from "./hero";
 import Switch from "./switch";
+import { cn } from "@/lib/cn";
 import { siteMetadata } from "../constants";
 
 const BRAND = siteMetadata.title;
 const SCROLL_DISTANCE = 180;
-const brandClass =
-  "font-freehand font-black leading-none text-primary no-underline";
+
+const brandClass = "wordmark not-prose leading-none no-underline";
 
 const MotionLink = motion.create(Link);
 
@@ -22,13 +23,32 @@ function clamp(value: number, min: number, max: number) {
 }
 
 const navLinkBase =
-  "relative text-lg no-underline transition-colors after:absolute after:bottom-[-3px] after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-[width] after:duration-300 hover:after:w-full";
-const navLinkInactive = "text-foreground hover:text-foreground";
-const navLinkActive = "text-primary";
+  "relative font-ui text-lg no-underline transition-colors duration-action ease-action " +
+  "after:absolute after:bottom-[-3px] after:left-0 after:h-[2px] after:w-0 after:bg-current " +
+  "after:transition-[width] after:duration-action after:ease-action hover:after:w-full " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " +
+  "focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 function navLinkClass(active: boolean) {
-  return `${navLinkBase} ${active ? navLinkActive : navLinkInactive}`;
+  return cn(
+    navLinkBase,
+    active ? "text-primary" : "text-ink-secondary hover:text-ink-primary"
+  );
 }
+
+export const NAV_ITEMS = [
+  { to: "/", label: "Blogs", isActive: (p: string) => p === "/" },
+  {
+    to: "/now/",
+    label: "Now",
+    isActive: (p: string) => p.startsWith("/notes"),
+  },
+  {
+    to: "/about",
+    label: "About",
+    isActive: (p: string) => p.startsWith("/about"),
+  },
+] as const;
 
 type AppBarProps = {
   pathname: string;
@@ -36,50 +56,31 @@ type AppBarProps = {
 };
 
 function AppBar({ pathname, titleNode }: AppBarProps) {
-  const blogsActive = pathname === `/`;
-  const notesActive = pathname.startsWith(`/notes`);
-  const aboutActive = pathname.startsWith(`/about`);
-
   return (
-    <div className="grid w-full grid-cols-1 sm:grid-cols-2">
+    <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
       <div className="flex items-center justify-center sm:justify-start">
-        <h2 className="justify-center flex sm:justify-start mb-0 mt-0 border-0">
-          {titleNode}
-        </h2>
+        <h2 className="m-0 flex border-0 not-prose">{titleNode}</h2>
       </div>
-      <div className="grid grid-cols-4 gap-4 mb-1 justify-center items-center">
-        <div>
-          <Link
-            prefetch="intent"
-            to={`/`}
-            aria-current={blogsActive ? "page" : undefined}
-            className={navLinkClass(blogsActive)}
-          >
-            Blogs
-          </Link>
-        </div>
-        <div>
-          <Link
-            prefetch="intent"
-            to={`/now/`}
-            aria-current={notesActive ? "page" : undefined}
-            className={navLinkClass(notesActive)}
-          >
-            Now
-          </Link>
-        </div>
-        <div>
-          <Link
-            prefetch="intent"
-            to={`/about`}
-            aria-current={aboutActive ? "page" : undefined}
-            className={navLinkClass(aboutActive)}
-          >
-            About
-          </Link>
-        </div>
+      <nav
+        aria-label="Main"
+        className="flex items-center justify-center gap-8 sm:justify-end"
+      >
+        {NAV_ITEMS.map((item) => {
+          const active = item.isActive(pathname);
+          return (
+            <Link
+              key={item.to}
+              prefetch="intent"
+              to={item.to}
+              aria-current={active ? "page" : undefined}
+              className={navLinkClass(active)}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
         <Switch />
-      </div>
+      </nav>
     </div>
   );
 }
@@ -90,14 +91,14 @@ const Header = React.memo(function Header() {
 
   if (!isRoot) {
     return (
-      <header className="mb-1 flex flex-col items-center justify-center not-prose">
+      <header className="flex flex-col items-center justify-center not-prose">
         <AppBar
           pathname={pathname}
           titleNode={
             <Link
               prefetch="intent"
               to={`/`}
-              className={`text-3xl ${brandClass}`}
+              className={cn("text-3xl", brandClass)}
             >
               {BRAND}
             </Link>
@@ -137,14 +138,14 @@ function RootHeader({ pathname }: { pathname: string }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 mb-1 flex w-full flex-col items-center justify-center bg-background/95 pt-4 pb-0 not-prose">
+      <header className="sticky top-0 z-30 flex w-full flex-col items-center justify-center bg-background/95 pb-2 pt-4 not-prose">
         <AppBar
           pathname={pathname}
           titleNode={
             <MotionLink
               prefetch="intent"
               to={`/`}
-              className={`block text-3xl ${brandClass}`}
+              className={cn("block text-3xl", brandClass)}
               style={{ opacity: navTitleOpacity, y: navTitleY }}
             >
               {BRAND}

@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData } from "react-router";
+import { useFetcher, useRouteLoaderData } from "react-router";
 
 export function MoonIcon() {
   return (
@@ -12,7 +12,7 @@ export function MoonIcon() {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M14.228 7.9439C10.5176 8.82869 7.75757 12.1054 7.75757 15.9987C7.75757 20.5716 11.5618 24.2919 16.2367 24.2919C19.2323 24.2919 21.9337 22.7699 23.4514 20.3585C23.2779 20.3676 23.1033 20.3722 22.9287 20.3722C17.7826 20.3722 13.5951 16.2772 13.5951 11.2435C13.5951 10.1032 13.8108 8.98914 14.228 7.9439M16.2367 26.4993C10.3171 26.4993 5.50037 21.7899 5.50037 15.9987C5.50037 10.2109 10.3171 5.49927 16.2367 5.49927C16.6598 5.49927 17.0501 5.72963 17.2435 6.09753C17.438 6.46428 17.4087 6.90668 17.1638 7.24363C16.3059 8.42297 15.8535 9.80631 15.8535 11.2435C15.8535 15.06 19.0272 18.1637 22.9287 18.1637C23.6483 18.1637 24.3573 18.0582 25.0359 17.8531C25.4378 17.7293 25.8785 17.8359 26.1738 18.1304C26.4715 18.425 26.5758 18.8559 26.4446 19.2467C25.0019 23.5847 20.9 26.4993 16.2367 26.4993"
-        fill="white"
+        fill="currentColor"
       />
     </svg>
   );
@@ -86,11 +86,17 @@ export function SunIcon() {
 
 const iconTransformOrigin = { transformOrigin: "50% 100px" };
 function DarkModeToggle() {
-  const theme = useLoaderData<string>();
+  // Read the root loader explicitly (not useLoaderData) so the toggle keeps
+  // working when rendered outside the root's tree — e.g. inside the About
+  // page's own overlay header, where useLoaderData would return that route's
+  // data instead of the theme string.
+  const theme = (useRouteLoaderData("root") as string | undefined) ?? "light";
   const fetcher = useFetcher();
 
+  // A theme switch is an untriggered-feeling state change, so it takes the
+  // resting register (400ms) rather than the 130ms action register.
   const iconSpanClassName =
-    "absolute inset-0 transform transition-transform duration-700 motion-reduce:duration-[0s]";
+    "absolute inset-0 transform transition-transform duration-resting ease-out motion-reduce:duration-[0s]";
 
   return (
     <fetcher.Form method="post">
@@ -99,11 +105,12 @@ function DarkModeToggle() {
         name="theme"
         value={theme === "light" ? "dark" : "light"}
       />
+      {/* rounded-full is legitimate here: DESIGN.md reserves it for genuinely
+          circular elements, and a toggle knob is its named example. */}
       <button
         aria-label="Toggle Dark Mode"
-        className="border-primary inline-flex items-center justify-center overflow-hidden rounded-full border-2 p-1 transition focus:outline-none"
+        className="inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-primary p-1 text-primary transition-colors duration-action ease-action hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        {/* note that the duration is longer then the one on body, controlling the bg-color */}
         <div className="relative h-8 w-8">
           <span
             className={`${iconSpanClassName} ${

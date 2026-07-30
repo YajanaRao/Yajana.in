@@ -81,7 +81,7 @@ const ProfileCarousel = () => {
               src={img}
               alt={`Card ${index + 1}`}
               draggable={false}
-              className="w-64 h-64 rounded-2xl object-cover object-center"
+              className="w-64 h-64 rounded-lg object-cover object-center"
               style={{
                 filter: "contrast(1.02) saturate(0.98)",
               }}

@@ -310,7 +310,7 @@ function StatCard({
         : "text-foreground";
 
   return (
-    <div className="rounded-xl bg-card p-4">
+    <div className="rounded-lg bg-card p-4">
       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
@@ -318,7 +318,7 @@ function StatCard({
         {value}
       </p>
       {subtitle && (
-        <p className="mt-0.5 text-xs text-muted-foreground/80">
+        <p className="mt-0.5 text-xs text-muted-foreground">
           {subtitle}
         </p>
       )}
@@ -333,12 +333,12 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
   const progressBarWidth = `${progressClamped.toFixed(0)}%`;
 
   return (
-    <div className="rounded-xl bg-card p-5">
+    <div className="rounded-lg bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           FIRE Forecast
         </h3>
-        <span className="text-[10px] text-muted-foreground/80">
+        <span className="text-xs text-muted-foreground">
           {FIRE_CONFIG.expectedAnnualReturn * 100}% return ·{" "}
           {FIRE_CONFIG.inflationRate * 100}% inflation · 4% rule ·{" "}
           {(FIRE_CONFIG.targetMonthlyExpense / 1000).toFixed(0)}K/mo lifestyle
@@ -356,9 +356,9 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
               {fire.progressPct.toFixed(1)}%
             </span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-2.5 w-full overflow-hidden rounded-sm bg-muted">
             <div
-              className="h-full rounded-full bg-chart-1 transition-all duration-500"
+              className="h-full rounded-sm bg-chart-1 transition-all duration-resting ease-out"
               style={{ width: progressBarWidth }}
             />
           </div>
@@ -367,7 +367,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
         {/* Metrics row */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Years to FIRE
             </p>
             <p className="mt-0.5 text-lg font-bold tabular-nums text-foreground">
@@ -377,7 +377,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Coast FIRE
             </p>
             <p
@@ -391,7 +391,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
             </p>
           </div>
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Savings Rate
             </p>
             <p
@@ -406,7 +406,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
                 : "—"}
             </p>
             {fire.latestExpenseMonth && (
-              <p className="text-[10px] text-muted-foreground/80">
+              <p className="text-xs text-muted-foreground">
                 {fire.latestExpenseMonth}
               </p>
             )}
@@ -508,30 +508,30 @@ export default function PortfolioPage() {
 
       {/* Charts */}
       <div className="space-y-10">
-        <div className="rounded-xl bg-card p-4 sm:p-6">
+        <div className="rounded-lg bg-card p-4 sm:p-6">
           <CumulativeReturnsChart data={snapshots} />
         </div>
 
-        <div className="rounded-xl bg-card p-4 sm:p-6">
+        <div className="rounded-lg bg-card p-4 sm:p-6">
           <AssetClassPerformanceChart data={snapshots} />
         </div>
 
-        <div className="rounded-xl bg-card p-4 sm:p-6">
+        <div className="rounded-lg bg-card p-4 sm:p-6">
           <AssetAllocationChart snapshot={latest} />
         </div>
 
-        <div className="rounded-xl bg-card p-4 sm:p-6">
+        <div className="rounded-lg bg-card p-4 sm:p-6">
           <AssetReturnsChart snapshot={latest} />
         </div>
 
         {snapshots.length > 1 && (
-          <div className="rounded-xl bg-card p-4 sm:p-6">
+          <div className="rounded-lg bg-card p-4 sm:p-6">
             <GrowthChart data={snapshots} />
           </div>
         )}
 
         {/* Methodology note */}
-        <p className="text-xs text-muted-foreground/80">
+        <p className="text-xs text-muted-foreground">
           XIRR accounts for the timing and size of each investment. Nifty 50
           CAGR is the compound annual growth over the same date range. Alpha =
           XIRR − Nifty CAGR. The cumulative returns chart uses simple % change

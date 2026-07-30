@@ -1,0 +1,156 @@
+/* AUTO-GENERATED from design.md — do not edit by hand.
+   Regenerate with `bun run tokens`. Role aliases live in globals.css. */
+
+:root {
+    /* surface */
+    --surface-recessed2: 51.1 45.8% 88.4%; /* #EFEBD4 */
+    --surface-recessed1: 51.1 55.1% 90.4%; /* #F4F0D9 */
+    --surface-base: 43.8 86.7% 94.1%; /* #FDF6E3 */
+    --surface-raised: 50.8 34.2% 85.1%; /* #E6E2CC */
+    --surface-overlay: 51.4 29.8% 81.6%; /* #DEDAC2 */
+
+    /* ink */
+    --ink-primary: 201.8 10.7% 40.4%; /* #5C6A72 */
+    --ink-secondary: 105.9 8.5% 39.4%; /* #606D5C */
+    --ink-comment: 112.5 7.8% 40%; /* #606E5E */
+    --ink-faint: 97.5 9.2% 65.9%; /* #A6B0A0 */
+    --ink-on-action: 43.8 86.7% 94.1%; /* #FDF6E3 */
+
+    /* accent */
+    --accent-action: 47.6 100% 21.8%; /* #6F5800 */
+    --accent-action-container: 31.5 83.3% 90.6%; /* #FBE8D3 */
+    --accent-resting: 79.4 76.9% 23.7%; /* #4D6B0E */
+    --accent-resting-container: 58.1 34.8% 82%; /* #E1E0C1 */
+
+    /* status */
+    --status-danger: 3.2 62.6% 35.7%; /* #942822 */
+    --status-warning: 25.3 82.4% 33.3%; /* #9B4A0F */
+    --status-success: 79.4 76.9% 23.7%; /* #4D6B0E */
+    --status-info: 212.1 68.7% 32.5%; /* #1A4F8C */
+
+    /* state */
+    --state-selection: 63.2 30.6% 76.3%; /* #D3D5B0 */
+    --state-match-all: 46.3 39.3% 76.1%; /* #DACFAA */
+    --state-active: 47.6 100% 21.8%; /* #6F5800 */
+    --state-hover: 50.8 34.2% 85.1%; /* #E6E2CC */
+    --state-disabled: 97.5 9.2% 65.9%; /* #A6B0A0 */
+
+    /* code */
+    --code-keyword: 73.3 84.2% 27.3%; /* #66800B */
+    --code-operator: 42.9 2.8% 51.6%; /* #878580 */
+    --code-function: 21.9 79.9% 41%; /* #BC5215 */
+    --code-string: 174.9 56.9% 32.7%; /* #24837B */
+    --code-type: 212.2 67.7% 38.8%; /* #205EA6 */
+    --code-tag: 326 54.6% 40.6%; /* #A02F6F */
+    --code-regex: 259.4 42.1% 43.3%; /* #5E409D */
+    --code-number: 259.4 42.1% 43.3%; /* #5E409D */
+    --code-variable: 201.8 10.7% 40.4%; /* #5C6A72 */
+    --code-punctuation: 112.5 7.8% 40%; /* #606E5E */
+    --code-comment: 112.5 7.8% 40%; /* #606E5E */
+
+    /* diff */
+    --diff-add: 79.4 76.9% 23.7%; /* #4D6B0E */
+    --diff-change: 25.3 82.4% 33.3%; /* #9B4A0F */
+    --diff-delete: 3.2 62.6% 35.7%; /* #942822 */
+    --diff-untracked: 212.1 68.7% 32.5%; /* #1A4F8C */
+    --diff-ignored: 112.5 7.8% 40%; /* #606E5E */
+    --diff-conflict: 326 54.6% 40.6%; /* #A02F6F */
+    --diff-add-bg: 61.7 30.4% 77.5%; /* #D6D7B4 */
+    --diff-change-bg: 32.9 51.5% 80.6%; /* #E7D0B4 */
+    --diff-delete-bg: 21.3 47.4% 81.4%; /* #E6C9B9 */
+
+    /* terminal */
+    --terminal-ansi-black: 30 3.7% 10.6%; /* #1C1B1A */
+    --terminal-ansi-red: 3.1 62% 42.4%; /* #AF3029 */
+    --terminal-ansi-green: 73.3 84.2% 27.3%; /* #66800B */
+    --terminal-ansi-yellow: 45.3 98.9% 34.1%; /* #AD8301 */
+    --terminal-ansi-blue: 212.2 67.7% 38.8%; /* #205EA6 */
+    --terminal-ansi-magenta: 326 54.6% 40.6%; /* #A02F6F */
+    --terminal-ansi-cyan: 174.9 56.9% 32.7%; /* #24837B */
+    --terminal-ansi-white: 201.8 10.7% 40.4%; /* #5C6A72 */
+    --terminal-ansi-bright-black: 50 2.8% 42.4%; /* #6F6E69 */
+    --terminal-ansi-bright-red: 12.1 73.8% 43.3%; /* #C03E1D */
+    --terminal-ansi-bright-green: 71.8 46% 41.4%; /* #879A39 */
+    --terminal-ansi-bright-yellow: 45.2 81.7% 44.9%; /* #D0A215 */
+    --terminal-ansi-bright-blue: 207.8 48.6% 50.4%; /* #4385BE */
+    --terminal-ansi-bright-magenta: 329.2 53.6% 58.6%; /* #CE5D97 */
+    --terminal-ansi-bright-cyan: 174.6 48.9% 44.5%; /* #3AA99F */
+    --terminal-ansi-bright-white: 43.8 86.7% 94.1%; /* #FDF6E3 */
+}
+
+.dark {
+    /* surface */
+    --surface-recessed2: 206.7 13.4% 13.1%; /* #1D2226 */
+    --surface-recessed1: 201.8 13.6% 15.9%; /* #232A2E */
+    --surface-base: 205.7 13.5% 20.4%; /* #2D353B */
+    --surface-raised: 198.8 11.6% 27.1%; /* #3D484D */
+    --surface-overlay: 201.2 10.7% 31.2%; /* #475258 */
+
+    /* ink */
+    --ink-primary: 41 31.8% 74.7%; /* #D3C6AA */
+    --ink-secondary: 97.5 9.2% 65.9%; /* #A6B0A0 */
+    --ink-comment: 113.3 4.4% 60.2%; /* #969E95 */
+    --ink-faint: 110 4.8% 49.4%; /* #7A8478 */
+    --ink-on-action: 206.7 13.4% 13.1%; /* #1D2226 */
+
+    /* accent */
+    --accent-action: 46.6 100% 50%; /* #FFC600 */
+    --accent-action-container: 40 43.8% 17.5%; /* #403319 */
+    --accent-resting: 68.8 41% 64.1%; /* #BEC97E */
+    --accent-resting-container: 131.3 21.6% 29%; /* #3A5A40 */
+
+    /* status */
+    --status-danger: 8.7 88.7% 75.7%; /* #F89A8A */
+    --status-warning: 25.4 91.5% 72.2%; /* #F9AE77 */
+    --status-success: 68.8 41% 64.1%; /* #BEC97E */
+    --status-info: 203 50.3% 71.6%; /* #92BFDB */
+
+    /* state */
+    --state-selection: 98.6 8.5% 32.2%; /* #50594B */
+    --state-match-all: 50 38% 27.8%; /* #62592C */
+    --state-active: 46.6 100% 50%; /* #FFC600 */
+    --state-hover: 198.8 11.6% 27.1%; /* #3D484D */
+    --state-disabled: 110 4.8% 49.4%; /* #7A8478 */
+
+    /* code */
+    --code-keyword: 69.9 36.3% 50.8%; /* #A0AF54 */
+    --code-operator: 42.9 2.8% 51.6%; /* #878580 */
+    --code-function: 24.3 81.1% 60.6%; /* #EC8B49 */
+    --code-string: 169.7 42.9% 54.7%; /* #5ABDAC */
+    --code-type: 204.5 47.1% 59.2%; /* #66A0C8 */
+    --code-tag: 335 65.6% 69.2%; /* #E47DA8 */
+    --code-regex: 254.2 36.9% 70.8%; /* #A699D0 */
+    --code-number: 254.2 36.9% 70.8%; /* #A699D0 */
+    --code-variable: 41 31.8% 74.7%; /* #D3C6AA */
+    --code-punctuation: 113.3 4.4% 60.2%; /* #969E95 */
+    --code-comment: 113.3 4.4% 60.2%; /* #969E95 */
+
+    /* diff */
+    --diff-add: 68.8 41% 64.1%; /* #BEC97E */
+    --diff-change: 25.4 91.5% 72.2%; /* #F9AE77 */
+    --diff-delete: 8.7 88.7% 75.7%; /* #F89A8A */
+    --diff-untracked: 203 50.3% 71.6%; /* #92BFDB */
+    --diff-ignored: 113.3 4.4% 60.2%; /* #969E95 */
+    --diff-conflict: 335 65.6% 69.2%; /* #E47DA8 */
+    --diff-add-bg: 105 7.5% 31.4%; /* #4D564A */
+    --diff-change-bg: 26.7 11.1% 31.8%; /* #5A5048 */
+    --diff-delete-bg: 356 9.1% 32.4%; /* #5A4B4C */
+
+    /* terminal */
+    --terminal-ansi-black: 206.7 13.4% 13.1%; /* #1D2226 */
+    --terminal-ansi-red: 5 61% 53.7%; /* #D14D41 */
+    --terminal-ansi-green: 71.8 46% 41.4%; /* #879A39 */
+    --terminal-ansi-yellow: 45.2 81.7% 44.9%; /* #D0A215 */
+    --terminal-ansi-blue: 207.8 48.6% 50.4%; /* #4385BE */
+    --terminal-ansi-magenta: 329.2 53.6% 58.6%; /* #CE5D97 */
+    --terminal-ansi-cyan: 174.6 48.9% 44.5%; /* #3AA99F */
+    --terminal-ansi-white: 41 31.8% 74.7%; /* #D3C6AA */
+    --terminal-ansi-bright-black: 45 2.4% 33.3%; /* #575653 */
+    --terminal-ansi-bright-red: 7.4 74.9% 64.1%; /* #E8705F */
+    --terminal-ansi-bright-green: 69.9 36.3% 50.8%; /* #A0AF54 */
+    --terminal-ansi-bright-yellow: 45.9 78.7% 65.1%; /* #ECCB60 */
+    --terminal-ansi-bright-blue: 204.5 47.1% 59.2%; /* #66A0C8 */
+    --terminal-ansi-bright-magenta: 335 65.6% 69.2%; /* #E47DA8 */
+    --terminal-ansi-bright-cyan: 169.7 42.9% 54.7%; /* #5ABDAC */
+    --terminal-ansi-bright-white: 0 0% 100%; /* #FFFFFF */
+}

@@ -25,49 +25,52 @@ const ProjectCard = ({ project }: { project: Project }) => {
     if (source === "appstore") return <Appstore />;
   };
   return (
-    <div className="lg:w-1/2 p-1 not-prose">
-      <div className="rounded-lg overflow-hidden bg-card">
+    <div className="p-2 lg:w-1/2 not-prose">
+      <div className="overflow-hidden rounded-lg bg-card">
         {project.cover ? (
           <img
-            className="w-full h-64 mt-0 mb-4"
+            className="mb-4 mt-0 h-64 w-full object-cover"
             src={project.cover}
             alt={project.title}
           />
         ) : (
           <iframe
-            className="w-full mb-4"
+            className="mb-4 w-full"
             height="260"
             src={project.video}
-            title="YouTube video player"
+            title={`${project.title} — demo video`}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           ></iframe>
         )}
-        <div className="px-6">
-          <a target="_blank" href={project.link}>
-            <h3 className="font-bold text-xl mb-2">{project.title}</h3>
+        <div className="px-6 pb-6">
+          <a target="_blank" href={project.link} className="no-underline">
+            <h3 className="mb-2 mt-0 font-heading text-xl font-extrabold italic text-ink-primary">
+              {project.title}
+            </h3>
           </a>
-          <p className="text-muted-foreground text-base">
+          <p className="mb-4 text-base text-ink-secondary">
             {project.description}
           </p>
-          {project?.source?.length && (
-            <div className="flex flex-col md:flex-row mb-4">
+          {/* `.length &&` would render a literal 0 for an empty source list. */}
+          {project.source?.length ? (
+            <div className="flex flex-col gap-2 md:flex-row md:gap-4">
               {project.source.map((source) => (
                 <a
                   key={`${project.key}-${source.key}`}
-                  className="group flex items-center mr-4 h-8"
+                  className="group flex h-8 items-center gap-2 no-underline"
                   target="_blank"
                   href={source.link}
                 >
                   {renderSourceIcon(source.type)}
-                  <span className="text-muted-foreground ml-2">
+                  <span className="font-ui text-sm text-ink-secondary transition-colors duration-action ease-action group-hover:text-primary">
                     {source.text}
                   </span>
                 </a>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

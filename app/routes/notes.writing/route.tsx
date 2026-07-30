@@ -67,8 +67,9 @@ export default function Index() {
         to become self-contained essays, while others remain seeded here,
         patiently waiting to be groomed someday.
       </p>
+      {/* An accent rule and tone, never a filled panel (DESIGN.md, Blockquote). */}
       <div
-        className="bg-muted border-l-4 border-primary text-muted-foreground p-4"
+        className="border-l-4 border-primary py-2 pl-6 text-ink-secondary"
         role="alert"
       >
         <p className="font-bold">Be Warned</p>

@@ -7,7 +7,7 @@
   "author": "Yajana N Rao <yajananrao@gmail.com>",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/YajanaRao/yajanarao.github.io/issues"
+    "url": "https://github.com/YajanaRao/yajana.in/issues"
   },
   "dependencies": {
     "@react-router/node": "^7.15.0",
@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.105.3",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^2.0.0",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.20",
     "isbot": "^4.4.0",
     "motion": "^12.38.0",
@@ -24,7 +25,8 @@
     "recharts": "^3.8.1",
     "rehype-pretty-code": "^0.13.2",
     "remark-gfm": "^4.0.1",
-    "shiki": "^1.29.2"
+    "shiki": "^1.29.2",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.1",
@@ -37,6 +39,7 @@
     "autoprefixer": "^10.5.0",
     "eslint": "^8.57.1",
     "gh-pages": "^3.2.3",
+    "js-yaml": "^4.1.0",
     "postcss": "^8.5.14",
     "prettier": "2.3.2",
     "remark-frontmatter": "^5.0.0",
@@ -54,7 +57,7 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YajanaRao/yajanarao.github.io"
+    "url": "git+https://github.com/YajanaRao/yajana.in"
   },
   "scripts": {
     "dev": "react-router dev",
@@ -62,7 +65,10 @@
     "start": "react-router-serve build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
+    "tokens": "node scripts/build-tokens.mjs",
+    "predev": "node scripts/build-tokens.mjs",
+    "prebuild": "node scripts/build-tokens.mjs"
   },
   "packageManager": "bun@^1.0.0"
 }

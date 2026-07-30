@@ -2,13 +2,16 @@ import React from "react";
 import { siteMetadata } from "../constants";
 
 const tileClass =
-  "inline-flex h-9 w-9 items-center justify-center rounded-sm bg-foreground transition-colors group-hover:bg-primary";
-const iconClass = "h-5 w-5 fill-background";
+  "inline-flex h-8 w-8 items-center justify-center rounded-sm bg-ink-secondary " +
+  "transition-colors duration-action ease-action group-hover:bg-primary";
+const iconClass =
+  "h-4 w-4 fill-background transition-colors duration-action ease-action " +
+  "group-hover:fill-primary-foreground";
 
 const Footer = React.memo(() => {
   const { author, social } = siteMetadata;
   return (
-    <footer className="my-2 not-prose flex justify-center items-center gap-3">
+    <footer className="mt-16 flex items-center justify-center gap-4 not-prose">
       <a
         href={`https://twitter.com/${social.twitter}`}
         target="_blank"

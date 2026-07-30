@@ -8,6 +8,8 @@ import {
 } from "react-router";
 import { getPosts } from "../lib/posts";
 import { useUpdateQueryStringValueWithoutNavigation } from "../lib/utils";
+import { Input } from "@/components/ui/input";
+import { BadgeButton } from "@/components/ui/badge";
 import dayjs from "dayjs";
 
 export const meta: MetaFunction<typeof loader> = (args) => {
@@ -56,8 +58,7 @@ export const meta: MetaFunction<typeof loader> = (args) => {
         name: "Yajana N Rao",
         alternateName: "Yajana's Blog",
         url: "https://yajana.in",
-        description:
-          "Yajana Rao's blog on Programming, Spirituality and Books",
+        description: "Yajana Rao's blog on Programming, Spirituality and Books",
         author: { "@type": "Person", name: "Yajana N Rao" },
         potentialAction: {
           "@type": "SearchAction",
@@ -136,66 +137,78 @@ const BlogIndex = () => {
   return (
     <div>
       <form onChange={(e) => e.preventDefault()}>
-        <div style={{ display: "flex" }}>
-          <input
-            type="text"
-            id="search"
-            name="q"
-            placeholder="Search Blogs"
-            autoFocus
-            defaultValue={query}
-            onChange={(event) =>
-              setQuery(event.currentTarget.value?.toLowerCase())
-            }
-            className="bg-background text-foreground border-border placeholder:text-muted-foreground appearance-none w-full py-4 pl-7 pr-3 leading-tight rounded-full border focus:ring-primary"
-          />
-        </div>
+        <label htmlFor="search" className="sr-only">
+          Search blogs
+        </label>
+        <Input
+          id="search"
+          name="q"
+          type="search"
+          placeholder="Search blogs"
+          autoFocus
+          defaultValue={query}
+          onChange={(event) =>
+            setQuery(event.currentTarget.value?.toLowerCase())
+          }
+        />
       </form>
-      <div className="py-2 mb-4 mx-auto flex items-center">
-        <div className="w-full text-center mx-auto">
-          {categories.map((category) => (
-            <button
+
+      {/* Filter pills: green at rest, gold outline for the active one. */}
+      <div className="mb-16 mt-4 flex flex-wrap justify-center gap-3 not-prose">
+        {categories.map((category) => {
+          const active = query === category;
+          return (
+            <BadgeButton
               key={category}
-              className={
-                query === category
-                  ? "m-1 px-4 py-1 rounded-full bg-primary text-primary-foreground"
-                  : "m-1 px-4 py-1 rounded-full bg-secondary text-secondary-foreground"
-              }
-              type="button"
-              onClick={() => {
-                setQuery(category);
-              }}
+              variant={active ? "active" : "resting"}
+              aria-pressed={active}
+              onClick={() => setQuery(active ? "" : category)}
             >
               {category}
-            </button>
-          ))}
-        </div>
+            </BadgeButton>
+          );
+        })}
       </div>
-      {posts.map((node) => {
-        const { title, date, description } = node.frontmatter;
-        return (
-          <article key={node.slug} className="p-6 rounded-lg mb-6">
-            <header>
-              <h2 className="text-2xl mb-0 not-prose">
-                <Link prefetch="intent" to={`/${node.slug}`}>
+
+      {/* No card fills here: spacing is the primary separator (DESIGN.md,
+          Layout). A background would be a second mechanism for a job the gap
+          already does. */}
+      <div className="flex flex-col gap-16 not-prose">
+        {posts.map((node) => {
+          const { title, date, description } = node.frontmatter;
+          return (
+            <article key={node.slug}>
+              {/* Ink at rest, gold on hover — linkness is already obvious from
+                  position in a list of titles, so the accent marks the one you
+                  are acting on, not all ten. */}
+              {/* Explicit scale, since not-prose opts out of prose sizing:
+                  30 / 14 / 18. Upright semibold Fraunces, not extrabold-italic:
+                  the title still clearly outranks the 18px lede, but reads as a
+                  confident editorial headline instead of shouting. The script
+                  wordmark carries the page's one slanted flourish; the titles
+                  stay upright so the layout has a vertical anchor. */}
+              <h2 className="m-0 font-heading text-3xl font-semibold not-italic leading-snug">
+                <Link
+                  prefetch="intent"
+                  to={`/${node.slug}`}
+                  className="text-ink-primary no-underline transition-colors duration-action ease-action hover:text-primary"
+                >
                   {title}
                 </Link>
               </h2>
-              <small className="text-muted-foreground">
-                {dayjs(date).format("MMMM D, YYYY")}
-              </small>
-            </header>
-            <section>
+              <p className="m-0 mt-2 font-ui text-sm text-ink-comment">
+                <time dateTime={date}>
+                  {dayjs(date).format("MMMM D, YYYY")}
+                </time>
+              </p>
               <p
-                dangerouslySetInnerHTML={{
-                  __html: description,
-                }}
-                className="mt-2 mb-0"
+                dangerouslySetInnerHTML={{ __html: description }}
+                className="m-0 mt-3 font-ui text-lg text-ink-secondary"
               />
-            </section>
-          </article>
-        );
-      })}
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 };

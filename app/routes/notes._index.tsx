@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
+import { Card, CardTitle } from "@/components/ui/card";
 
 export const meta = [
   {
@@ -77,32 +78,27 @@ const Courses = ({}) => {
         {categories.map((category, index) => {
           return (
             <article key={index}>
-              <div className="bg-card relative transition duration-500 rounded-lg flex flex-col">
-                <div className="">
-                  <img
-                    className="rounded-t-lg mb-0 min-h-60"
-                    src={category.image}
-                    alt={category.title}
-                    style={{ width: "100%" }}
-                    width={"0"}
-                    height={"100"}
-                  />
-                </div>
-                <div className="px-4 py-6">
-                  <h3 className="text-foreground font-bold text-2xl mb-3 hover:text-primary hover:cursor-pointer mt-0">
-                    {category.title}
-                  </h3>
-                  <p className="text-muted-foreground tracking-wide mb-2">
+              <Card className="flex h-full flex-col overflow-hidden">
+                <img
+                  className="mb-0 mt-0 min-h-60 w-full object-cover"
+                  src={category.image}
+                  alt={category.title}
+                  width={640}
+                  height={240}
+                />
+                <div className="flex flex-1 flex-col px-6 py-6">
+                  <CardTitle className="mb-2">{category.title}</CardTitle>
+                  <p className="mb-6 mt-0 font-content text-ink-secondary">
                     {category.description}
                   </p>
                   <Link
-                    className="bg-primary transition duration-300 text-primary-foreground font-bold py-2 px-4 rounded-lg"
                     to={`/notes/${category.link}`}
+                    className="mt-auto inline-flex h-10 w-fit items-center justify-center rounded-sm bg-primary px-4 font-ui text-sm font-medium text-primary-foreground no-underline transition-colors duration-action ease-action hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     Visit
                   </Link>
                 </div>
-              </div>
+              </Card>
             </article>
           );
         })}
