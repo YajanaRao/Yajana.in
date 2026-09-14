@@ -1,22 +1,30 @@
 import React from "react";
+import { Link } from "react-router";
 
-import Layout from "@/components/layout";
+import { Kicker } from "@/components/ui/kicker";
+import { Prose } from "@/components/prose";
 
+/**
+ * Kept as a dedicated route composition. Unmatched URLs also surface through
+ * root ErrorBoundary — keep the copy aligned with that component.
+ */
 const NotFoundPage = () => {
   return (
-    <Layout>
-      <div>
-        <div
-          style={{ height: "75vh" }}
-          className="flex items-center justify-center flex-col"
-        >
-          <h1 className="text-foreground">Not Found</h1>
-          <p className="text-foreground">
-            You just hit a route that doesn&#39;t exist... the sadness.
-          </p>
-        </div>
+    <Prose>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+        <Kicker className="mb-2">Error 404</Kicker>
+        <h1 className="mb-4 mt-0 font-heading text-5xl font-extrabold text-ink-primary">
+          Not found
+        </h1>
+        <p className="lede mb-8 mt-0">
+          That page doesn&apos;t exist — it may have moved, or never been
+          written.
+        </p>
+        <Link to="/" className="font-ui text-primary">
+          Back to the blog
+        </Link>
       </div>
-    </Layout>
+    </Prose>
   );
 };
 

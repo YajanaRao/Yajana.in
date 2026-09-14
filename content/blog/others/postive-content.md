@@ -33,20 +33,18 @@ And waste my heart on fear no more.​
 ​
 — John O’Donohue
 
-
-
-Muscles without strength, 
-friendship without trust, 
-opinion without risk, 
-change without aesthetics, 
-age without values, 
-food without nourishment, 
-power without fairness, 
-facts without rigor, 
-degrees without erudition, 
-militarism without fortitude, 
-progress without civilization, 
-complication without depth, 
+Muscles without strength,
+friendship without trust,
+opinion without risk,
+change without aesthetics,
+age without values,
+food without nourishment,
+power without fairness,
+facts without rigor,
+degrees without erudition,
+militarism without fortitude,
+progress without civilization,
+complication without depth,
 fluency without content; these are the sins to remember.
 
 ~ Nassim Taleb

@@ -6,3 +6,9 @@ declare module "*.mdx" {
   export const frontmatter: any;
   export default MDXComponent;
 }
+
+declare module "*.md" {
+  let MDXComponent: (props: any) => JSX.Element;
+  export const frontmatter: any;
+  export default MDXComponent;
+}

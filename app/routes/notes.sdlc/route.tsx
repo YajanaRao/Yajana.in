@@ -1,25 +1,21 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, MetaFunction } from "react-router";
 
 import * as introduction from "./sdlc-introduction.mdx";
 import * as sdlcModels from "./sdlc-models.md";
 
-function postFromModule(mod) {
+function postFromModule(mod: { frontmatter: any }) {
   return {
     ...mod.frontmatter,
   };
 }
 
 export async function loader() {
-  // Return metadata about each of the posts for display on the index page.
-  // Referencing the posts here instead of in the Index component down below
-  // lets us avoid bundling the actual posts themselves in the bundle for the
-  // index page.
   return [postFromModule(introduction), postFromModule(sdlcModels)];
 }
 
 const ogImageUrl = "/images/sdlc.png";
 
-export const meta = [
+export const meta: MetaFunction = () => [
   {
     title: "Software Development Lifecycle | Yajana",
   },
@@ -76,13 +72,13 @@ export default function Index() {
       </ul>
 
       <section id={introduction.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{introduction.frontmatter.title}</h1>
+        <h2>{introduction.frontmatter.title}</h2>
         <p>{introduction.frontmatter.description}</p>
         <introduction.default />
       </section>
 
       <section id={sdlcModels.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{sdlcModels.frontmatter.title}</h1>
+        <h2>{sdlcModels.frontmatter.title}</h2>
         <p>{sdlcModels.frontmatter.description}</p>
         <sdlcModels.default />
       </section>

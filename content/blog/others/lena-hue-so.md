@@ -5,10 +5,9 @@ date: "2022-11-03"
 description: "Sufi poet Rohal Faqir urges people to delve into the deeper dimensions of life, so that they can be open to receive what grace has to offer."
 ---
 
-
 ## Lena Hue So
 
-If you wish to receive, receive now 
+If you wish to receive, receive now
 for this is the moment to receive, oh brother!
 Having come here as a human being, Don't miss the chance to receive!
 This life, like a precious gem, is not easy to come across
@@ -35,7 +34,7 @@ This life, like a precious gem, is not easy to come across
 Having come here as a human being, Don't miss the chance to receive!
 
 This life, like a precious gem, is not easy to come across
-If you wish to receive, receive now 
+If you wish to receive, receive now
 for this is the moment to receive, oh brother!
 
 ~ Sufi Rohal Faqir

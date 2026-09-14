@@ -1,14 +1,3 @@
-/**
- * XIRR — Extended Internal Rate of Return
- *
- * Given a series of cash flows with dates, finds the annualized discount rate
- * that makes the net present value (NPV) of all flows equal to zero.
- *
- * Negative amounts = money going IN (investments)
- * Positive amounts = money coming OUT (current value / redemption)
- *
- * Uses Newton-Raphson iteration to solve for the rate.
- */
 
 interface CashFlow {
   date: Date;
@@ -34,17 +23,11 @@ function npvDerivative(rate: number, flows: CashFlow[], d0: Date): number {
   }, 0);
 }
 
-/**
- * Compute XIRR for a series of cash flows.
- *
- * @returns Annualized rate (e.g., 0.15 = 15%), or null if it fails to converge.
- */
 export function xirr(flows: CashFlow[], guess = 0.1): number | null {
   if (flows.length < 2) return null;
 
   const d0 = flows[0].date;
 
-  // Verify there's at least one positive and one negative flow
   const hasNeg = flows.some((f) => f.amount < 0);
   const hasPos = flows.some((f) => f.amount > 0);
   if (!hasNeg || !hasPos) return null;
@@ -61,7 +44,6 @@ export function xirr(flows: CashFlow[], guess = 0.1): number | null {
 
     const newRate = rate - f / df;
 
-    // Guard against divergence
     if (newRate < -0.99) {
       rate = -0.99;
     } else {
@@ -73,14 +55,10 @@ export function xirr(flows: CashFlow[], guess = 0.1): number | null {
     }
   }
 
-  // If Newton-Raphson didn't converge, try bisection as fallback
   return xirrBisection(flows, d0);
 }
 
-function xirrBisection(
-  flows: CashFlow[],
-  d0: Date,
-): number | null {
+function xirrBisection(flows: CashFlow[], d0: Date): number | null {
   let lo = -0.99;
   let hi = 10.0;
   const maxIter = 300;
@@ -89,7 +67,6 @@ function xirrBisection(
   let fLo = npv(lo, flows, d0);
   let fHi = npv(hi, flows, d0);
 
-  // Ensure the root is bracketed
   if (fLo * fHi > 0) return null;
 
   for (let i = 0; i < maxIter; i++) {
@@ -112,17 +89,11 @@ function xirrBisection(
   return null;
 }
 
-/**
- * Compute CAGR (Compound Annual Growth Rate) between two data points.
- * Useful for benchmarks like Nifty 50 that don't have cash flows.
- *
- * @returns Annualized rate (e.g., 0.12 = 12%)
- */
 export function cagr(
   startValue: number,
   endValue: number,
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ): number {
   const years = daysBetween(startDate, endDate) / 365.0;
   if (years <= 0 || startValue <= 0) return 0;

@@ -3,7 +3,7 @@ title: Integrating react-native-web in an existing react native application
 description: >-
   For using react native on web we can use many web tools. Create React App
   template is used for this example.
-date: '2020-08-29T17:24:49.380Z'
+date: "2020-08-29T17:24:49.380Z"
 categories: react-native
 ---
 
@@ -66,7 +66,7 @@ and it should start developer server at [_http://localhost:3000_](http://localho
 
 ### References
 
-*   [https://callstack.github.io/react-native-paper/using-on-the-web.html](https://callstack.github.io/react-native-paper/using-on-the-web.html)
-*   [https://web.dev/add-manifest/](https://web.dev/add-manifest/)
-*   [https://necolas.github.io/react-native-web/docs/?path=/docs/guides-multi-platform--page](https://necolas.github.io/react-native-web/docs/?path=/docs/guides-multi-platform--page)
-*   [https://developers.google.com/web/fundamentals/primers/service-workers](https://developers.google.com/web/fundamentals/primers/service-workers)
+- [https://callstack.github.io/react-native-paper/using-on-the-web.html](https://callstack.github.io/react-native-paper/using-on-the-web.html)
+- [https://web.dev/add-manifest/](https://web.dev/add-manifest/)
+- [https://necolas.github.io/react-native-web/docs/?path=/docs/guides-multi-platform--page](https://necolas.github.io/react-native-web/docs/?path=/docs/guides-multi-platform--page)
+- [https://developers.google.com/web/fundamentals/primers/service-workers](https://developers.google.com/web/fundamentals/primers/service-workers)

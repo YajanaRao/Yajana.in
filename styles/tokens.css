@@ -1,0 +1,100 @@
+/* AUTO-GENERATED from design.md — do not edit by hand.
+   Regenerate with `bun run tokens`. Role aliases live in globals.css. */
+
+:root {
+    /* surface */
+    --surface-base: 43.8 86.7% 94.1%; /* #FDF6E3 */
+    --surface-recessed1: 51.1 55.1% 90.4%; /* #F4F0D9 */
+    --surface-recessed2: 51.1 45.8% 88.4%; /* #EFEBD4 */
+    --surface-raised: 50.8 34.2% 85.1%; /* #E6E2CC */
+    --surface-overlay: 51.4 29.8% 81.6%; /* #DEDAC2 */
+
+    /* ink */
+    --ink-primary: 201.8 10.7% 40.4%; /* #5C6A72 */
+    --ink-secondary: 105.9 8.5% 39.4%; /* #606D5C */
+    --ink-comment: 112.5 7.8% 40%; /* #606E5E */
+    --ink-faint: 97.5 9.2% 65.9%; /* #A6B0A0 */
+    --ink-on-action: 43.8 86.7% 94.1%; /* #FDF6E3 */
+    --ink-on-wash: 200 12.6% 32.7%; /* #49575E */
+
+    /* accent */
+    --accent-action: 47.6 100% 21.8%; /* #6F5800 */
+    --accent-action-container: 31.5 83.3% 90.6%; /* #FBE8D3 */
+    --accent-resting: 79.4 76.9% 23.7%; /* #4D6B0E */
+    --accent-resting-container: 58.1 34.8% 82%; /* #E1E0C1 */
+
+    /* status */
+    --status-danger: 3.2 62.6% 35.7%; /* #942822 */
+    --status-warning: 25.3 82.4% 33.3%; /* #9B4A0F */
+    --status-success: 79.4 76.9% 23.7%; /* #4D6B0E */
+    --status-info: 212.1 68.7% 32.5%; /* #1A4F8C */
+
+    /* state */
+    --state-selection: 63.2 30.6% 76.3%; /* #D3D5B0 */
+    --state-match-all: 46.3 39.3% 76.1%; /* #DACFAA */
+    --state-active: 47.6 100% 21.8%; /* #6F5800 */
+    --state-hover: 50.8 34.2% 85.1%; /* #E6E2CC */
+    --state-disabled: 97.5 9.2% 65.9%; /* #A6B0A0 */
+
+    /* code */
+    --code-keyword: 73.3 84.2% 27.3%; /* #66800B */
+    --code-operator: 42.9 2.8% 51.6%; /* #878580 */
+    --code-function: 21.9 79.9% 41%; /* #BC5215 */
+    --code-string: 174.9 56.9% 32.7%; /* #24837B */
+    --code-type: 212.2 67.7% 38.8%; /* #205EA6 */
+    --code-tag: 326 54.6% 40.6%; /* #A02F6F */
+    --code-regex: 259.4 42.1% 43.3%; /* #5E409D */
+    --code-number: 259.4 42.1% 43.3%; /* #5E409D */
+    --code-variable: 201.8 10.7% 40.4%; /* #5C6A72 */
+    --code-punctuation: 112.5 7.8% 40%; /* #606E5E */
+    --code-comment: 112.5 7.8% 40%; /* #606E5E */
+}
+
+.dark {
+    /* surface */
+    --surface-base: 210 20.8% 9.4%; /* #13181D */
+    --surface-recessed1: 212.7 18% 12%; /* #191E24 */
+    --surface-recessed2: 210 17.1% 13.7%; /* #1D2329 */
+    --surface-raised: 210 14.6% 16.1%; /* #23292F */
+    --surface-overlay: 210 14% 19.6%; /* #2B3239 */
+
+    /* ink */
+    --ink-primary: 41 31.8% 74.7%; /* #D3C6AA */
+    --ink-secondary: 97.5 9.2% 65.9%; /* #A6B0A0 */
+    --ink-comment: 113.3 4.4% 60.2%; /* #969E95 */
+    --ink-faint: 110 4.8% 49.4%; /* #7A8478 */
+    --ink-on-action: 210 20.8% 9.4%; /* #13181D */
+    --ink-on-wash: 41 31.8% 74.7%; /* #D3C6AA */
+
+    /* accent */
+    --accent-action: 46.6 100% 50%; /* #FFC600 */
+    --accent-action-container: 40 43.8% 17.5%; /* #403319 */
+    --accent-resting: 68.8 41% 64.1%; /* #BEC97E */
+    --accent-resting-container: 133.5 36.5% 16.7%; /* #1B3A22 */
+
+    /* status */
+    --status-danger: 8.7 88.7% 75.7%; /* #F89A8A */
+    --status-warning: 25.4 91.5% 72.2%; /* #F9AE77 */
+    --status-success: 68.8 41% 64.1%; /* #BEC97E */
+    --status-info: 203 50.3% 71.6%; /* #92BFDB */
+
+    /* state */
+    --state-selection: 111.4 7.2% 19%; /* #2E342D */
+    --state-match-all: 50.9 40.7% 15.9%; /* #393418 */
+    --state-active: 46.6 100% 50%; /* #FFC600 */
+    --state-hover: 210 14.6% 16.1%; /* #23292F */
+    --state-disabled: 110 4.8% 49.4%; /* #7A8478 */
+
+    /* code */
+    --code-keyword: 69.9 36.3% 50.8%; /* #A0AF54 */
+    --code-operator: 42.9 2.8% 51.6%; /* #878580 */
+    --code-function: 24.3 81.1% 60.6%; /* #EC8B49 */
+    --code-string: 169.7 42.9% 54.7%; /* #5ABDAC */
+    --code-type: 204.5 47.1% 59.2%; /* #66A0C8 */
+    --code-tag: 335 65.6% 69.2%; /* #E47DA8 */
+    --code-regex: 254.2 36.9% 70.8%; /* #A699D0 */
+    --code-number: 254.2 36.9% 70.8%; /* #A699D0 */
+    --code-variable: 41 31.8% 74.7%; /* #D3C6AA */
+    --code-punctuation: 113.3 4.4% 60.2%; /* #969E95 */
+    --code-comment: 113.3 4.4% 60.2%; /* #969E95 */
+}

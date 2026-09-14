@@ -3,32 +3,51 @@ import {
   Meta,
   Outlet,
   Scripts,
-  useLoaderData,
-  ActionFunctionArgs,
+  ScrollRestoration,
+  useRouteLoaderData,
   LinksFunction,
   LoaderFunctionArgs,
 } from "react-router";
 import { Analytics } from "@vercel/analytics/react";
+import "../styles/tokens.css";
 import "../styles/globals.css";
-import Layout from "@/components/layout";
-import { themeCookie } from "@/lib/theme";
+
+import "@fontsource-variable/big-shoulders-display/wght";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource-variable/ibm-plex-sans/wght-italic.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import "@fontsource/freehand/latin-400.css";
+
+import plexSans from "@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url";
+import bigShouldersDisplay from "@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal.woff2?url";
+import freehandRegular from "@fontsource/freehand/files/freehand-latin-400-normal.woff2?url";
+import SiteLayout from "@/components/layout";
+import { themeCookie, themeAction } from "@/lib/theme";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 export const links: LinksFunction = () => {
   return [
     {
-      rel: "preconnect",
-      href: "https://fonts.googleapis.com",
-    },
-    {
-      rel: "preconnect",
-      href: "https://fonts.gstatic.com",
+      rel: "preload",
+      as: "font",
+      type: "font/woff2",
+      href: plexSans,
       crossOrigin: "anonymous",
     },
     {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap",
+      rel: "preload",
+      as: "font",
+      type: "font/woff2",
+      href: bigShouldersDisplay,
+      crossOrigin: "anonymous",
+    },
+    {
+      rel: "preload",
+      as: "font",
+      type: "font/woff2",
+      href: freehandRegular,
+      crossOrigin: "anonymous",
     },
   ];
 };
@@ -39,21 +58,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return theme || "light";
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const theme = formData.get("theme") as string;
-  return new Response(JSON.stringify({ theme }), {
-    headers: {
-      "Set-Cookie": await themeCookie.serialize(theme),
-      "Content-Type": "application/json",
-    },
-  });
-}
+export const action = themeAction;
 
-export { ErrorBoundary };
+export function Layout({ children }: { children: React.ReactNode }) {
+  const theme = (useRouteLoaderData("root") as string | undefined) ?? "light";
 
-export default function App() {
-  const theme = useLoaderData<string>();
   return (
     <html lang="en" className={theme}>
       <head>
@@ -61,21 +70,45 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:url" content="https://yajana.in" />
         <meta property="og:type" content="website" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content={theme === "dark" ? "#2D353B" : "#FDF6E3"} />
-        <link rel="apple-touch-icon" href="/profile-picture.jpg" />
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <meta
+          name="theme-color"
+          content={theme === "dark" ? "#13181D" : "#FDF6E3"}
+        />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <Meta />
         <Links />
       </head>
-      <body>
-        <Layout>
-          <Outlet />
-        </Layout>
+      <body className="bg-background text-foreground">
+        {children}
+        <ScrollRestoration />
         <SpeedInsights />
         <Scripts />
         <Analytics />
       </body>
     </html>
+  );
+}
+
+export { ErrorBoundary };
+
+export default function App() {
+  return (
+    <SiteLayout>
+      <Outlet />
+    </SiteLayout>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, MetaFunction } from "react-router";
 
-export const meta = [
+export const meta: MetaFunction = () => [
   {
     title: "Notes | Yajana's Blog",
   },
@@ -39,76 +39,68 @@ export const meta = [
   },
 ];
 
-const Courses = ({}) => {
-  const categories = [
-    {
-      key: "c-programming",
-      title: "C Programming",
-      description: "Beginer concepts related to c programming language",
-      link: "c-programming",
-      image: "/images/c-program.png",
-    },
-    {
-      key: "javascript",
-      title: "Javascript",
-      description: "Fundamental programming concepts in JavaScript.",
-      link: "javascript",
-      image: "/images/javascript.png",
-    },
-    {
-      key: "sdlc",
-      title: "SDLC",
-      description: "Software development life cycle",
-      link: "sdlc",
-      image: "/images/sdlc.png",
-    },
-    {
-      key: "interview",
-      title: "Interview Preparation",
-      description: "Notes on interview preparation",
-      link: "interview",
-      image: "/images/interview.jpeg",
-    },
-  ];
+const categories = [
+  {
+    key: "c-programming",
+    title: "C Programming",
+    description: "Beginner concepts related to the C programming language",
+    link: "c-programming",
+  },
+  {
+    key: "javascript",
+    title: "Javascript",
+    description: "Fundamental programming concepts in JavaScript",
+    link: "javascript",
+  },
+  {
+    key: "sdlc",
+    title: "SDLC",
+    description: "Software development life cycle",
+    link: "sdlc",
+  },
+  {
+    key: "interview",
+    title: "Interview Preparation",
+    description: "Notes on interview preparation",
+    link: "interview",
+  },
+] as const;
 
+const NotesIndex = () => {
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
-        {categories.map((category, index) => {
-          return (
-            <article key={index}>
-              <div className="bg-card relative transition duration-500 rounded-lg flex flex-col">
-                <div className="">
-                  <img
-                    className="rounded-t-lg mb-0 min-h-60"
-                    src={category.image}
-                    alt={category.title}
-                    style={{ width: "100%" }}
-                    width={"0"}
-                    height={"100"}
-                  />
-                </div>
-                <div className="px-4 py-6">
-                  <h3 className="text-foreground font-bold text-2xl mb-3 hover:text-primary hover:cursor-pointer mt-0">
-                    {category.title}
-                  </h3>
-                  <p className="text-muted-foreground tracking-wide mb-2">
-                    {category.description}
-                  </p>
-                  <Link
-                    className="bg-primary transition duration-300 text-primary-foreground font-bold py-2 px-4 rounded-lg"
-                    to={`/notes/${category.link}`}
-                  >
-                    Visit
-                  </Link>
-                </div>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+    <div className="not-prose">
+      <h1 className="m-0 font-heading text-4xl font-extrabold text-ink-primary sm:text-5xl">
+        Notes
+      </h1>
+      <p className="lede m-0 mt-3">
+        Rough notes on programming and writing.
+      </p>
+
+      <ul className="mt-12 flex list-none flex-col gap-10 p-0">
+        {categories.map((category) => (
+          <li key={category.key}>
+            <Link
+              prefetch="intent"
+              to={`/notes/${category.link}`}
+              className="group font-heading text-[2rem] font-extrabold leading-snug text-ink-primary no-underline transition-colors duration-action ease-action hover:text-primary"
+            >
+              {category.title}
+              <span
+                aria-hidden
+                className="inline-block translate-x-0 opacity-0 transition-all duration-action ease-action group-hover:translate-x-1 group-hover:opacity-100"
+              >
+                {" "}
+                →
+              </span>
+            </Link>
+            <p className="m-0 mt-1 font-content text-base text-ink-secondary">
+              {category.description}
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default Courses;
+export default NotesIndex;

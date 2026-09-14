@@ -59,7 +59,6 @@ Comfortable
 1. Awareness Meditation / Insight (Vipasana)
    an accurate and deep understanding. (Wisdom)
 
-
 ## Vipasana
 
 - Uses breath as the primary focus of attention

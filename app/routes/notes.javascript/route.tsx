@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, MetaFunction } from "react-router";
 
 import * as introduction from "./introduction.mdx";
 import * as basics from "./basics.mdx";
@@ -7,17 +7,13 @@ import * as arraysAndObjects from "./arrays-and-objects.mdx";
 import * as functions from "./functions.mdx";
 import * as events from "./events.mdx";
 
-function postFromModule(mod) {
+function postFromModule(mod: { frontmatter: any }) {
   return {
     ...mod.frontmatter,
   };
 }
 
 export async function loader() {
-  // Return metadata about each of the posts for display on the index page.
-  // Referencing the posts here instead of in the Index component down below
-  // lets us avoid bundling the actual posts themselves in the bundle for the
-  // index page.
   return [
     postFromModule(introduction),
     postFromModule(basics),
@@ -30,7 +26,7 @@ export async function loader() {
 
 const ogImageUrl = "/images/javascript.png";
 
-export const meta = [
+export const meta: MetaFunction = () => [
   {
     title: "Javascript | Yajana",
   },
@@ -87,19 +83,19 @@ export default function Index() {
       </ul>
 
       <section id={introduction.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{introduction.frontmatter.title}</h1>
+        <h2>{introduction.frontmatter.title}</h2>
         <p>{introduction.frontmatter.description}</p>
         <introduction.default />
       </section>
 
       <section id={basics.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{basics.frontmatter.title}</h1>
+        <h2>{basics.frontmatter.title}</h2>
         <p>{basics.frontmatter.description}</p>
         <basics.default />
       </section>
 
       <section id={variables.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{variables.frontmatter.title}</h1>
+        <h2>{variables.frontmatter.title}</h2>
         <p>{variables.frontmatter.description}</p>
         <variables.default />
       </section>
@@ -108,19 +104,19 @@ export default function Index() {
         id={arraysAndObjects.frontmatter.slug}
         style={{ marginBottom: 20 }}
       >
-        <h1>{arraysAndObjects.frontmatter.title}</h1>
+        <h2>{arraysAndObjects.frontmatter.title}</h2>
         <p>{arraysAndObjects.frontmatter.description}</p>
         <arraysAndObjects.default />
       </section>
 
       <section id={functions.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{functions.frontmatter.title}</h1>
+        <h2>{functions.frontmatter.title}</h2>
         <p>{functions.frontmatter.description}</p>
         <functions.default />
       </section>
 
       <section id={events.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{events.frontmatter.title}</h1>
+        <h2>{events.frontmatter.title}</h2>
         <p>{events.frontmatter.description}</p>
         <events.default />
       </section>

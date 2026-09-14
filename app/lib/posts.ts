@@ -2,7 +2,7 @@ export type Frontmatter = {
   title: string;
   categories: string;
   description: string;
-  date: string; // YYYY-MM-DD
+  date: string;
 };
 
 export type PostMeta = {
@@ -17,7 +17,6 @@ export const getPosts = (): PostMeta[] => {
       "../routes/*/route.mdx",
       "!../routes/draft.*.mdx",
       "!../routes/drafts/*",
-      // "!../routes/notes.*/*",
     ],
     { eager: true }
   );
@@ -26,6 +25,16 @@ export const getPosts = (): PostMeta[] => {
     let id = file.replace("../", "").replace(/\.mdx$/, "");
     let slug = id.split("routes/")[1].replace(".", "/");
     if (slug === undefined) throw new Error(`No route for ${id}`);
+
+    if (!post.frontmatter) {
+      throw new Error(
+        `No frontmatter exported by ${id}.mdx — the \`---\` block must be the ` +
+          `very first thing in the file, with no blank line above it.`
+      );
+    }
+    if (!post.frontmatter.date) {
+      throw new Error(`Missing \`date\` in the frontmatter of ${id}.mdx`);
+    }
 
     return {
       slug,

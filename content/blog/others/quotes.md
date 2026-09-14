@@ -5,7 +5,6 @@ date: "2019-08-25"
 categories: "spirituality"
 ---
 
-
 - I don't have time for things which are not real
 
 - If you want to sweep arrogance of try poverty
