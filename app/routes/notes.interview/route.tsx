@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, MetaFunction } from "react-router";
 
 import * as BinarySearch from "./binary-search.mdx";
 import * as TwoPointers from "./two-pointers.mdx";
@@ -7,17 +7,13 @@ import * as JSQuestions from "./js-questions.mdx";
 import * as JSQuestions1 from "./js-questions-1.mdx";
 import * as CssQuestions from "./css-questions.mdx";
 
-function postFromModule(mod) {
+function postFromModule(mod: { frontmatter: any }) {
   return {
     ...mod.frontmatter,
   };
 }
 
 export async function loader() {
-  // Return metadata about each of the posts for display on the index page.
-  // Referencing the posts here instead of in the Index component down below
-  // lets us avoid bundling the actual posts themselves in the bundle for the
-  // index page.
   return [
     postFromModule(BinarySearch),
     postFromModule(TwoPointers),
@@ -28,7 +24,7 @@ export async function loader() {
 
 const ogImageUrl = "/images/interview.jpeg";
 
-export const meta = [
+export const meta: MetaFunction = () => [
   {
     title: "Interview Preparation | Yajana",
   },
@@ -84,13 +80,13 @@ export default function Index() {
         ))}
       </ul>
       <section id={BinarySearch.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{BinarySearch.frontmatter.title}</h1>
+        <h2>{BinarySearch.frontmatter.title}</h2>
         <p>{BinarySearch.frontmatter.description}</p>
         <BinarySearch.default />
       </section>
 
       <section id={TwoPointers.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{TwoPointers.frontmatter.title}</h1>
+        <h2>{TwoPointers.frontmatter.title}</h2>
         <p>{TwoPointers.frontmatter.description}</p>
         <TwoPointers.default />
       </section>
@@ -98,14 +94,14 @@ export default function Index() {
         id={JavascriptQuestions.frontmatter.slug}
         style={{ marginBottom: 20 }}
       >
-        <h1>{JavascriptQuestions.frontmatter.title}</h1>
+        <h2>{JavascriptQuestions.frontmatter.title}</h2>
         <p>{JavascriptQuestions.frontmatter.description}</p>
         <JavascriptQuestions.default />
         <JSQuestions.default />
         <JSQuestions1.default />
       </section>
       <section id={CssQuestions.frontmatter.slug} style={{ marginBottom: 20 }}>
-        <h1>{CssQuestions.frontmatter.title}</h1>
+        <h2>{CssQuestions.frontmatter.title}</h2>
         <p>{CssQuestions.frontmatter.description}</p>
         <CssQuestions.default />
       </section>

@@ -1,14 +1,24 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
 
-/**
- * Eyebrow above a title — the accent's one content touchpoint, legitimate
- * because it's a positional marker rather than a colored heading. Small-caps,
- * above the title only.
- */
 export function Kicker({
   className,
+  dot = false,
+  children,
   ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("kicker m-0 mb-2 text-sm", className)} {...props} />;
+}: React.HTMLAttributes<HTMLParagraphElement> & { dot?: boolean }) {
+  return (
+    <p
+      className={cn("kicker m-0", dot && "flex items-center gap-2", className)}
+      {...props}
+    >
+      {dot && (
+        <span
+          className="inline-block size-1.5 shrink-0 bg-primary"
+          aria-hidden="true"
+        />
+      )}
+      {children}
+    </p>
+  );
 }

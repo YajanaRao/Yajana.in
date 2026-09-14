@@ -2,21 +2,22 @@ import * as React from "react";
 import {
   Link,
   MetaFunction,
+  redirect,
   useLoaderData,
-  useSearchParams,
   LoaderFunctionArgs,
 } from "react-router";
-import { getPosts } from "../lib/posts";
-import { useUpdateQueryStringValueWithoutNavigation } from "../lib/utils";
-import { Input } from "@/components/ui/input";
-import { BadgeButton } from "@/components/ui/badge";
+import { motion, useReducedMotion } from "framer-motion";
+import type { MotionProps, Variants } from "framer-motion";
 import dayjs from "dayjs";
+import { getPosts } from "../lib/posts";
+import { QuickSearch } from "@/components/quick-search";
+import { Prose } from "@/components/prose";
 
 export const meta: MetaFunction<typeof loader> = (args) => {
   let { siteUrl } = args.data || {};
   return [
     {
-      title: "Yajana's Blog",
+      title: "Yajana Rao",
     },
     {
       content: "Yajana Rao's blog on Programming, Spirituality and Books",
@@ -27,7 +28,7 @@ export const meta: MetaFunction<typeof loader> = (args) => {
       property: "image",
     },
     {
-      content: "Yajana's Blog",
+      content: "Yajana Rao",
       property: "og:title",
     },
     {
@@ -64,7 +65,7 @@ export const meta: MetaFunction<typeof loader> = (args) => {
           "@type": "SearchAction",
           target: {
             "@type": "EntryPoint",
-            urlTemplate: "https://yajana.in/?q={search_term_string}",
+            urlTemplate: "https://yajana.in/blog?q={search_term_string}",
           },
           "query-input": "required name=search_term_string",
         },
@@ -92,6 +93,12 @@ export const meta: MetaFunction<typeof loader> = (args) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   let requestUrl = new URL(request.url);
+
+  const q = requestUrl.searchParams.get("q");
+  if (q) {
+    throw redirect(`/blog?q=${encodeURIComponent(q)}`, 301);
+  }
+
   let siteUrl = requestUrl.protocol + "//" + requestUrl.host;
 
   const posts = getPosts();
@@ -99,118 +106,157 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { siteUrl, posts };
 };
 
-const BlogIndex = () => {
-  const [searchParams] = useSearchParams();
-  const { posts: allPosts } = useLoaderData<typeof loader>();
-  const [queryValue, setQuery] = React.useState(() => {
-    return searchParams.get("q") ?? "";
-  });
-  const query = queryValue.trim();
+const EXPLORE = [
+  {
+    label: "Book summaries",
+    to: "/blog?q=book summary",
+    description: "Notes from what I've been reading",
+  },
+  {
+    label: "Now",
+    to: "/now",
+    description: "What I'm focused on at the moment",
+  },
+  {
+    label: "Notes",
+    to: "/notes",
+    description: "Rough notes on programming and writing",
+  },
+  {
+    label: "About",
+    to: "/about",
+    description: "Who I am, in more than one line",
+  },
+];
 
-  useUpdateQueryStringValueWithoutNavigation("q", query);
+const reveal: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut", delay: 0.08 * i },
+  }),
+};
 
-  let categories = React.useMemo(
-    () =>
-      allPosts
-        .flatMap((post) => post.frontmatter.categories ?? [])
-        .map((category) => category.trim())
-        .filter(Boolean)
-        .filter((value, index, self) => self.indexOf(value) === index),
-    [allPosts]
-  );
+const Home = () => {
+  const { posts } = useLoaderData<typeof loader>();
+  const recent = posts.slice(0, 5);
+  const reduceMotion = useReducedMotion();
 
-  const posts = React.useMemo(
-    () =>
-      allPosts
-        .filter((post) => {
-          const { title, categories } = post.frontmatter;
-          return (
-            title?.toLowerCase().includes(query?.toLowerCase() || "") ||
-            (categories &&
-              categories?.toLowerCase().includes(query?.toLowerCase() || ""))
-          );
-        })
-        .filter((post) => post),
-    [query, allPosts]
-  );
+  const anim = (i: number): MotionProps =>
+    reduceMotion
+      ? {}
+      : {
+          variants: reveal,
+          initial: "hidden",
+          animate: "show",
+          custom: i,
+        };
 
   return (
-    <div>
-      <form onChange={(e) => e.preventDefault()}>
-        <label htmlFor="search" className="sr-only">
-          Search blogs
-        </label>
-        <Input
-          id="search"
-          name="q"
-          type="search"
-          placeholder="Search blogs"
-          autoFocus
-          defaultValue={query}
-          onChange={(event) =>
-            setQuery(event.currentTarget.value?.toLowerCase())
-          }
-        />
-      </form>
+    <Prose>
+      <div className="flex flex-col gap-14 not-prose">
+        <motion.p
+          {...anim(0)}
+          className="mx-auto max-w-lede text-center font-content text-[19px] font-normal leading-[1.7] text-ink-primary"
+        >
+          This is my digital home — I write about{" "}
+          <IntroLink to="/blog?q=tech">programming</IntroLink>,{" "}
+          <IntroLink to="/blog?q=finance">money</IntroLink>,{" "}
+          <IntroLink to="/blog?q=book summary">books</IntroLink>, and the search
+          for a <IntroLink to="/blog?q=spirituality">quieter mind</IntroLink>.
+        </motion.p>
 
-      {/* Filter pills: green at rest, gold outline for the active one. */}
-      <div className="mb-16 mt-4 flex flex-wrap justify-center gap-3 not-prose">
-        {categories.map((category) => {
-          const active = query === category;
-          return (
-            <BadgeButton
-              key={category}
-              variant={active ? "active" : "resting"}
-              aria-pressed={active}
-              onClick={() => setQuery(active ? "" : category)}
-            >
-              {category}
-            </BadgeButton>
-          );
-        })}
-      </div>
+        <motion.div {...anim(1)}>
+          <QuickSearch posts={posts} />
+        </motion.div>
 
-      {/* No card fills here: spacing is the primary separator (DESIGN.md,
-          Layout). A background would be a second mechanism for a job the gap
-          already does. */}
-      <div className="flex flex-col gap-16 not-prose">
-        {posts.map((node) => {
-          const { title, date, description } = node.frontmatter;
-          return (
-            <article key={node.slug}>
-              {/* Ink at rest, gold on hover — linkness is already obvious from
-                  position in a list of titles, so the accent marks the one you
-                  are acting on, not all ten. */}
-              {/* Explicit scale, since not-prose opts out of prose sizing:
-                  30 / 14 / 18. Upright semibold Fraunces, not extrabold-italic:
-                  the title still clearly outranks the 18px lede, but reads as a
-                  confident editorial headline instead of shouting. The script
-                  wordmark carries the page's one slanted flourish; the titles
-                  stay upright so the layout has a vertical anchor. */}
-              <h2 className="m-0 font-heading text-3xl font-semibold not-italic leading-snug">
-                <Link
-                  prefetch="intent"
-                  to={`/${node.slug}`}
-                  className="text-ink-primary no-underline transition-colors duration-action ease-action hover:text-primary"
+        <div className="grid gap-14 sm:grid-cols-[1.35fr_1fr] sm:gap-20">
+          <motion.section {...anim(2)} aria-labelledby="recent-writing">
+            <p id="recent-writing" className="kicker">
+              Recent writing
+            </p>
+            <ul className="mt-6 flex flex-col gap-6">
+              {recent.map((post) => (
+                <li key={post.slug}>
+                  <Link
+                    prefetch="intent"
+                    to={`/${post.slug}`}
+                    className="group font-ui text-lg font-medium leading-snug text-ink-primary no-underline transition-colors duration-action ease-action hover:text-primary"
+                  >
+                    {post.frontmatter.title}
+                    <span
+                      aria-hidden
+                      className="inline-block translate-x-0 opacity-0 transition-all duration-action ease-action group-hover:translate-x-1 group-hover:opacity-100"
+                    >
+                      {" "}
+                      →
+                    </span>
+                  </Link>
+                  <p className="mt-0.5 font-ui text-sm text-ink-comment">
+                    <time dateTime={post.frontmatter.date}>
+                      {dayjs(post.frontmatter.date).format("MMMM YYYY")}
+                    </time>
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6">
+              <Link
+                to="/blog"
+                className="group font-ui text-base font-medium text-primary no-underline"
+              >
+                All posts{" "}
+                <span
+                  aria-hidden
+                  className="inline-block transition-transform duration-action ease-action group-hover:translate-x-1"
                 >
-                  {title}
-                </Link>
-              </h2>
-              <p className="m-0 mt-2 font-ui text-sm text-ink-comment">
-                <time dateTime={date}>
-                  {dayjs(date).format("MMMM D, YYYY")}
-                </time>
-              </p>
-              <p
-                dangerouslySetInnerHTML={{ __html: description }}
-                className="m-0 mt-3 font-ui text-lg text-ink-secondary"
-              />
-            </article>
-          );
-        })}
+                  →
+                </span>
+              </Link>
+            </p>
+          </motion.section>
+
+          <motion.section {...anim(3)} aria-labelledby="explore">
+            <p id="explore" className="kicker">
+              Explore
+            </p>
+            <ul className="mt-6 flex flex-col gap-6">
+              {EXPLORE.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    prefetch="intent"
+                    to={item.to}
+                    className="font-ui text-lg font-medium leading-snug text-ink-primary no-underline transition-colors duration-action ease-action hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                  <p className="mt-0.5 font-ui text-sm text-ink-secondary">
+                    {item.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+        </div>
       </div>
-    </div>
+    </Prose>
   );
 };
 
-export default BlogIndex;
+const IntroLink = ({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) => (
+  <Link
+    to={to}
+    className="font-medium text-primary no-underline transition-colors duration-action ease-action hover:underline hover:underline-offset-4"
+  >
+    {children}
+  </Link>
+);
+
+export default Home;

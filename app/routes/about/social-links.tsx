@@ -1,7 +1,8 @@
 import { siteMetadata } from "../../constants";
 
-// The same brand glyphs the footer ships, reused for the hero's social row.
 const ICONS = {
+  email:
+    "M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z",
   twitter:
     "M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z",
   github:
@@ -15,16 +16,38 @@ const ICONS = {
 const { social, author } = siteMetadata;
 
 export const SOCIALS = [
-  { key: "twitter", label: `${author.name} on X`, href: `https://twitter.com/${social.twitter}`, path: ICONS.twitter },
-  { key: "github", label: `${author.name} on GitHub`, href: `https://github.com/${social.github}`, path: ICONS.github },
-  { key: "substack", label: `${author.name} on Substack`, href: social.substack, path: ICONS.substack },
-  { key: "linkedin", label: `${author.name} on LinkedIn`, href: `https://www.linkedin.com/in/${social.linkedin}`, path: ICONS.linkedin },
+  {
+    key: "email",
+    label: `Email ${author.name}`,
+    href: "mailto:yajananrao@gmail.com",
+    path: ICONS.email,
+  },
+  {
+    key: "twitter",
+    label: `${author.name} on X`,
+    href: `https://twitter.com/${social.twitter}`,
+    path: ICONS.twitter,
+  },
+  {
+    key: "github",
+    label: `${author.name} on GitHub`,
+    href: `https://github.com/${social.github}`,
+    path: ICONS.github,
+  },
+  {
+    key: "substack",
+    label: `${author.name} on Substack`,
+    href: social.substack,
+    path: ICONS.substack,
+  },
+  {
+    key: "linkedin",
+    label: `${author.name} on LinkedIn`,
+    href: `https://www.linkedin.com/in/${social.linkedin}`,
+    path: ICONS.linkedin,
+  },
 ] as const;
 
-/**
- * The hero's social row — square recessed tiles with the brand glyph, gold on
- * hover. Square per DESIGN.md (chrome is rounded-none).
- */
 export function SocialRow() {
   return (
     <div className="flex items-center gap-4">
@@ -32,10 +55,11 @@ export function SocialRow() {
         <a
           key={s.key}
           href={s.href}
-          target="_blank"
-          rel="noreferrer"
+          {...(s.href.startsWith("http")
+            ? { target: "_blank" as const, rel: "noreferrer" }
+            : {})}
           aria-label={s.label}
-          className="group inline-flex size-9 items-center justify-center border border-border bg-surface-recessed1 transition-colors duration-action ease-action hover:border-primary"
+          className="group inline-flex size-9 items-center justify-center bg-surface-recessed1 transition-colors duration-action ease-action hover:bg-surface-raised"
         >
           <svg
             viewBox="0 0 24 24"

@@ -1,13 +1,8 @@
 import { LoaderFunctionArgs, MetaFunction } from "react-router";
-import { themeAction } from "@/lib/theme";
 import Hero from "./hero";
-import Biography from "./biography";
 import ProjectsSection from "./projects-section";
-import Contact from "./contact";
-
-// The overlay header renders the theme toggle inside this route, so its
-// no-action fetcher.Form posts here — expose the shared theme action.
-export const action = themeAction;
+import { ContactSection, Divider, NarrativeSection } from "./sections";
+import { WideProse } from "@/components/prose";
 
 export const meta: MetaFunction<typeof loader> = (args) => {
   let { siteUrl } = args.data || {};
@@ -59,12 +54,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 function About() {
   return (
-    <>
+    <WideProse>
       <Hero />
-      <Biography />
+      <Divider />
+      <NarrativeSection />
+      <Divider />
       <ProjectsSection />
-      <Contact />
-    </>
+      <Divider />
+      <ContactSection />
+    </WideProse>
   );
 }
 

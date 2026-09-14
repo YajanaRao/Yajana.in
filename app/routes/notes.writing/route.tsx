@@ -1,19 +1,18 @@
-import { MetaFunction } from "react-router";
+import { LoaderFunctionArgs, MetaFunction } from "react-router";
 
 import * as drafts from "./drafts.mdx";
 
-function postFromModule(mod) {
+function postFromModule(mod: { frontmatter: any }) {
   return {
     ...mod.frontmatter,
   };
 }
 
-export async function loader() {
-  // Return metadata about each of the posts for display on the index page.
-  // Referencing the posts here instead of in the Index component down below
-  // lets us avoid bundling the actual posts themselves in the bundle for the
-  // index page.
-  return [postFromModule(drafts)];
+export async function loader({ request }: LoaderFunctionArgs) {
+  let requestUrl = new URL(request.url);
+  let siteUrl = requestUrl.protocol + "//" + requestUrl.host;
+
+  return { siteUrl, posts: [postFromModule(drafts)] };
 }
 
 export const meta: MetaFunction<typeof loader> = (args) => {
@@ -62,20 +61,19 @@ export default function Index() {
     <div>
       <h1>Writings</h1>
       <p>
-        Hi 👋, I'm Yajana Rao and you're looking at my knowledge garden, a place
-        where I publish my raw notes and thoughts. Some of these notes graduate
-        to become self-contained essays, while others remain seeded here,
-        patiently waiting to be groomed someday.
+        Hi, I&apos;m Yajana Rao and you&apos;re looking at my knowledge garden,
+        a place where I publish my raw notes and thoughts. Some of these notes
+        graduate to become self-contained essays, while others remain seeded
+        here, patiently waiting to be groomed someday.
       </p>
-      {/* An accent rule and tone, never a filled panel (DESIGN.md, Blockquote). */}
       <div
         className="border-l-4 border-primary py-2 pl-6 text-ink-secondary"
         role="alert"
       >
-        <p className="font-bold">Be Warned</p>
+        <p className="font-semibold">Be warned</p>
         <p>
-          ⚠️ Writings here are raw and haven't been edited, so expect
-          grammatical and coherence issues at multiple places.
+          Writings here are raw and haven&apos;t been edited, so expect
+          grammatical and coherence issues in places.
         </p>
       </div>
 

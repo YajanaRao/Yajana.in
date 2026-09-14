@@ -1,5 +1,6 @@
-import Shortmic from "./shortmic.png";
-import ReactTrackPlayer from "./react-track-player.png";
+import Serenity from "@/assets/images/about/serenity.webp";
+import Shortmic from "@/assets/images/about/shortmic.webp";
+import ReactTrackPlayer from "@/assets/images/about/react-track-player.webp";
 
 export const skills = [
   {
@@ -258,8 +259,7 @@ export const projects = [
   {
     key: "serenity",
     title: "Serenity Music Player",
-    cover:
-      "https://raw.githubusercontent.com/YajanaRao/Serenity/develop/screenshots/banner.png",
+    cover: Serenity,
     link: "https://github.com/YajanaRao/Serenity",
     description:
       "Open source music player with 355+ GitHub stars, 111 forks, and 10 contributors. Built using React Native as an alternative to Spotify with 24 releases and 1000+ commits. Supports local, network, and cloud audio sources with playlist, queue, repeat, and shuffle features.",
@@ -332,6 +332,29 @@ export const projects = [
         key: "ms-clarity",
         text: "Microsoft Clarity",
       },
+    ],
+  },
+  {
+    key: "forestflower",
+    title: "Forestflower Theme",
+    cover: ReactTrackPlayer,
+    link: "https://github.com/YajanaRao/forestflower",
+    description:
+      "Wild and Beautiful colour scheme for Neovim, Ghostty, Herdr and Other tools I use",
+    source: [
+      {
+        key: "github",
+        text: "github",
+        type: "github",
+        link: "https://github.com/YajanaRao/forestflower",
+      },
+    ],
+    tags: [
+      {
+        key: "neovim",
+        text: "Neovim",
+      },
+      { key: "lua", text: "Lua" },
     ],
   },
   {

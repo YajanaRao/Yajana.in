@@ -86,15 +86,9 @@ export function SunIcon() {
 
 const iconTransformOrigin = { transformOrigin: "50% 100px" };
 function DarkModeToggle() {
-  // Read the root loader explicitly (not useLoaderData) so the toggle keeps
-  // working when rendered outside the root's tree — e.g. inside the About
-  // page's own overlay header, where useLoaderData would return that route's
-  // data instead of the theme string.
   const theme = (useRouteLoaderData("root") as string | undefined) ?? "light";
   const fetcher = useFetcher();
 
-  // A theme switch is an untriggered-feeling state change, so it takes the
-  // resting register (400ms) rather than the 130ms action register.
   const iconSpanClassName =
     "absolute inset-0 transform transition-transform duration-resting ease-out motion-reduce:duration-[0s]";
 
@@ -105,8 +99,6 @@ function DarkModeToggle() {
         name="theme"
         value={theme === "light" ? "dark" : "light"}
       />
-      {/* rounded-full is legitimate here: DESIGN.md reserves it for genuinely
-          circular elements, and a toggle knob is its named example. */}
       <button
         aria-label="Toggle Dark Mode"
         className="inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-primary p-1 text-primary transition-colors duration-action ease-action hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"

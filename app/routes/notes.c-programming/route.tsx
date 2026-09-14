@@ -1,6 +1,6 @@
 title: "C Programming";
 
-import { useLoaderData } from "react-router";
+import { useLoaderData, MetaFunction } from "react-router";
 
 import * as Introduction from "./introduction.mdx";
 import * as Strings from "./strings-and-character-array.md";
@@ -12,13 +12,13 @@ import * as Looping from "./looping/index.mdx";
 import * as Functions from "./functions/index.mdx";
 import * as Errors from "./errors/index.md";
 
-function postFromModule(mod) {
+function postFromModule(mod: { frontmatter: any }) {
   return {
     ...mod.frontmatter,
   };
 }
 
-export const meta = [
+export const meta: MetaFunction = () => [
   {
     title: "C Programming | Yajana",
   },
@@ -57,10 +57,6 @@ export const meta = [
 ];
 
 export async function loader() {
-  // Return metadata about each of the posts for display on the index page.
-  // Referencing the posts here instead of in the Index component down below
-  // lets us avoid bundling the actual posts themselves in the bundle for the
-  // index page.
   return [
     postFromModule(Introduction),
     postFromModule(Arrays),
@@ -93,19 +89,19 @@ export default function Index() {
       </ul>
 
       <section id={Introduction.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Introduction.frontmatter.title}</h1>
+        <h2>{Introduction.frontmatter.title}</h2>
         <p>{Introduction.frontmatter.description}</p>
         <Introduction.default />
       </section>
 
       <section id={Arrays.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Arrays.frontmatter.title}</h1>
+        <h2>{Arrays.frontmatter.title}</h2>
         <p>{Arrays.frontmatter.description}</p>
         <Arrays.default />
       </section>
 
       <section id={Pointers.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Pointers.frontmatter.title}</h1>
+        <h2>{Pointers.frontmatter.title}</h2>
         <p>{Pointers.frontmatter.description}</p>
         <Pointers.default />
       </section>
@@ -114,28 +110,28 @@ export default function Index() {
         id={ConditionalStatements.frontmatter.slug}
         style={{ marginBottom: 40 }}
       >
-        <h1>{ConditionalStatements.frontmatter.title}</h1>
+        <h2>{ConditionalStatements.frontmatter.title}</h2>
         <p>{ConditionalStatements.frontmatter.description}</p>
         <ConditionalStatements.default />
       </section>
 
       <section id={Errors.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Errors.frontmatter.title}</h1>
+        <h2>{Errors.frontmatter.title}</h2>
         <p>{Errors.frontmatter.description}</p>
         <Errors.default />
       </section>
       <section id={Functions.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Functions.frontmatter.title}</h1>
+        <h2>{Functions.frontmatter.title}</h2>
         <p>{Functions.frontmatter.description}</p>
         <Functions.default />
       </section>
       <section id={Looping.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Looping.frontmatter.title}</h1>
+        <h2>{Looping.frontmatter.title}</h2>
         <p>{Looping.frontmatter.description}</p>
         <Looping.default />
       </section>
       <section id={Strings.frontmatter.slug} style={{ marginBottom: 40 }}>
-        <h1>{Strings.frontmatter.title}</h1>
+        <h2>{Strings.frontmatter.title}</h2>
         <p>{Strings.frontmatter.description}</p>
         <Strings.default />
       </section>
@@ -143,7 +139,7 @@ export default function Index() {
         id={StructAndUnions.frontmatter.slug}
         style={{ marginBottom: 40 }}
       >
-        <h1>{StructAndUnions.frontmatter.title}</h1>
+        <h2>{StructAndUnions.frontmatter.title}</h2>
         <p>{StructAndUnions.frontmatter.description}</p>
         <StructAndUnions.default />
       </section>

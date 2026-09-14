@@ -8,7 +8,6 @@ date: "2022-01-10"
 sudo fusuma --config=/home/ubuntu/.config/fusuma/config.yml
 ```
 
-
 ## References
 
 - https://medium.com/@italohdc/setting-up-touchpad-gestures-in-your-ubuntu-laptop-dae7a5617f91

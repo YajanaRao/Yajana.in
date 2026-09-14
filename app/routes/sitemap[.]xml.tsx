@@ -2,9 +2,9 @@ import { getPosts } from "@/lib/posts";
 
 const SITE_URL = "https://yajana.in";
 
-// Static, non-MDX pages that should be discoverable in search.
 const STATIC_PATHS = [
   "/",
+  "/blog",
   "/about",
   "/now",
   "/notes",
@@ -17,7 +17,10 @@ export async function loader() {
   const posts = getPosts();
 
   const urls = [
-    ...STATIC_PATHS.map((path) => ({ path, lastmod: undefined as string | undefined })),
+    ...STATIC_PATHS.map((path) => ({
+      path,
+      lastmod: undefined as string | undefined,
+    })),
     ...posts.map((post) => ({
       path: `/${post.slug}`,
       lastmod: post.frontmatter.date,

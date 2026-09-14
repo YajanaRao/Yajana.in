@@ -17,7 +17,6 @@ import {
   ReferenceLine,
 } from "recharts";
 
-// --- Types ---
 
 export interface Snapshot {
   snapshot_date: string;
@@ -54,7 +53,6 @@ export interface Snapshot {
   nifty50_value: number;
 }
 
-// --- Helpers ---
 
 const ASSET_COLORS: Record<string, string> = {
   "Stocks - India": "hsl(var(--chart-1))",
@@ -85,10 +83,8 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg bg-card px-3 py-2">
-      <p className="mb-1 text-xs text-muted-foreground">
-        {label}
-      </p>
+    <div className="bg-card px-3 py-2">
+      <p className="mb-1 text-xs text-muted-foreground">{label}</p>
       {payload.map((entry, i) => (
         <p
           key={i}
@@ -102,8 +98,6 @@ function ChartTooltip({
   );
 }
 
-// --- Cumulative Returns vs Nifty 50 ---
-// Shows portfolio % return and Nifty 50 % return since the first snapshot (rebased to 0%)
 
 export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
   if (data.length < 2) return null;
@@ -111,7 +105,6 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
   const baseVal = data[0].total_val;
   const baseNifty = data[0].nifty50_value;
 
-  // Build Nifty series with carry-forward for missing/zero values
   let lastKnownNifty = baseNifty;
   const chartData = data.map((s) => {
     const nifty = s.nifty50_value > 0 ? s.nifty50_value : lastKnownNifty;
@@ -138,18 +131,31 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
         >
           <defs>
             <linearGradient id="gradPortfolio" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1} />
+              <stop
+                offset="0%"
+                stopColor="hsl(var(--chart-1))"
+                stopOpacity={0.5}
+              />
+              <stop
+                offset="100%"
+                stopColor="hsl(var(--chart-1))"
+                stopOpacity={0.1}
+              />
             </linearGradient>
             <linearGradient id="gradNifty" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--chart-3))" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="hsl(var(--chart-3))" stopOpacity={0.1} />
+              <stop
+                offset="0%"
+                stopColor="hsl(var(--chart-3))"
+                stopOpacity={0.4}
+              />
+              <stop
+                offset="100%"
+                stopColor="hsl(var(--chart-3))"
+                stopOpacity={0.1}
+              />
             </linearGradient>
           </defs>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="hsl(var(--border))"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -192,8 +198,6 @@ export function CumulativeReturnsChart({ data }: { data: Snapshot[] }) {
   );
 }
 
-// --- Asset Class Performance Comparison ---
-// Rebases each asset class, portfolio total, and Nifty 50 to 0% at the first snapshot
 
 const PERFORMANCE_COLORS: Record<string, string> = {
   Portfolio: "hsl(var(--chart-1))",
@@ -210,24 +214,23 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
   if (data.length < 2) return null;
 
   const currentReturnPct = (currentValue: number, investedValue: number) =>
-    investedValue > 0 ? ((currentValue - investedValue) / investedValue) * 100 : 0;
+    investedValue > 0
+      ? ((currentValue - investedValue) / investedValue) * 100
+      : 0;
 
   const chartData = data.map((s) => {
     return {
       date: formatDate(s.snapshot_date),
       Portfolio: currentReturnPct(s.total_val, s.total_inv),
-      "Stocks - India": currentReturnPct(s.curr_stocks_india, s.inv_stocks_india),
+      "Stocks - India": currentReturnPct(
+        s.curr_stocks_india,
+        s.inv_stocks_india
+      ),
       "Stocks - US": currentReturnPct(s.curr_stocks_us, s.inv_stocks_us),
       "ETFs - India": currentReturnPct(s.curr_etfs_india, s.inv_etfs_india),
       "ETFs - US": currentReturnPct(s.curr_etfs_us, s.inv_etfs_us),
-      "Mutual Funds": currentReturnPct(
-        s.curr_mutual_funds,
-        s.inv_mutual_funds,
-      ),
-      "Gold & Silver": currentReturnPct(
-        s.curr_gold_silver,
-        s.inv_gold_silver,
-      ),
+      "Mutual Funds": currentReturnPct(s.curr_mutual_funds, s.inv_mutual_funds),
+      "Gold & Silver": currentReturnPct(s.curr_gold_silver, s.inv_gold_silver),
       Crypto: currentReturnPct(s.curr_crypto, s.inv_crypto),
     };
   });
@@ -246,10 +249,7 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="hsl(var(--border))"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -264,7 +264,11 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
             width={55}
           />
           <Tooltip content={<ChartTooltip />} />
-          <ReferenceLine y={0} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+          <ReferenceLine
+            y={0}
+            stroke="hsl(var(--border))"
+            strokeDasharray="3 3"
+          />
           {Object.entries(PERFORMANCE_COLORS).map(([key, color]) => (
             <Line
               key={key}
@@ -290,7 +294,6 @@ export function AssetClassPerformanceChart({ data }: { data: Snapshot[] }) {
   );
 }
 
-// --- Asset Allocation Pie (percentages) ---
 
 export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
   const assets = [
@@ -328,7 +331,9 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
             {assets.map((entry) => (
               <Cell
                 key={entry.name}
-                fill={ASSET_COLORS[entry.name] ?? "hsl(var(--muted-foreground))"}
+                fill={
+                  ASSET_COLORS[entry.name] ?? "hsl(var(--muted-foreground))"
+                }
               />
             ))}
           </Pie>
@@ -338,7 +343,7 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
               const { name, value } = payload[0].payload;
               const pct = ((value / total) * 100).toFixed(1);
               return (
-                <div className="rounded-lg bg-card px-3 py-2">
+                <div className="bg-card px-3 py-2">
                   <p className="text-sm font-medium text-card-foreground">
                     {name}
                   </p>
@@ -351,7 +356,7 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
           />
         </PieChart>
       </ResponsiveContainer>
-          <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+      <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
         {assets.map((a) => (
           <div
             key={a.name}
@@ -359,7 +364,10 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
           >
             <span
               className="inline-block h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: ASSET_COLORS[a.name] ?? "hsl(var(--muted-foreground))" }}
+              style={{
+                backgroundColor:
+                  ASSET_COLORS[a.name] ?? "hsl(var(--muted-foreground))",
+              }}
             />
             {a.name}{" "}
             <span className="font-medium text-foreground">
@@ -372,7 +380,6 @@ export function AssetAllocationChart({ snapshot }: { snapshot: Snapshot }) {
   );
 }
 
-// --- Asset-wise Returns (%) Bar Chart ---
 
 export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
   const returnPct = (curr: number, inv: number) =>
@@ -381,7 +388,10 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
   const assets = [
     {
       name: "Stocks IN",
-      returnPct: returnPct(snapshot.curr_stocks_india, snapshot.inv_stocks_india),
+      returnPct: returnPct(
+        snapshot.curr_stocks_india,
+        snapshot.inv_stocks_india
+      ),
     },
     {
       name: "Stocks US",
@@ -397,7 +407,10 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
     },
     {
       name: "MFs",
-      returnPct: returnPct(snapshot.curr_mutual_funds, snapshot.inv_mutual_funds),
+      returnPct: returnPct(
+        snapshot.curr_mutual_funds,
+        snapshot.inv_mutual_funds
+      ),
     },
     {
       name: "Gold",
@@ -409,17 +422,22 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
     },
     {
       name: "Emergency",
-      returnPct: 6.5, // IDFC First Bank savings rate
+      returnPct: 6.5,
     },
     {
       name: "Savings",
-      returnPct: 2.5, // SBI savings rate
+      returnPct: 2.5,
     },
     {
       name: "FDs",
-      returnPct: returnPct(snapshot.curr_fixed_deposits, snapshot.inv_fixed_deposits),
+      returnPct: returnPct(
+        snapshot.curr_fixed_deposits,
+        snapshot.inv_fixed_deposits
+      ),
     },
-  ].filter((a) => a.returnPct !== 0 || a.name === "Emergency" || a.name === "Savings");
+  ].filter(
+    (a) => a.returnPct !== 0 || a.name === "Emergency" || a.name === "Savings"
+  );
 
   return (
     <div>
@@ -431,10 +449,7 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
           data={assets}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="hsl(var(--border))"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis
             dataKey="name"
             tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
@@ -455,7 +470,11 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
             {assets.map((entry, i) => (
               <Cell
                 key={i}
-                fill={entry.returnPct >= 0 ? "hsl(var(--chart-1))" : "hsl(var(--destructive))"}
+                fill={
+                  entry.returnPct >= 0
+                    ? "hsl(var(--chart-1))"
+                    : "hsl(var(--destructive))"
+                }
                 radius={[4, 4, 0, 0] as unknown as number}
               />
             ))}
@@ -466,17 +485,17 @@ export function AssetReturnsChart({ snapshot }: { snapshot: Snapshot }) {
   );
 }
 
-// --- Period-over-Period Growth (Portfolio vs Nifty) ---
 
 export function GrowthChart({ data }: { data: Snapshot[] }) {
   if (data.length < 2) return null;
 
-  // Carry forward zero nifty values so period-over-period calc isn't distorted
   let prevNifty = data[0].nifty50_value;
   const chartData = data.slice(1).map((s, i) => {
     const prev = data[i];
-    const prevNiftyEffective = prev.nifty50_value > 0 ? prev.nifty50_value : prevNifty;
-    const currNifty = s.nifty50_value > 0 ? s.nifty50_value : prevNiftyEffective;
+    const prevNiftyEffective =
+      prev.nifty50_value > 0 ? prev.nifty50_value : prevNifty;
+    const currNifty =
+      s.nifty50_value > 0 ? s.nifty50_value : prevNiftyEffective;
 
     const portfolioGrowth =
       prev.total_val > 0
@@ -509,10 +528,7 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="hsl(var(--border))"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -555,11 +571,6 @@ export function GrowthChart({ data }: { data: Snapshot[] }) {
   );
 }
 
-// --- Income Allocation Chart ---
-// Expense = Salary - Δ(investment assets) - Δ(savings + emergency fund)
-// Investment assets = stocks, MFs, gold, crypto, FDs
-// Savings pool = savings account + emergency fund (where salary lands)
-// Skips first snapshot (baseline) and the latest if same-day (no change).
 
 export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
   const chartData: Array<{
@@ -575,7 +586,6 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
     if (curr.inc_month <= 0) continue;
 
-    // Change in pure investment assets (stocks, ETFs, MFs, gold, crypto, FDs)
     const investDelta =
       curr.inv_stocks -
       prev.inv_stocks +
@@ -586,7 +596,6 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
       (curr.inv_crypto - prev.inv_crypto) +
       (curr.inv_fixed_deposits - prev.inv_fixed_deposits);
 
-    // Change in cash pool (savings + emergency fund)
     const cashDelta =
       curr.inv_savings_account -
       prev.inv_savings_account +
@@ -594,7 +603,6 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
 
     const expense = curr.inc_month - investDelta - cashDelta;
 
-    // Skip if no meaningful change (same-day duplicate)
     if (investDelta === 0 && cashDelta === 0) continue;
 
     const salary = curr.inc_month;
@@ -621,10 +629,7 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
           data={chartData}
           margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="hsl(var(--border))"
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -647,9 +652,21 @@ export function IncomeAllocationChart({ data }: { data: Snapshot[] }) {
             wrapperStyle={{ color: "hsl(var(--foreground))" }}
           />
           <ReferenceLine y={0} stroke="hsl(var(--border))" />
-          <Bar dataKey="Invested" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Cash Δ" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+          <Bar
+            dataKey="Invested"
+            fill="hsl(var(--chart-1))"
+            radius={[4, 4, 0, 0]}
+          />
+          <Bar
+            dataKey="Expenses"
+            fill="hsl(var(--destructive))"
+            radius={[4, 4, 0, 0]}
+          />
+          <Bar
+            dataKey="Cash Δ"
+            fill="hsl(var(--chart-2))"
+            radius={[4, 4, 0, 0]}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

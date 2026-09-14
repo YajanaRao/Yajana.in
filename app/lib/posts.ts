@@ -2,7 +2,7 @@ export type Frontmatter = {
   title: string;
   categories: string;
   description: string;
-  date: string; // YYYY-MM-DD
+  date: string;
 };
 
 export type PostMeta = {
@@ -17,7 +17,6 @@ export const getPosts = (): PostMeta[] => {
       "../routes/*/route.mdx",
       "!../routes/draft.*.mdx",
       "!../routes/drafts/*",
-      // "!../routes/notes.*/*",
     ],
     { eager: true }
   );
@@ -27,9 +26,6 @@ export const getPosts = (): PostMeta[] => {
     let slug = id.split("routes/")[1].replace(".", "/");
     if (slug === undefined) throw new Error(`No route for ${id}`);
 
-    // remark-frontmatter only parses YAML that opens the file. A stray blank
-    // line before the `---` silently yields no export, which otherwise blows up
-    // several frames later in sortBy with no mention of the offending file.
     if (!post.frontmatter) {
       throw new Error(
         `No frontmatter exported by ${id}.mdx — the \`---\` block must be the ` +

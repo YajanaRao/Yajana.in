@@ -2,7 +2,7 @@ import * as React from "react";
 
 function BookSummary() {
   return (
-    <div className="mx-auto max-w-md overflow-hidden rounded-lg bg-card md:max-w-2xl not-prose">
+    <div className="mx-auto max-w-md overflow-hidden bg-card md:max-w-2xl not-prose">
       <div className="md:flex">
         <div className="md:shrink-0 flex items-center justify-center">
           <img
@@ -18,7 +18,7 @@ function BookSummary() {
           >
             View all my reviews
           </a>
-          <h4 className="font-heading font-extrabold italic tracking-tight text-ink-primary">
+          <h4 className="font-content font-semibold text-ink-primary">
             <a href="https://www.goodreads.com/book/show/242472.The_Black_Swan">
               The Black Swan: The Impact of the Highly Improbable
             </a>{" "}

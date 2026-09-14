@@ -3,7 +3,145 @@
   "installCommand": "bun install",
   "devCommand": "bun run dev",
   "redirects": [
-    { "source": "/2025", "destination": "/review/2025", "permanent": false },
-    { "source": "/kerala", "destination": "/travel/kerala", "permanent": false }
+    {
+      "source": "/2025",
+      "destination": "/blog/2025",
+      "permanent": false
+    },
+    {
+      "source": "/kerala",
+      "destination": "/blog/kerala",
+      "permanent": false
+    },
+    {
+      "source": "/blogs",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/archieve/self-discovery",
+      "destination": "/blog/self-discovery",
+      "permanent": true
+    },
+    {
+      "source": "/archieve/the-rural-hostels",
+      "destination": "/blog/the-rural-hostels",
+      "permanent": true
+    },
+    {
+      "source": "/book/atmamun",
+      "destination": "/blog/atmamun",
+      "permanent": true
+    },
+    {
+      "source": "/book/black-swan",
+      "destination": "/blog/black-swan",
+      "permanent": true
+    },
+    {
+      "source": "/book/how-mind-works",
+      "destination": "/blog/how-mind-works",
+      "permanent": true
+    },
+    {
+      "source": "/book/infinity",
+      "destination": "/blog/infinity",
+      "permanent": true
+    },
+    {
+      "source": "/book/rework",
+      "destination": "/blog/rework",
+      "permanent": true
+    },
+    {
+      "source": "/book/sapiens",
+      "destination": "/blog/sapiens",
+      "permanent": true
+    },
+    {
+      "source": "/book/selfish-gene",
+      "destination": "/blog/selfish-gene",
+      "permanent": true
+    },
+    {
+      "source": "/book/the-bed-of-procrustes",
+      "destination": "/blog/the-bed-of-procrustes",
+      "permanent": true
+    },
+    {
+      "source": "/book/the-lean-startup",
+      "destination": "/blog/the-lean-startup",
+      "permanent": true
+    },
+    {
+      "source": "/book/the-power-of-now",
+      "destination": "/blog/the-power-of-now",
+      "permanent": true
+    },
+    {
+      "source": "/book/tiny-experiments",
+      "destination": "/blog/tiny-experiments",
+      "permanent": true
+    },
+    {
+      "source": "/book/waking",
+      "destination": "/blog/waking",
+      "permanent": true
+    },
+    {
+      "source": "/review/2025",
+      "destination": "/blog/2025",
+      "permanent": true
+    },
+    {
+      "source": "/tech/api-specs",
+      "destination": "/blog/api-specs",
+      "permanent": true
+    },
+    {
+      "source": "/tech/best-practices-while-using-textinput",
+      "destination": "/blog/best-practices-while-using-textinput",
+      "permanent": true
+    },
+    {
+      "source": "/tech/coding-best-practices",
+      "destination": "/blog/coding-best-practices",
+      "permanent": true
+    },
+    {
+      "source": "/tech/integrate-react-native-web-to-existing-application",
+      "destination": "/blog/integrate-react-native-web-to-existing-application",
+      "permanent": true
+    },
+    {
+      "source": "/tech/macbook",
+      "destination": "/blog/macbook",
+      "permanent": true
+    },
+    {
+      "source": "/tech/self-serve",
+      "destination": "/blog/self-serve",
+      "permanent": true
+    },
+    {
+      "source": "/tech/use-async-storage-hook",
+      "destination": "/blog/use-async-storage-hook",
+      "permanent": true
+    },
+    {
+      "source": "/tech/vim",
+      "destination": "/blog/vim",
+      "permanent": true
+    },
+    {
+      "source": "/tech/why-did-you-rerender",
+      "destination": "/blog/why-did-you-rerender",
+      "permanent": true
+    },
+    {
+      "source": "/travel/kerala",
+      "destination": "/blog/kerala",
+      "permanent": true
+    }
   ]
 }

@@ -3,6 +3,7 @@ export const siteMetadata = {
   author: {
     name: `Yajana Rao`,
     summary: `Software Engineer + Writer + Seeker of Truth`,
+    tagline: `I'm a software engineer and writer.`,
   },
   description: `Personal blog of Yajana Rao`,
   siteUrl: `https://yajana.in/`,

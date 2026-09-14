@@ -5,6 +5,11 @@
     "": {
       "name": "yajana-blog",
       "dependencies": {
+        "@fontsource-variable/big-shoulders-display": "^5.3.0",
+        "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+        "@fontsource-variable/jetbrains-mono": "^5.3.0",
+        "@fontsource-variable/wix-madefor-text": "^5.3.0",
+        "@fontsource/freehand": "^5.3.0",
         "@react-router/node": "^7.15.0",
         "@react-router/serve": "^7.15.0",
         "@supabase/supabase-js": "^2.105.3",
@@ -158,6 +163,16 @@
     "@eslint/eslintrc": ["@eslint/eslintrc@2.1.4", "", { "dependencies": { "ajv": "^6.12.4", "debug": "^4.3.2", "espree": "^9.6.0", "globals": "^13.19.0", "ignore": "^5.2.0", "import-fresh": "^3.2.1", "js-yaml": "^4.1.0", "minimatch": "^3.1.2", "strip-json-comments": "^3.1.1" } }, "sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ=="],
 
     "@eslint/js": ["@eslint/js@8.57.1", "", {}, "sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q=="],
+
+    "@fontsource-variable/big-shoulders-display": ["@fontsource-variable/big-shoulders-display@5.3.0", "", {}, "sha512-7k1REXMZFEa7gSWOURbmCJW5Gv9D0EbEFQgosZidM8Ob/qpPlK96vqyIzCTnNZ/C0XFZWxeKU53D3QdeHctYCA=="],
+
+    "@fontsource-variable/ibm-plex-sans": ["@fontsource-variable/ibm-plex-sans@5.3.0", "", {}, "sha512-agG8tXFEo0hD9+J7npa4vbbWult52eMLVaQ6WQRlhs/iCAojrMAoejru85W9HTVXHfyUj96KM7gp/KGAS87XaQ=="],
+
+    "@fontsource-variable/jetbrains-mono": ["@fontsource-variable/jetbrains-mono@5.3.0", "", {}, "sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw=="],
+
+    "@fontsource-variable/wix-madefor-text": ["@fontsource-variable/wix-madefor-text@5.3.0", "", {}, "sha512-p5zs3NakLybEkOyWMXROb6P9kAyIzsRJXgommBy0QC5RaFTb+Te2OdWikitQ+6KGBPMvACLUEIXgPOBQMK5NUg=="],
+
+    "@fontsource/freehand": ["@fontsource/freehand@5.3.0", "", {}, "sha512-60VszXOjo8unICoeREC9w7XtYP76aThT6T6h3cxRjBRfgjGMsqhVL2eH3jcSf3tk7nl+u83IA6QWBOUJDnAZTg=="],
 
     "@humanwhocodes/config-array": ["@humanwhocodes/config-array@0.13.0", "", { "dependencies": { "@humanwhocodes/object-schema": "^2.0.3", "debug": "^4.3.1", "minimatch": "^3.0.5" } }, "sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw=="],
 

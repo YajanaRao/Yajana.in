@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, MetaFunction, useLoaderData } from "react-router";
-import { supabase } from "@/lib/supabase.server";
+import { getSupabase } from "@/lib/supabase.server";
 import { xirr, cagr } from "@/lib/xirr";
 import {
   CumulativeReturnsChart,
@@ -9,6 +9,7 @@ import {
   GrowthChart,
   type Snapshot,
 } from "./charts";
+import { Prose } from "@/components/prose";
 
 export const meta: MetaFunction = () => {
   return [
@@ -71,7 +72,6 @@ function normalizeSnapshots(snapshots: Snapshot[]): Snapshot[] {
       const currentValue = current[currentField] as number;
       const previousValue = previous[currentField] as number;
 
-      // Weekend/failed quotes can arrive as zero even when the position still exists.
       if (invested > 0 && currentValue === 0 && previousValue > 0) {
         current[currentField] = previousValue as Snapshot[typeof currentField];
       }
@@ -108,10 +108,6 @@ function computeMetrics(snapshots: Snapshot[]): PortfolioMetrics {
   const latest = snapshots[snapshots.length - 1];
   const previous = snapshots[snapshots.length - 2];
 
-  // Build XIRR cash flows.
-  // The first snapshot is the baseline — we use its total_val as starting capital
-  // since we don't know when the money before tracking started was invested.
-  // From snapshot 2 onward, new_inv represents actual new inflows.
   const flows: Array<{ date: Date; amount: number }> = [];
 
   flows.push({
@@ -137,7 +133,6 @@ function computeMetrics(snapshots: Snapshot[]): PortfolioMetrics {
   const xirrRate = xirr(flows);
   const xirrPct = xirrRate !== null ? xirrRate * 100 : null;
 
-  // Find the last snapshot with a valid (non-zero) Nifty 50 value
   const latestNiftySnapshot = [...snapshots]
     .reverse()
     .find((s) => s.nifty50_value > 0) ?? latest;
@@ -166,7 +161,6 @@ const FIRE_CONFIG = {
   expectedAnnualReturn: 0.1,
   inflationRate: 0.06,
   fireMultiplier: 25,
-  // Target future lifestyle expense, not current conservative spending
   targetMonthlyExpense: 100_000,
 } as const;
 
@@ -193,15 +187,12 @@ function computeFireMetrics(
 
   if (fireNumber <= 0) return noData;
 
-  // FIRE progress
   const progressPct = (currentPortfolio / fireNumber) * 100;
 
-  // Years to FIRE using real return (nominal - inflation) with monthly contributions
   const realReturn =
     FIRE_CONFIG.expectedAnnualReturn - FIRE_CONFIG.inflationRate;
   const monthlyRealReturn = realReturn / 12;
 
-  // Average monthly investment from snapshots
   const investmentSnapshots = snapshots.filter((s) => s.new_inv > 0);
   const avgMonthlyInvestment =
     investmentSnapshots.length > 0
@@ -209,8 +200,6 @@ function computeFireMetrics(
         investmentSnapshots.length
       : 0;
 
-  // Solve: FV = PV*(1+r)^n + PMT*((1+r)^n - 1)/r = fireNumber
-  // Using iterative approach since there's no closed-form solution for n with both PV and PMT
   let yearsToFire: number | null = null;
   if (monthlyRealReturn > 0 && avgMonthlyInvestment > 0) {
     let months = 0;
@@ -222,7 +211,6 @@ function computeFireMetrics(
     yearsToFire = months < 600 ? months / 12 : null;
   }
 
-  // Coast FIRE: would current portfolio compound to FIRE number by target age?
   const yearsToCoastTarget =
     FIRE_CONFIG.coastFireTargetAge - FIRE_CONFIG.currentAge;
   const coastFireNumber =
@@ -240,7 +228,6 @@ function computeFireMetrics(
     coastFireYearsAway = months < 600 ? months / 12 : null;
   }
 
-  // Savings rate from latest month
   const latestExpense = expenses[expenses.length - 1];
   const savingsRatePct =
     latestExpense.salary > 0
@@ -266,6 +253,7 @@ function computeFireMetrics(
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const supabase = getSupabase();
   const [snapshotResult, expenseResult] = await Promise.all([
     supabase
       .from("portfolio_snapshots")
@@ -289,7 +277,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { snapshots, metrics, fireMetrics };
 };
 
-// --- Stat card ---
 
 function StatCard({
   label,
@@ -310,7 +297,7 @@ function StatCard({
         : "text-foreground";
 
   return (
-    <div className="rounded-lg bg-card p-4">
+    <div className="bg-card p-4">
       <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
@@ -333,7 +320,7 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
   const progressBarWidth = `${progressClamped.toFixed(0)}%`;
 
   return (
-    <div className="rounded-lg bg-card p-5">
+    <div className="bg-card p-5">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           FIRE Forecast
@@ -346,7 +333,6 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
       </div>
 
       <div className="space-y-4">
-        {/* Progress bar */}
         <div>
           <div className="mb-1 flex items-baseline justify-between">
             <span className="text-xs text-muted-foreground">
@@ -356,15 +342,14 @@ function FireForecastCard({ fire }: { fire: FireMetrics }) {
               {fire.progressPct.toFixed(1)}%
             </span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-sm bg-muted">
+          <div className="h-2.5 w-full overflow-hidden bg-muted">
             <div
-              className="h-full rounded-sm bg-chart-1 transition-all duration-resting ease-out"
+              className="h-full bg-chart-1 transition-all duration-resting ease-out"
               style={{ width: progressBarWidth }}
             />
           </div>
         </div>
 
-        {/* Metrics row */}
         <div className="grid grid-cols-3 gap-3">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -427,9 +412,11 @@ export default function PortfolioPage() {
 
   if (!snapshots.length) {
     return (
-      <div className="py-16 text-center text-muted-foreground">
-        No portfolio data available yet.
-      </div>
+      <Prose>
+        <div className="py-16 text-center text-muted-foreground">
+          No portfolio data available yet.
+        </div>
+      </Prose>
     );
   }
 
@@ -450,96 +437,93 @@ export default function PortfolioPage() {
   const previousDate = previous ? fmt(previous.snapshot_date) : null;
 
   return (
-    <div className="not-prose">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Portfolio
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Last updated: {lastUpdated}
-        </p>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard
-          label="XIRR"
-          value={metrics.xirrPct !== null ? pctString(metrics.xirrPct) : "—"}
-          subtitle={`since ${trackingSince}`}
-          trend={
-            metrics.xirrPct !== null
-              ? metrics.xirrPct >= 0
-                ? "up"
-                : "down"
-              : "neutral"
-          }
-        />
-        <StatCard
-          label="Since Last Snapshot"
-          value={pctString(metrics.periodGrowthPct)}
-          subtitle={previousDate ? `since ${previousDate}` : undefined}
-          trend={metrics.periodGrowthPct >= 0 ? "up" : "down"}
-        />
-        <StatCard
-          label="Nifty 50 CAGR"
-          value={pctString(metrics.niftyCagrPct)}
-          subtitle={`${trackingSince} — ${lastUpdated}`}
-          trend={metrics.niftyCagrPct >= 0 ? "up" : "down"}
-        />
-        <StatCard
-          label="Alpha"
-          value={metrics.alphaPct !== null ? pctString(metrics.alphaPct) : "—"}
-          subtitle="XIRR − Nifty CAGR"
-          trend={
-            metrics.alphaPct !== null
-              ? metrics.alphaPct >= 0
-                ? "up"
-                : "down"
-              : "neutral"
-          }
-        />
-      </div>
-
-      {/* FIRE Forecast */}
-      <div className="mb-10">
-        <FireForecastCard fire={fireMetrics} />
-      </div>
-
-      {/* Charts */}
-      <div className="space-y-10">
-        <div className="rounded-lg bg-card p-4 sm:p-6">
-          <CumulativeReturnsChart data={snapshots} />
+    <Prose>
+      <div className="not-prose">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Portfolio
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Last updated: {lastUpdated}
+          </p>
         </div>
 
-        <div className="rounded-lg bg-card p-4 sm:p-6">
-          <AssetClassPerformanceChart data={snapshots} />
+        <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatCard
+            label="XIRR"
+            value={metrics.xirrPct !== null ? pctString(metrics.xirrPct) : "—"}
+            subtitle={`since ${trackingSince}`}
+            trend={
+              metrics.xirrPct !== null
+                ? metrics.xirrPct >= 0
+                  ? "up"
+                  : "down"
+                : "neutral"
+            }
+          />
+          <StatCard
+            label="Since Last Snapshot"
+            value={pctString(metrics.periodGrowthPct)}
+            subtitle={previousDate ? `since ${previousDate}` : undefined}
+            trend={metrics.periodGrowthPct >= 0 ? "up" : "down"}
+          />
+          <StatCard
+            label="Nifty 50 CAGR"
+            value={pctString(metrics.niftyCagrPct)}
+            subtitle={`${trackingSince} — ${lastUpdated}`}
+            trend={metrics.niftyCagrPct >= 0 ? "up" : "down"}
+          />
+          <StatCard
+            label="Alpha"
+            value={metrics.alphaPct !== null ? pctString(metrics.alphaPct) : "—"}
+            subtitle="XIRR − Nifty CAGR"
+            trend={
+              metrics.alphaPct !== null
+                ? metrics.alphaPct >= 0
+                  ? "up"
+                  : "down"
+                : "neutral"
+            }
+          />
         </div>
 
-        <div className="rounded-lg bg-card p-4 sm:p-6">
-          <AssetAllocationChart snapshot={latest} />
+        <div className="mb-10">
+          <FireForecastCard fire={fireMetrics} />
         </div>
 
-        <div className="rounded-lg bg-card p-4 sm:p-6">
-          <AssetReturnsChart snapshot={latest} />
-        </div>
-
-        {snapshots.length > 1 && (
-          <div className="rounded-lg bg-card p-4 sm:p-6">
-            <GrowthChart data={snapshots} />
+        <div className="space-y-10">
+          <div className="bg-card p-4 sm:p-6">
+            <CumulativeReturnsChart data={snapshots} />
           </div>
-        )}
 
-        {/* Methodology note */}
-        <p className="text-xs text-muted-foreground">
-          XIRR accounts for the timing and size of each investment. Nifty 50
-          CAGR is the compound annual growth over the same date range. Alpha =
-          XIRR − Nifty CAGR. The cumulative returns chart uses simple % change
-          from the first snapshot (not XIRR), so it may differ from the headline
-          number. The asset-class performance chart shows current return versus
-          invested amount for each snapshot.
-        </p>
+          <div className="bg-card p-4 sm:p-6">
+            <AssetClassPerformanceChart data={snapshots} />
+          </div>
+
+          <div className="bg-card p-4 sm:p-6">
+            <AssetAllocationChart snapshot={latest} />
+          </div>
+
+          <div className="bg-card p-4 sm:p-6">
+            <AssetReturnsChart snapshot={latest} />
+          </div>
+
+          {snapshots.length > 1 && (
+            <div className="bg-card p-4 sm:p-6">
+              <GrowthChart data={snapshots} />
+            </div>
+          )}
+
+          <p className="text-xs text-muted-foreground">
+            XIRR accounts for the timing and size of each investment. Nifty 50
+            CAGR is the compound annual growth over the same date range. Alpha =
+            XIRR − Nifty CAGR. The cumulative returns chart uses simple % change
+            from the first snapshot (not XIRR), so it may differ from the headline
+            number. The asset-class performance chart shows current return versus
+            invested amount for each snapshot.
+          </p>
+        </div>
       </div>
-    </div>
+    </Prose>
   );
 }
