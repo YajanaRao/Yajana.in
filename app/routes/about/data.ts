@@ -1,6 +1,7 @@
 import Serenity from "@/assets/images/about/serenity.webp";
 import Shortmic from "@/assets/images/about/shortmic.webp";
 import ReactTrackPlayer from "@/assets/images/about/react-track-player.webp";
+import Forestflower from "@/assets/images/about/forestflower.webp";
 
 export const skills = [
   {
@@ -337,7 +338,7 @@ export const projects = [
   {
     key: "forestflower",
     title: "Forestflower Theme",
-    cover: ReactTrackPlayer,
+    cover: Forestflower,
     link: "https://github.com/YajanaRao/forestflower",
     description:
       "Wild and Beautiful colour scheme for Neovim, Ghostty, Herdr and Other tools I use",
