@@ -5,7 +5,7 @@ import typography from "@tailwindcss/typography";
 // thickness that changes under the cursor makes the line jump against the
 // baseline; holding it steady lets the colour carry the whole hover signal.
 const proseLink = {
-  fontWeight: "500",
+  fontWeight: "400",
   textDecoration: "underline",
   textDecorationColor: "hsl(var(--primary) / 0.45)",
   textDecorationThickness: "2px",
@@ -131,6 +131,7 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
           container: "hsl(var(--primary-container))",
         },
+        illustration: "hsl(var(--illustration))",
         resting: {
           DEFAULT: "hsl(var(--resting))",
           container: "hsl(var(--resting-container))",

@@ -2,82 +2,139 @@
 version: alpha
 name: Forest Flower
 
+# ── Colour source of truth ───────────────────────────────────────────────────
+# Four brand seeds (+ status seeds). Each is a hue and a chroma in CIE LCh(ab);
+# a seed's tonal palette is every lightness 0–100 at that hue. A role is a tone
+# (L*) picked from one palette, with chroma lowered where needed to stay in
+# sRGB. The resolved hexes are in `schemes:` below and in styles/tokens.css.
+seeds:
+  primary: { hue: 87, chroma: 84 } # Gold — action. Cobalt 2 #FFC600 at tone 83
+  secondary: { hue: 118, chroma: 50 } # Green — rest
+  neutral: { hue: 131, chroma: 5, achromatic_below: 15 } # Leaf — surfaces
+  neutral_variant: { hue: 131, chroma: 10, achromatic_below: 15 } # Leaf — ink
+  danger: { hue: 35, chroma: 54 }
+  warning: { hue: 58, chroma: 56 }
+  info: { hue: 262, chroma: 40 }
+
+# Tone per role, per scheme. Optional `chroma:` caps the palette chroma for that
+# role; optional `hue:` overrides it (used once — see Colors › Containers).
+# A string is an alias to another role.
+roles:
+  surface: # neutral — base is the substrate edge; every step is inward
+    base: { seed: neutral, light: { tone: 97.1 }, dark: { tone: 0 } }
+    recessed1: { seed: neutral, light: { tone: 94.6 }, dark: { tone: 3 } }
+    recessed2: { seed: neutral, light: { tone: 92.8 }, dark: { tone: 5.5 } }
+    raised: { seed: neutral, light: { tone: 89.8 }, dark: { tone: 8.2 } }
+    overlay: { seed: neutral, light: { tone: 86.7 }, dark: { tone: 12.3 } }
+  ink: # neutral variant — read tiers meet AA; faint is locate-only
+    primary: { seed: neutral_variant, light: { tone: 25 }, dark: { tone: 86 } }
+    secondary: { seed: neutral_variant, light: { tone: 37 }, dark: { tone: 72 } }
+    comment: { seed: neutral_variant, light: { tone: 43 }, dark: { tone: 62 } }
+    faint: { seed: neutral_variant, light: { tone: 70 }, dark: { tone: 50 } }
+    on_action: "{surface.base}"
+    on_wash: "{ink.primary}"
+  accent:
+    action: { seed: primary, light: { tone: 38.5 }, dark: { tone: 82.7 } }
+    action_container:
+      seed: primary
+      light: { tone: 92, chroma: 18, hue: 93 }
+      dark: { tone: 28, chroma: 18 }
+    resting: { seed: secondary, light: { tone: 41.4 }, dark: { tone: 78.6 } }
+    resting_container:
+      seed: secondary
+      light: { tone: 90, chroma: 14 }
+      dark: { tone: 28, chroma: 20 }
+  status:
+    danger: { seed: danger, light: { tone: 34 }, dark: { tone: 73 } }
+    warning: { seed: warning, light: { tone: 41 }, dark: { tone: 77 } }
+    success: "{accent.resting}"
+    info: { seed: info, light: { tone: 34 }, dark: { tone: 75 } }
+  illustration: # decorative only — never text, never a boundary
+    backdrop: { seed: info, light: { tone: 80, chroma: 18, hue: 255 }, dark: { tone: 78, chroma: 18, hue: 255 } }
+  state:
+    active: "{accent.action}"
+    hover: "{surface.raised}"
+    disabled: "{ink.faint}"
+
+# Derived washes: blend(from, alpha, surface.base). α is per-substrate.
+washes:
+  selection: { from: accent.resting, alpha: { light: 0.24, dark: 0.16 } }
+  match_all: { from: accent.action, alpha: { light: 0.25, dark: 0.16 } }
+
+# Syntax palette — a domain palette (Material's "custom colours"), adapted from
+# Flexoki; kept as literals because each hue is calibrated per tier.
+code:
+  keyword: { light: "#66800B", dark: "#A0AF54" }
+  operator: { light: "#878580", dark: "#878580" } # constant in both schemes
+  function: { light: "#BC5215", dark: "#EC8B49" }
+  string: { light: "#24837B", dark: "#5ABDAC" }
+  type: { light: "#205EA6", dark: "#66A0C8" }
+  tag: { light: "#A02F6F", dark: "#E47DA8" }
+  regex: { light: "#5E409D", dark: "#A699D0" }
+  number: "{code.regex}"
+  variable: "{ink.primary}"
+  punctuation: "{ink.comment}"
+  comment: "{ink.comment}"
+
+# Pairs that must meet their target. Grounds may differ per scheme (`on_light`).
+contrast:
+  - fg: [ink.primary, ink.secondary]
+    on: [surface.base, surface.recessed1, surface.recessed2, surface.raised, surface.overlay, state.selection, state.match_all]
+    min: 4.5
+  - fg: [ink.comment]
+    on_light: [surface.base, surface.recessed1, surface.recessed2]
+    on_dark: [surface.base, surface.recessed1, surface.recessed2, surface.raised, surface.overlay, state.selection, state.match_all]
+    min: 4.5
+  - fg: [accent.action, accent.resting, status.danger, status.warning, status.info]
+    on: [surface.base, surface.recessed1]
+    min: 4.5
+  - fg: [ink.on_action]
+    on: [accent.action]
+    min: 4.5
+  - fg: [accent.action, ink.primary]
+    on: [accent.action_container]
+    min: 4.5
+  - fg: [accent.resting, ink.primary]
+    on: [accent.resting_container]
+    min: 4.5
+  - fg: [code.keyword, code.operator, code.function, code.string, code.type, code.tag, code.regex]
+    on: [surface.recessed1]
+    min: 3.0
+
+# Resolved from seeds + roles above. Keep in sync with styles/tokens.css.
 schemes:
-  dark:
-    # Ordered edge-outward: base is the substrate edge, every step is inward.
-    # Spacing is job-matched, not uniform — see Elevation (surfaces).
-    surface:
-      base: "#13181D" # the substrate edge — page floor, editor text pane
-      recessed1: "#191E24" # nav, footer, cards, code blocks           (+1)
-      recessed2: "#1D2329" # the 1px divider (border)                  (+2)
-      raised: "#23292F" # hover, active rows                        (+3)
-      overlay: "#2B3239" # popovers, dialogs, toasts                 (+4)
-    ink:
-      primary: "#D3C6AA" # body / default fg                          (AA)
-      secondary: "#A6B0A0" # subheadings, ledes, nav — read            (AA)
-      comment: "#969E95" # captions, bylines, meta — read            (AA)
-      faint: "#7A8478" # dividers, disabled — locate only     (AA-exempt)
-      on_action: "{surface.base}" # text/icon on an accent.action fill = #13181D
-      on_wash: "{ink.primary}" # text on a state.* wash — dark needs no deeper tier
-    accent:
-      action: "#FFC600" # scarce "act here / you are here"
-      action_container: "#403319"
-      resting: "#BEC97E" # passive identity (resting state)
-      resting_container: "#1B3A22" # overlay tier, resting hue
-    # Status — outcome / condition
-    status:
-      danger: "#F89A8A"
-      warning: "#F9AE77"
-      success: "{accent.resting}" # = #BEC97E
-      info: "#92BFDB"
-    state:
-      selection: "#2E342D" # blend(accent.resting, 0.16, surface.base)
-      match_all: "#393418" # blend(accent.action,  0.16, surface.base)
-      active: "{accent.action}" # the current one among many
-      hover: "{surface.raised}"
-      disabled: "{ink.faint}"
-    code:
-      keyword: "#A0AF54"
-      operator: "#878580" # constant — recedes on every line
-      function: "#EC8B49"
-      string: "#5ABDAC"
-      type: "#66A0C8"
-      tag: "#E47DA8"
-      regex: "#A699D0"
-      number: "{code.regex}"
-      variable: "{ink.primary}"
-      punctuation: "{ink.comment}"
-      comment: "{ink.comment}"
   light:
     surface:
-      base: "#FDF6E3" # the substrate edge — the cream page
-      recessed1: "#F4F0D9" # (+1)
-      recessed2: "#EFEBD4" # (+2)
-      raised: "#E6E2CC" # (+3)
-      overlay: "#DEDAC2" # (+4)
+      base: "#F3F8EF"
+      recessed1: "#ECF1E8"
+      recessed2: "#E7ECE3"
+      raised: "#DEE3DA"
+      overlay: "#D6DBD2"
     ink:
-      primary: "#5C6A72" # 5.18 on base
-      secondary: "#606D5C" # 5.07 on base / 4.77 on recessed1
-      comment: "#606E5E" # 5.01 / 4.71 — converges with secondary; see Ink
-      faint: "#A6B0A0" # 1.87 — decorative only, AA-exempt by design
-      on_action: "{surface.base}" # = #FDF6E3
-      on_wash: "#49575E" # ink.primary one step deeper — 4.95 on state.selection
+      primary: "#363E30"
+      secondary: "#515A4B"
+      comment: "#606859"
+      faint: "#A5AE9D"
+      on_action: "#F3F8EF" # {surface.base}
+      on_wash: "#363E30" # {ink.primary}
     accent:
-      action: "#6F5800"
-      action_container: "#FBE8D3"
-      resting: "#4D6B0E"
-      resting_container: "#E1E0C1"
+      action: "#705800"
+      action_container: "#F4E7C6"
+      resting: "#506A0C"
+      resting_container: "#DFE5CB"
     status:
-      danger: "#942822"
-      warning: "#9B4A0F"
-      success: "{accent.resting}" # = #4D6B0E
-      info: "#1A4F8C"
+      danger: "#942921"
+      warning: "#9A4B0B"
+      success: "#506A0C" # {accent.resting}
+      info: "#005581"
+    illustration:
+      backdrop: "#AACAE6"
     state:
-      selection: "#D3D5B0" # blend(accent.resting, 0.24, surface.base)
-      match_all: "#DACFAA" # blend(accent.action,  0.25, surface.base)
-      active: "{accent.action}"
-      hover: "{surface.raised}"
-      disabled: "{ink.faint}"
+      match_all: "#D2D0B3"
+      selection: "#CCD6B9"
+      active: "#705800" # {accent.action}
+      hover: "#DEE3DA" # {surface.raised}
+      disabled: "#A5AE9D" # {ink.faint}
     code:
       keyword: "#66800B"
       operator: "#878580"
@@ -86,10 +143,54 @@ schemes:
       type: "#205EA6"
       tag: "#A02F6F"
       regex: "#5E409D"
-      number: "{code.regex}"
-      variable: "{ink.primary}"
-      punctuation: "{ink.comment}"
-      comment: "{ink.comment}"
+      number: "#5E409D" # {code.regex}
+      variable: "#363E30" # {ink.primary}
+      punctuation: "#606859" # {ink.comment}
+      comment: "#606859" # {ink.comment}
+  dark:
+    surface:
+      base: "#000000"
+      recessed1: "#0B0B0B"
+      recessed2: "#121212"
+      raised: "#181818"
+      overlay: "#202020"
+    ink:
+      primary: "#D0DAC9"
+      secondary: "#AAB4A3"
+      comment: "#8F9988"
+      faint: "#717A6A"
+      on_action: "#000000" # {surface.base}
+      on_wash: "#D0DAC9" # {ink.primary}
+    accent:
+      action: "#FBC701"
+      action_container: "#4D4126"
+      resting: "#B3CD6E"
+      resting_container: "#3D4526"
+    status:
+      danger: "#FF9786"
+      warning: "#FFAB74"
+      success: "#B3CD6E" # {accent.resting}
+      info: "#75BFFF"
+    illustration:
+      backdrop: "#A4C5E1"
+    state:
+      match_all: "#282000"
+      selection: "#1D2112"
+      active: "#FBC701" # {accent.action}
+      hover: "#181818" # {surface.raised}
+      disabled: "#717A6A" # {ink.faint}
+    code:
+      keyword: "#A0AF54"
+      operator: "#878580"
+      function: "#EC8B49"
+      string: "#5ABDAC"
+      type: "#66A0C8"
+      tag: "#E47DA8"
+      regex: "#A699D0"
+      number: "#A699D0" # {code.regex}
+      variable: "#D0DAC9" # {ink.primary}
+      punctuation: "#8F9988" # {ink.comment}
+      comment: "#8F9988" # {ink.comment}
 
 constant:
   - code.operator # "#878580" in both schemes
@@ -168,8 +269,8 @@ components:
   # second mechanism for a job the gap already does. See Layout.
   card:
     backgroundColor:
-      "{surface.recessed1}" # NOT raised: body copy on light
-      # raised measures 4.29:1, below AA. Raised is for transient hover only.
+      "{surface.recessed1}" # +1, not raised: raised is the hover tone, and a
+      # card at rest must not look hovered. (Prose would pass on raised: 8.55.)
     textColor: "{ink.primary}"
     rounded: "{rounded.none}"
 
@@ -236,52 +337,109 @@ darkest in dark — and step every other surface inward from there, so the two
 ramps are mirror images rather than two different structures wearing the same
 token names.
 
-- **Dark** — a near-black forest floor (#13181D) with the ramp stepping up out
-  of it, brighter-tier syntax inks, a single bright gold (#FFC600) chrome
-  accent: a forest at night, the shell recedes and the code glows.
-- **Light** — warm cream parchment surfaces, deeper-tier syntax inks, the same
-  gold darkened (#6F5800) to read on cream: ink on aged paper.
+- **Light — Leaf.** A barely-there green page (`#F3F8EF`, tone 97, hue 131°),
+  Leaf-tinted forest ink (`#363E30`), deeper-tier syntax inks, and the gold
+  at tone 38 (`#705800`) so it reads on a bright ground: sunlight through new
+  leaves. The page itself sits in the resting register, so gold is the only
+  point of intensity on it.
+- **Dark — Night.** A pure black floor (`#000000`) with grey surfaces stepping
+  up out of it, Leaf-tinted light ink (`#D0DAC9`), brighter-tier syntax inks,
+  and the gold at tone 83 (`#FBC701`): a forest at night, where the shell
+  recedes and the code glows.
+
+**One palette, two tone ranges.** Both schemes are drawn from the same four
+seeds (see _Colors › Seeds_); a scheme is only a choice of tones. The one rule
+that differs by tone, not by scheme: the neutral seeds go **achromatic at tone
+15 and below**, so the black floor and the greys stepped off it carry no hue,
+while every ink — light or dark — keeps the Leaf tint. That is what makes Night
+read as Leaf at night rather than as a second brand.
+
+**History, so nobody re-tries a dead end.** Light was cream (`#FDF6E3`) until
+2026-10 and read as a borrowed Solarized/Everforest parchment rather than as
+this brand. Dark was blue-black (`#13181D`), then briefly green-black
+(`#131914`) — rejected by eye, a tinted floor looked murky — and its ink was
+Everforest parchment (`#D3C6AA`) until the seed model made every neutral one
+hue. Each replacement kept the old tone steps, so every surface still does the
+job it did before.
 
 The same ramp serves the website and the editor: the page and the editor's text
-pane are both `surface.base`, chrome and panels sit at `surface.recessed1`. The
-near-black floor is what gives the cool half of the syntax palette room to
-read — `code.type` and `status.info` sit within 10° of the surface hue, so they
-separate by lightness or not at all.
+pane are both `surface.base`; chrome and panels sit at `surface.recessed1`.
 
 ## Pipeline
 
-The `schemes:` block in this file is the source of truth. `styles/tokens.css` is
-generated from it and must never be hand-edited; `styles/globals.css` layers the
-shadcn role aliases (`--background`, `--card`, `--primary`, `--ring`) on top of
-those primitives, and `tailwind.config.ts` exposes them as utilities.
+**Seeds and roles are the source of truth.** The `seeds:` and `roles:` blocks at
+the top of this file define every colour; `schemes:` lists the resolved hexes.
+`styles/tokens.css` mirrors `schemes:` as HSL triples (light in `:root`, dark in
+`.dark`), with the hex in a trailing comment on each line. It is maintained by
+hand: when a seed or tone changes, recompute the affected hexes, update
+`schemes:`, `tokens.css` and the tables under _Colors_ together, and re-check
+every pair listed under `contrast:`.
 
-The generator is `scripts/build-tokens.mjs`, run by the `tokens` and
-`prebuild` npm scripts. It parses the `schemes:` block of this file (plus
-the editor palettes in `FOREST-FLOWER-EDITOR.md`), resolves the `{a.b}`
-aliases and emits both scheme blocks as HSL triples. `tokens.css` is
-committed, so `bun run dev` does not regenerate it — after editing a hex
-here, run `bun run tokens` (production builds still regenerate via
-`prebuild`). Hand-edits to `tokens.css` are overwritten.
+`styles/globals.css` layers the shadcn role aliases (`--background`, `--card`,
+`--primary`, `--ring`, …) on top of those primitives, and `tailwind.config.ts`
+exposes them as utilities — a new token needs adding to both if a component
+should use it as a class.
 
-Only colors are generated. The typography, spacing, radius, and motion blocks in
-this front matter are documentation that `globals.css` and `tailwind.config.ts`
-implement by hand, so those two must be updated alongside any change here.
+Typography, spacing, radius, and motion in the front matter are documentation
+that `globals.css` and `tailwind.config.ts` implement by hand.
 
-`FOREST-FLOWER-EDITOR.md` extends this file with the two editor-only domain
-palettes (git diff, terminal ANSI). It inherits everything else and redefines
-nothing; the generator folds its palettes into `tokens.css` as custom
-properties, though no website component consumes them.
+The editor-only palettes (git diff, terminal ANSI) were specified in a
+companion `FOREST-FLOWER-EDITOR.md`, which is not in this repository. Nothing on
+the website consumes them.
 
 ## Colors
 
-Every color is a semantic token — named for its job, resolved per scheme in the
-front matter `schemes:` block.
+The colour system follows the Material 3 model: **a few seed colours, each
+expanded into a tonal palette, and every role a tone picked from one palette.**
+Change a seed and every role derived from it moves together.
 
-> The intensity pattern inverts by substrate: dark needs _brighter_ tokens to
-> read against the forest canvas; light needs _deeper_ tokens to read against the
-> cream canvas — code/status hues flip 300→600 / 200→700. Only `code.operator`
-> (and `none`) hold one value across both schemes; see `constant:` in the front
-> matter.
+### Seeds
+
+| Seed              | Hue  | Chroma | Job                                                   |
+| ----------------- | ---- | ------ | ----------------------------------------------------- |
+| `primary`         | 87°  | 84     | **Gold** — action: links, buttons, kicker, highlight  |
+| `secondary`       | 118° | 50     | **Green** — rest: success, calm labels, selection     |
+| `neutral`         | 131° | 5      | **Leaf** — every surface (page, nav, hover, popovers) |
+| `neutral_variant` | 131° | 10     | **Leaf** — every ink tier                             |
+| `danger`          | 35°  | 54     | errors, destructive                                   |
+| `warning`         | 58°  | 56     | warnings                                              |
+| `info`            | 262° | 40     | informational notices                                 |
+
+Hue and chroma are CIE LCh(ab); tone is L\*. A seed's chroma is a ceiling: at
+very light or very dark tones a hue cannot reach it inside sRGB, and the build
+lowers chroma until the colour exists rather than shifting its hue or tone.
+There is deliberately **no tertiary** seed — gold and green already split the
+attention budget, and a third accent would compete with both.
+
+### Role tones
+
+| Role                         | Light | Dark  | Material equivalent         |
+| ---------------------------- | ----- | ----- | --------------------------- |
+| `surface.base`               | 97    | 0     | surface                     |
+| `surface.recessed1` → overlay | 95 → 87 | 3 → 12 | surface containers        |
+| `ink.primary`                | 25    | 86    | on-surface                  |
+| `ink.secondary` / `comment`  | 37 / 43 | 72 / 62 | on-surface-variant       |
+| `accent.action`              | 38    | 83    | primary                     |
+| `accent.action_container`    | 92    | 28    | primary-container           |
+| `accent.resting`             | 41    | 79    | secondary                   |
+| `accent.resting_container`   | 90    | 28    | secondary-container         |
+| `status.*`                   | 34–41 | 73–77 | error                       |
+
+Read across a row and the structure is the same in both schemes — strong
+roles near tone 40 in light and 80 in dark, containers near 90 and 28 — which
+is why the two modes feel like one brand. Containers sit a little below
+Material's 30 in dark because the floor is pure black; on black, 28 already
+reads as a fill rather than a stain.
+
+**Two documented exceptions.** Both are encoded in `roles:`, not hand-picked:
+
+- **Containers cap their chroma** (`action_container` 18, `resting_container`
+  14–20). A container at the full seed chroma would be a
+  saturated pastel that out-shouts the action colour it supports.
+- **Light gold containers shift hue to 93°** (seed 87°). Next to the green page,
+  simultaneous contrast pushes pale gold toward peach; six degrees toward
+  yellow cancels it. Dark containers keep the seed hue — black has no
+  surround cast.
 
 ### Token axes
 
@@ -289,33 +447,22 @@ Tokens are organised by the semantic **axis** they belong to. An element is
 styled by **indexing an axis** — a nav is "recessed", a link is "action" — so
 there is no component-by-component mapping table.
 
-| Axis          | Index                                             | Tokens                                     | Source            |
-| ------------- | ------------------------------------------------- | ------------------------------------------ | ----------------- |
-| **Elevation** | base · recessed-1 · recessed-2 · raised · overlay | `surface.*` (+ `border` = recessed-2 tone) | Everforest        |
-| **Ink**       | primary · secondary · comment · faint · on-action | `ink.*`                                    | Everforest / ink  |
-| **Attention** | action · resting (+ containers)                   | `accent.*`                                 | Gold + Green      |
-| **Status**    | danger · warning · success · info                 | `status.*`                                 | Flexoki           |
-| **State**     | selection · match-all · active · hover · disabled | `state.*` (**derived**)                    | Attention/Surface |
-| **Code**      | keyword · function · string · type · tag · …      | `code.*`                                   | Flexoki           |
+| Axis          | Index                                             | Tokens                                     | Source             |
+| ------------- | ------------------------------------------------- | ------------------------------------------ | ------------------ |
+| **Elevation** | base · recessed-1 · recessed-2 · raised · overlay | `surface.*` (+ `border` = recessed-2 tone) | `neutral` seed     |
+| **Ink**       | primary · secondary · comment · faint · on-action | `ink.*`                                    | `neutral_variant`  |
+| **Attention** | action · resting (+ container, line)              | `accent.*`                                 | `primary` + `secondary` |
+| **Status**    | danger · warning · success · info                 | `status.*`                                 | status seeds       |
+| **State**     | selection · match-all · active · hover · disabled | `state.*` (**derived**)                    | Attention/Surface  |
+| **Code**      | keyword · function · string · type · tag · …      | `code.*`                                   | Flexoki            |
 
-Two further axes — **Diff** (`diff.*`) and **Terminal** (`terminal.ansi.*`) —
-are editor-only and live in `FOREST-FLOWER-EDITOR.md`. Nothing on the website
-consumes them.
-
-**Source palettes.** Surfaces are Everforest (forest dark / parchment light).
-Accents are Flexoki, role-mapped (300/200 dark, 600/700 light). The action accent
-is gold — Cobalt 2 `#FFC600` dark, deep `#6F5800` light. The resting accent is
-Flexoki green (= the `status.success` tier).
-
-**Aliases, not copies.** Several tokens are references, so one edit propagates:
-`status.success → {accent.resting}`, `code.variable → {ink.primary}`, `code.comment` = `code.punctuation` = `{ink.comment}`,
-`state.active → {accent.action}`, `ink.on_action → {surface.base}` (the
+**Aliases, not copies.** Several roles are references, so one edit propagates:
+`status.success → {accent.resting}`, `code.variable → {ink.primary}`,
+`code.comment` = `code.punctuation` = `{ink.comment}`,
+`state.active → {accent.action}`, `state.hover → {surface.raised}`,
+`state.disabled → {ink.faint}`, `ink.on_action → {surface.base}` (the
 substrate edge is by definition the extreme tone, so it is also the right
-foreground on a gold fill), and `ink.on_wash → {ink.primary}` in **dark only** —
-light needs a genuinely deeper value there, so that one is a literal rather than
-a ref. An alias in one scheme and a literal in the other is allowed precisely
-because the substrates differ; what may not differ is the token's job. In the front matter these are `{a.b}` refs that
-resolve within the enclosing scheme.
+foreground on a gold fill), and `ink.on_wash → {ink.primary}`.
 
 **Derived state.** State washes are computed from the attention accents rather
 than stored as hand-picked literals, so they always sit inside the palette:
@@ -326,57 +473,54 @@ than stored as hand-picked literals, so they always sit inside the palette:
   wash behind all matches of a search; the **current** match stays solid
   `accent.action` (`state.active`) so it still pops.
 
-**α is per-substrate: 0.24 / 0.25 in light, 0.16 in dark.** A wash has to satisfy
-three things at once — text on it stays readable, the wash itself is visible
-against `surface.base`, and `selection` is telling apart from `match_all`. Dark
-satisfies all three comfortably at 0.16 (every ink tier ≥ 4.54, every syntax
-token ≥ 3.39, ΔE 14.9 between the two washes), and 0.16 is chosen rather than
-0.24 because the deeper wash dropped `ink.comment` to 3.77 and `code.operator`
-to 2.82.
-
-Light cannot satisfy all three, and the numbers say so plainly. Its ink tiers
-start at only 5.01–5.18 against cream, so any wash eats the headroom: AA needs
-α ≤ 0.05, a visible wash needs α ≥ 0.06, and telling the two washes apart needs
-α ≥ 0.14 (ΔE 3.1; at 0.07 they measure ΔE 1.13 — indistinguishable). The
-constraints do not overlap. Light therefore keeps the larger, usable wash and
-takes a foreground instead: see `ink.on_wash` and the wash exemption in
-_Measured contrast_.
+**α is per-substrate: 0.24 / 0.25 in light, 0.16 in dark.** A wash has to do
+three things at once — keep the text on it readable, be visible against
+`surface.base`, and stay distinguishable from the other wash. Dark manages all
+three at 0.16 (ΔE 10.3 between the washes). Light needs the larger α to be
+visible at all on a bright page, and still keeps ΔE 4.7 between the two. Body
+ink clears AA on every wash in both schemes (7.10 is the light floor), which is
+why `ink.on_wash` needs no value of its own.
 
 ### Token value table
 
-| Token                               | Job                                          | Light     | Dark      |
-| ----------------------------------- | -------------------------------------------- | --------- | --------- |
-| `surface.base`                      | substrate edge — page, editor pane (0)       | `#FDF6E3` | `#13181D` |
-| `surface.recessed1`                 | nav, footer, cards, code blocks (+1)         | `#F4F0D9` | `#191E24` |
-| `surface.recessed2`                 | 1px divider tone (+2)                        | `#EFEBD4` | `#1D2329` |
-| `surface.raised`                    | hover, active rows (+3)                      | `#E6E2CC` | `#23292F` |
-| `surface.overlay`                   | popovers, dialogs, toasts (+4)               | `#DEDAC2` | `#2B3239` |
-| `ink.primary`                       | body / default fg (AA)                       | `#5C6A72` | `#D3C6AA` |
-| `ink.secondary`                     | subheadings, ledes, nav — read (AA)          | `#606D5C` | `#A6B0A0` |
-| `ink.comment`                       | captions, bylines, meta — read (AA)          | `#606E5E` | `#969E95` |
-| `ink.faint`                         | dividers, disabled — locate (AA-exempt)      | `#A6B0A0` | `#7A8478` |
-| `ink.on_action` (= surface.base)    | text/icon on an `accent.action` fill         | `#FDF6E3` | `#13181D` |
-| `ink.on_wash`                       | text on a `state.*` wash (light: deeper ink) | `#49575E` | `#D3C6AA` |
-| `accent.action`                     | the scarce "act here" mark                   | `#6F5800` | `#FFC600` |
-| `accent.action_container`           | accent-adjacent bg fill                      | `#FBE8D3` | `#403319` |
-| `accent.resting`                    | resting identity                             | `#4D6B0E` | `#BEC97E` |
-| `accent.resting_container`          | state bg fills (pills, washes)               | `#E1E0C1` | `#1B3A22` |
-| `status.danger`                     | errors, destructive                          | `#942822` | `#F89A8A` |
-| `status.warning`                    | warnings                                     | `#9B4A0F` | `#F9AE77` |
-| `status.success` (= accent.resting) | confirmations                                | `#4D6B0E` | `#BEC97E` |
-| `status.info`                       | informational notices, hints                 | `#1A4F8C` | `#92BFDB` |
-| `state.selection`                   | selected-text wash — _derived_ resting       | `#D3D5B0` | `#2E342D` |
-| `state.match_all`                   | all matches of a search — _derived_ action   | `#DACFAA` | `#393418` |
-| `code.keyword`                      | control flow, imports, declarations          | `#66800B` | `#A0AF54` |
-| `code.operator` (**constant**)      | `=` `=>` `?` `:` `+` `&&`                    | `#878580` | `#878580` |
-| `code.function`                     | function defs, method calls                  | `#BC5215` | `#EC8B49` |
-| `code.string`                       | string & template literals                   | `#24837B` | `#5ABDAC` |
-| `code.type`                         | type/class/interface names                   | `#205EA6` | `#66A0C8` |
-| `code.tag`                          | HTML/JSX tags, language features             | `#A02F6F` | `#E47DA8` |
-| `code.regex` / `code.number`        | regex; numeric & boolean literals            | `#5E409D` | `#A699D0` |
-| `code.variable` (= ink.primary)     | plain identifiers, properties                | `#5C6A72` | `#D3C6AA` |
-| `code.punctuation` (= ink.comment)  | delimiters, brackets, semicolons             | `#606E5E` | `#969E95` |
-| `code.comment` (= ink.comment)      | comments, italic where supported             | `#606E5E` | `#969E95` |
+| Token                               | Light     | Dark      |
+| ----------------------------------- | --------- | --------- |
+| `surface.base`                      | `#F3F8EF` | `#000000` |
+| `surface.recessed1`                 | `#ECF1E8` | `#0B0B0B` |
+| `surface.recessed2`                 | `#E7ECE3` | `#121212` |
+| `surface.raised`                    | `#DEE3DA` | `#181818` |
+| `surface.overlay`                   | `#D6DBD2` | `#202020` |
+| `ink.primary`                       | `#363E30` | `#D0DAC9` |
+| `ink.secondary`                     | `#515A4B` | `#AAB4A3` |
+| `ink.comment`                       | `#606859` | `#8F9988` |
+| `ink.faint`                         | `#A5AE9D` | `#717A6A` |
+| `ink.on_action` (= surface.base)    | `#F3F8EF` | `#000000` |
+| `ink.on_wash` (= ink.primary)       | `#363E30` | `#D0DAC9` |
+| `accent.action`                     | `#705800` | `#FBC701` |
+| `accent.action_container`           | `#F4E7C6` | `#4D4126` |
+| `accent.resting`                    | `#506A0C` | `#B3CD6E` |
+| `accent.resting_container`          | `#DFE5CB` | `#3D4526` |
+| `status.danger`                     | `#942921` | `#FF9786` |
+| `status.warning`                    | `#9A4B0B` | `#FFAB74` |
+| `status.success` (= accent.resting) | `#506A0C` | `#B3CD6E` |
+| `status.info`                       | `#005581` | `#75BFFF` |
+| `illustration.backdrop`             | `#AACAE6` | `#A4C5E1` |
+| `state.match_all`                   | `#D2D0B3` | `#282000` |
+| `state.selection`                   | `#CCD6B9` | `#1D2112` |
+| `state.active` (= accent.action)    | `#705800` | `#FBC701` |
+| `state.hover` (= surface.raised)    | `#DEE3DA` | `#181818` |
+| `state.disabled` (= ink.faint)      | `#A5AE9D` | `#717A6A` |
+| `code.keyword`                      | `#66800B` | `#A0AF54` |
+| `code.operator`                     | `#878580` | `#878580` |
+| `code.function`                     | `#BC5215` | `#EC8B49` |
+| `code.string`                       | `#24837B` | `#5ABDAC` |
+| `code.type`                         | `#205EA6` | `#66A0C8` |
+| `code.tag`                          | `#A02F6F` | `#E47DA8` |
+| `code.regex`                        | `#5E409D` | `#A699D0` |
+| `code.number` (= code.regex)        | `#5E409D` | `#A699D0` |
+| `code.variable` (= ink.primary)     | `#363E30` | `#D0DAC9` |
+| `code.punctuation` (= ink.comment)  | `#606859` | `#8F9988` |
+| `code.comment` (= ink.comment)      | `#606859` | `#8F9988` |
 
 The git-diff and terminal-ANSI palettes are held in `FOREST-FLOWER-EDITOR.md`,
 which extends this file. They are editor surfaces; the website resolves neither.
@@ -384,82 +528,72 @@ which extends this file. They are editor surfaces; the website resolves neither.
 ### Measured contrast
 
 This system requires that every claim be checkable, so the ratios are recorded
-here rather than asserted. Ink is measured against **the tightest ground it is
-permitted to sit on**, which is not the same surface in both schemes: in dark
-that is `surface.overlay`, the far end of the ramp, because the dark ramp clears
-AA on all five steps; in light it is `surface.recessed2`, because light prose is
-barred from `raised` and `overlay` (below). Accents and status are measured
-against `surface.base`.
+here rather than asserted. Each row is a pair listed under `contrast:` in the
+front matter, measured against the shipped values on 2026-10-09; targets are
+**4.5** for anything read and **3.0** for the syntax palette. Re-measure any row
+whose colours change. `ink.faint`, the divider tone
+and `illustration.backdrop` are decorative by design and not audited.
 
-| Pair                     | Light (recessed2) | Dark (overlay) | Target | Verdict            |
-| ------------------------ | ----------------- | -------------- | ------ | ------------------ |
-| `ink.primary`            | 4.66              | 7.68           | 4.5    | pass               |
-| `ink.secondary`          | 4.56              | 5.77           | 4.5    | pass               |
-| `ink.comment`            | **4.50**          | 4.71           | 4.5    | pass (at the line) |
-| `ink.faint`              | **1.87**          | **3.34**       | —      | exempt, see below  |
-| `code.operator` (lowest) | **3.07**          | 3.52           | 3.0    | pass (3:1 tier)    |
-| `code.keyword`           | 3.76              | 5.41           | 3.0    | pass (3:1 tier)    |
-| `code.string`            | 3.80              | 5.75           | 3.0    | pass (3:1 tier)    |
+**Light (Leaf).**
 
-| Pair (on base)   | Light | Dark  | Target | Verdict |
-| ---------------- | ----- | ----- | ------ | ------- |
-| `accent.action`  | 6.34  | 11.33 | 4.5    | pass    |
-| `accent.resting` | 5.68  | 10.07 | 4.5    | pass    |
-| `status.danger`  | 7.53  | 8.49  | 4.5    | pass    |
-| `status.warning` | 5.76  | 9.65  | 4.5    | pass    |
-| `status.info`    | 7.66  | 9.10  | 4.5    | pass    |
+| on light         | base  | recessed1 | recessed2 | raised | overlay | selection | match_all | action | action_container | resting_container |
+| ---------------- | ----- | --------- | --------- | ------ | ------- | --------- | --------- | ------ | ---------------- | ----------------- |
+| `ink.primary`    | 10.32 | 9.70      | 9.27      | 8.53   | 7.90    | 7.35      | 7.10      | —      | 9.05             | 8.58              |
+| `ink.secondary`  | 6.69  | 6.28      | 6.01      | 5.53   | 5.12    | 4.77      | 4.60      | —      | —                | —                 |
+| `ink.comment`    | 5.38  | 5.06      | 4.83      | —      | —       | —         | —         | —      | —                | —                 |
+| `accent.action`  | 6.32  | 5.94      | —         | —      | —       | —         | —         | —      | 5.54             | —                 |
+| `accent.resting` | 5.72  | 5.37      | —         | —      | —       | —         | —         | —      | —                | 4.76              |
+| `status.danger`  | 7.50  | 7.05      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `status.warning` | 5.76  | 5.41      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `status.info`    | 7.45  | 7.00      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `ink.on_action`  | —     | —         | —         | —      | —       | —         | —         | 6.32   | —                | —                 |
+| `code.keyword`   | —     | 3.93      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.operator`  | —     | 3.21      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.function`  | —     | 4.20      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.string`    | —     | 3.97      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.type`      | —     | 5.70      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.tag`       | —     | 5.85      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.regex`     | —     | 6.79      | —         | —      | —       | —         | —         | —      | —                | —                 |
 
-**The dark ramp is AA-clean end to end.** Every readable ink tier and every
-syntax token clears its target on all five dark surfaces:
+**Dark (Night).**
 
-| on dark         | base  | recessed1 | recessed2 | raised | overlay  |
-| --------------- | ----- | --------- | --------- | ------ | -------- |
-| `ink.primary`   | 10.57 | 9.92      | 9.38      | 8.69   | 7.68     |
-| `ink.secondary` | 7.94  | 7.46      | 7.05      | 6.53   | 5.77     |
-| `ink.comment`   | 6.48  | 6.08      | 5.75      | 5.33   | **4.71** |
-| `ink.faint`     | 4.59  | 4.31      | 4.08      | 3.78   | 3.34     |
-| `code.operator` | 4.84  | 4.55      | 4.30      | 3.98   | **3.52** |
-| `code.type`     | 6.32  | 5.93      | 5.61      | 5.20   | 4.59     |
+| on dark          | base  | recessed1 | recessed2 | raised | overlay | selection | match_all | action | action_container | resting_container |
+| ---------------- | ----- | --------- | --------- | ------ | ------- | --------- | --------- | ------ | ---------------- | ----------------- |
+| `ink.primary`    | 14.55 | 13.64     | 12.98     | 12.31  | 11.29   | 11.38     | 11.22     | —      | 6.93             | 7.00              |
+| `ink.secondary`  | 9.77  | 9.15      | 8.71      | 8.26   | 7.58    | 7.64      | 7.53      | —      | —                | —                 |
+| `ink.comment`    | 7.08  | 6.64      | 6.32      | 5.99   | 5.49    | 5.54      | 5.46      | —      | —                | —                 |
+| `accent.action`  | 13.27 | 12.44     | —         | —      | —       | —         | —         | —      | 6.32             | —                 |
+| `accent.resting` | 11.87 | 11.13     | —         | —      | —       | —         | —         | —      | —                | 5.72              |
+| `status.danger`  | 10.02 | 9.39      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `status.warning` | 11.33 | 10.62     | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `status.info`    | 10.65 | 9.98      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `ink.on_action`  | —     | —         | —         | —      | —       | —         | —         | 13.27  | —                | —                 |
+| `code.keyword`   | —     | 8.21      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.operator`  | —     | 5.34      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.function`  | —     | 7.83      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.string`    | —     | 8.73      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.type`      | —     | 6.96      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.tag`       | —     | 7.31      | —         | —      | —       | —         | —         | —      | —                | —                 |
+| `code.regex`     | —     | 7.58      | —         | —      | —       | —         | —         | —      | —                | —                 |
 
-`ink.comment` on `surface.overlay` is the binding constraint at 4.71. It is the
-step that caps how far the ramp may reach, so `surface.overlay` is pinned by
-accessibility while the steps below it are pinned by job (see _Elevation_).
+**Reading the tables.**
 
-**The `state.*` washes, measured at last.** Nothing in this system used to
-record what a wash does to the text on top of it, and both washes sit well off
-`surface.base` — so they were quietly the least-tested pairs in the palette.
-Measured against the shipped values:
-
-| on the wash     | light `selection` | light `match_all` | dark `selection` | dark `match_all` | target |
-| --------------- | ----------------- | ----------------- | ---------------- | ---------------- | ------ |
-| `ink.on_wash`   | 4.95              | 4.80              | 7.55             | 7.40             | 4.5    |
-| `ink.primary`   | **3.70**          | **3.59**          | 7.55             | 7.40             | 4.5    |
-| `ink.comment`   | **3.58**          | **3.47**          | 4.63             | 4.54             | 4.5    |
-| `code.keyword`  | **2.99**          | **2.90**          | 5.32             | 5.22             | 3.0    |
-| `code.operator` | **2.44**          | **2.37**          | 3.46             | 3.39             | 3.0    |
-| `code.string`   | **3.02**          | **2.93**          | 5.66             | 5.55             | 3.0    |
-
-Dark passes throughout — that is what dropping α from 0.24 to 0.16 bought. Light
-passes **only via `ink.on_wash`**, and the bolded light figures are a stated
-exemption, not an oversight: they apply where a consumer paints the wash but
-cannot set the foreground, which in practice means **an editor, where syntax
-colour must remain visible through a selection**. Setting one foreground there
-would flatten selected code to a single colour, which is a worse outcome than a
-transient dip on a user-initiated state. Any consumer that _does_ control the
-foreground — a web `::selection`, a single-ink highlight — must use
-`ink.on_wash` and is then fully AA. See _Derived state_ for why light cannot
-simply use a lighter wash.
-
-**Light `surface.raised` and `surface.overlay` fail for sustained reading, and
-that is now a light-only constraint.** Every ink tier drops below AA on
-them — `ink.primary` 4.29 / 3.97, `ink.secondary` 4.20 / 3.88, `ink.comment`
-4.14 / 3.83 — so on cream those two are hover, active-row, and dialog-chrome
-tones with no prose on them, which is the reason cards sit at
-`surface.recessed1`. Light therefore has three reading surfaces where dark has
-five; the cream canvas simply has less usable range before ink stops carrying.
-This asymmetry is a substrate fact, recorded rather than papered over: do not
-"fix" it by darkening light ink, which would collapse `ink.comment` into
-`ink.secondary` further than it already has (see _Ink_).
+- **Every audited pair passes in both schemes.** The tightest are light
+  `code.operator` on the code ground (3.21, against 3.0), light
+  `accent.resting` on its container (4.76) and light `ink.secondary` on the
+  search-match wash (4.60).
+- **Light `ink.comment` is a base → recessed2 tier.** Captions and dates may sit
+  on the page, nav, cards and dividers, not on hover, popover or a wash, where
+  they fall to ~4.0–4.4. Metadata in a popover takes `ink.secondary`. Dark
+  `ink.comment` is audited on every surface and clears 5.46.
+- **Syntax under a light wash is exempt.** An editor paints a selection but must
+  leave syntax colour visible through it, so code on a light wash dips below
+  3:1 (to ~2.4 for `code.operator`). Anything that _does_ control its
+  foreground — web `::selection`, the name highlight — uses `ink.on_wash` and is
+  in the table above.
+- **Decorative strokes:** the divider tone measures 1.12:1 in both schemes and
+  is invisible by construction; `illustration.backdrop` sits behind artwork and
+  never carries text or marks a boundary.
 
 ### Token application
 
@@ -476,10 +610,12 @@ No translation table — the element's meaning _is_ the index.
 | Primary button          | attention action              | `accent.action` (text `ink.on_action`) |
 | Secondary button / link | attention action, outline     | `accent.action` border/text, no fill   |
 | Kicker / eyebrow        | attention action, marker only | `accent.action`                        |
+| Name highlight          | attention action, container   | `accent.action_container`              |
+| Portrait bg, frames     | illustration                  | `illustration.backdrop`                |
 | Body text               | ink primary                   | `ink.primary`                          |
 | Caption / meta          | ink comment                   | `ink.comment`                          |
 | Selected text           | state selection               | `state.selection` · `ink.on_wash`      |
-| Code block              | elevation −1 · code palette   | `surface.recessed1` · `code.*`         |
+| Code block              | elevation +1 · code palette   | `surface.recessed1` · `code.*`         |
 
 A new element never introduces a new axis — it only picks an existing index.
 If a decision can't be expressed as an intent on one of these axes, the
@@ -489,56 +625,50 @@ system is missing a token, not an exception.
 
 Five surface steps create hierarchy through tone, never shadow, indexed by
 **distance from the substrate edge**. `surface.base` is that edge — the
-brightest tone in light (`#FDF6E3`), the darkest in dark (`#13181D`) — and every
-other surface steps _inward_ from it: progressively darker on cream,
-progressively lighter up off the forest floor. One structure, mirrored; the scheme
-decides only which direction "inward" points.
+brightest tone in light (`#F3F8EF`), the darkest in dark (`#000000`) — and every
+other surface steps _inward_ from it: progressively darker into the Leaf page,
+progressively lighter up off the black floor. One structure, mirrored; the
+scheme decides only which direction "inward" points.
 
 - `surface.base` (0): the substrate edge — the page, and the editor's text pane.
 - `surface.recessed1` (+1): nav, footer, code blocks, **cards**.
 - `surface.recessed2` (+2): the 1px divider tone.
-- `surface.raised` (+3): hover and active rows. **Light only:** body copy here
-  measures 4.29:1, below AA, so nothing a reader dwells on may rest on light
-  `raised` — which is why cards sit at +1, not +3. Dark `raised` measures 8.22
-  and carries prose fine, but cards stay at +1 in both schemes rather than
-  forking the component per mode.
+- `surface.raised` (+3): hover and active rows.
 - `surface.overlay` (+4): popovers, dialogs, toasts.
 
 The names keep their original sense — `recessed` reads as "settled into the
 page," `raised` as "lifted off it" — but the index is unsigned, because there
-is nothing on the far side of the substrate. That is precisely what the earlier
-signed scheme got wrong in dark: it placed `base` mid-ramp with two layers
-below it, which spent the dark scheme's floor on a divider tone and left the two
-schemes structurally different despite sharing token names. Anchoring both at
-the edge also means a surface can never be invented "past" `base`.
+is nothing on the far side of the substrate. Anchoring both schemes at the edge
+means a surface can never be invented "past" `base`.
 
-**Spacing is job-matched, not uniform.** The dark steps sit at +3.0 / +5.4 /
-+8.2 / +12.5 L\* from base (light runs ~2.4 apiece). The outer two are pinned by
-what they do rather than by an even interval: `raised` takes +8.2 because that is
-exactly the hover and active-row distance the earlier mid-tone ramp had, and
-`overlay` +12.5 for the same reason. The two recessed steps then fit in the room
-below `raised`, at 2.4–3.0 L\* apiece.
+**Spacing is job-matched, not uniform.** Measured as L\* distance from base:
 
-An earlier revision used a uniform 3.4 L\* and it was wrong in both directions at
-once: it pushed `raised` out to +10.2 — a quarter louder than designed, so hover
-and the editor's current line shouted — while pulling chrome separation in, so
-sidebars and nav went indistinct. Even intervals are not the goal; preserving
-what each step is _for_ is.
+| step        | Light (Leaf) | Dark (Night) |
+| ----------- | ------------ | ------------ |
+| `recessed1` | −2.6         | +3.0         |
+| `recessed2` | −4.3         | +5.5         |
+| `raised`    | −7.3         | +8.2         |
+| `overlay`   | −10.4        | +12.3        |
 
-This is also the cost of edge-anchoring that is easy to miss. Five surfaces
-stacked on one side of a near-black floor crowd each other in a way the old
-two-sided ramp did not: previously `recessed2` and `raised` sat on opposite
-sides of `base`, 16.9 L\* apart, and now they share 8.2 L\* of room. So the
-recessed steps get less separation than they used to, and cannot be widened
-without making `raised` loud again. What is held constant across the schemes is
-the number of steps and the job each one does — not the tonal distance between
-them, which the substrate dictates.
+`raised` and `overlay` are pinned by what they do — the hover/active-row
+distance and the dialog distance — and the two recessed steps fit in the room
+below. A uniform interval was tried once and was wrong both ways at once: it
+made hover shout while letting nav and sidebars go indistinct. Preserving what
+each step is _for_ matters more than even spacing. Light runs slightly tighter
+than dark because a bright page shows small tonal steps more readily.
+
+**Watch the bottom of the dark ramp.** On pure black, `recessed1` (`#0B0B0B`)
+measures 1.07:1 against the page. That is enough on a calibrated LCD and can
+vanish on an OLED panel that crushes near-blacks. Nav and footer are separated
+by spacing first (see _Elevation & Depth_), so this degrades to "no tone step"
+rather than to a broken layout — but if it reads as missing on a real phone,
+raise `recessed1` one step rather than adding a border.
 
 ### Selection & focus
 
 - **`state.selection`**: a derived **resting** wash — `accent.resting` blended
-  into `surface.base` at ~24% (see _Derived state_). Both modes share one hue (a
-  forest-green tint). It is a passive _state_ marker, so it stays low-chroma and
+  into `surface.base` (see _Derived state_). Both modes share one hue, a
+  forest-green tint. It is a passive _state_ marker, so it stays low-chroma and
   never borrows the gold action accent.
 - **Hover** (`state.hover` = `surface.raised`): reads as "active surface," not
   "spotlight."
@@ -548,40 +678,37 @@ them, which the substrate dictates.
 Four reading tiers split by **job**, not brightness — anything you _read_ meets
 WCAG AA; anything you merely _locate_ need not.
 
-- **`ink.primary`**: the default foreground — Everforest parchment (dark) /
-  slate-green (light). Not white/black, not grey; sits against the canvas without
-  harsh contrast.
+- **`ink.primary`**: the default foreground — Leaf at tone 25 in light
+  (`#363E30`) and tone 86 in dark (`#D0DAC9`), the same hue both ways. Never
+  black or white, never a pure grey;
+  in light it ties the text to the Leaf page, in dark it keeps the floor from
+  feeling clinical.
 - **`ink.secondary`**: quiet _text_ you still read — subheadings, ledes, nav
-  labels. A step below `ink.primary` so chrome recedes under the content, but it
-  meets WCAG AA (4.5:1) against `surface.recessed1` in both modes.
-- **`ink.faint`**: positional and decorative marks only — dividers, disabled
-  states, ornamental numerals. Intentionally below WCAG AA text contrast because
-  these are landmarks, not prose. The split from `ink.secondary` is by _job_,
-  not shade. Never use it for text a reader is meant to read.
+  labels. A step below `ink.primary` so chrome recedes under the content, and
+  AA on every surface in both schemes.
 - **`ink.comment`**: captions, bylines, timestamps, metadata. The quietest
-  readable tone that still meets WCAG AA (4.5:1) — recedes without disappearing.
-  **In light mode this tier converges with `ink.secondary`.** The cream canvas is
-  bright enough that any tone passing 4.5:1 against `surface.recessed1` lands
-  essentially where `ink.secondary` already sits, so light has three readable
-  tiers, not four, and metadata separates by size and italic rather than tone.
-  Dark has the range to keep all four distinct. This is a substrate constraint,
-  not a value that needs retuning.
-- **`ink.on_action`**: text/icons placed on an `accent.action` fill (primary
-  button labels) — the deepest substrate tone, for maximum contrast on gold.
-- **`ink.on_wash`**: text placed on a `state.*` wash (selected text, a search
-  match). In dark it is simply `{ink.primary}`, which already clears AA on the
-  0.16 washes. In light it is a **deeper cut of `ink.primary`** — same hue (242°)
-  and chroma (7.1), L\* 43.9 → 36 — because the light wash is dark enough to pull
-  ordinary body ink under AA. Use it wherever a consumer sets both the wash and
-  its foreground; where a consumer cannot (an editor, where syntax colour must
-  show through a selection), the wash is exempt and the ratios are recorded.
+  readable tone — recedes without disappearing. **All four tiers are now
+  distinct in both schemes.** On cream, light could only fit three (comment
+  converged with secondary); the deeper forest ink opened the range back up.
+  Light `ink.comment` is limited to base → recessed2 (see _Measured contrast_).
+- **`ink.faint`**: positional and decorative marks only — dividers, disabled
+  states, ornamental numerals. Intentionally below AA text contrast because
+  these are landmarks, not prose. Never use it for text a reader is meant to
+  read.
+- **`ink.on_action`**: text/icons on an `accent.action` fill (primary button
+  labels) — the substrate edge, for maximum contrast on gold.
+- **`ink.on_wash`**: text on a `state.*` wash (selected text, a search match).
+  It is `{ink.primary}` in both schemes: it clears 7.10 on the light
+  washes and 11.22 on the dark ones. Keep the token anyway — it names
+  the job, so a future palette that needs a deeper value has one place to put
+  it.
 
 ### Code (syntax)
 
 The code palette is inky and perceptually-calibrated: every accent sits at the
 same perceptual tier, so no single color shouts over its neighbours. Dark runs a
-**brighter tier** (the canvas is lighter than true black), light a **deeper
-tier** (to read against cream); same hue vocabulary, only the value flips.
+**brighter tier** (to read on the black floor), light a **deeper tier** (to
+read on the Leaf page); same hue vocabulary, only the value flips.
 Calibrated accents — not electric neon — preserve the "ink on paper" reading state
 and leave `accent.action` free to be the single loud signal.
 
@@ -616,8 +743,11 @@ Two channels with a strict division of labour: **`accent.action` (gold) =
 action**, **`accent.resting` (green) = resting state**.
 
 The **action accent** is gold, value-swapped to its substrate: **Cobalt 2 gold**
-(#FFC600) in dark, the same gold darkened to a **deep gold** (#6F5800) in light so
-it reads on the cream canvas. It marks the things you act on — links, primary
+(`#FBC701`, tone 83) in dark, the same seed at tone 38 — a **deep gold**
+(`#705800`) — in light so
+it reads on the Leaf page. Gold against green is also the brand's one
+complementary pairing — sun on leaves — which is why it reads as celebratory
+rather than alarming. It marks the things you act on — links, primary
 buttons, the active nav item, the kicker, the blockquote rule — as a marker,
 outline, or small fill, never a broad background wash.
 
@@ -954,10 +1084,10 @@ step, never a shadow.
 
 If neither carries it, the answer is to restructure the layout — not to draw a
 line. The 1px rule at `{surface.recessed2}` is **not** a third tier: it measures
-1.11:1 in light and 1.13:1 in dark, so it is invisible by construction and
-WCAG-exempt only because it is decorative. Making it load-bearing would need
-~3:1 (roughly `#8A8A78` on cream), a distinctly grey stroke that contradicts the
-calm surface. So it stays decorative, and nothing depends on it.
+1.12:1 in both schemes, so it is invisible by construction and WCAG-exempt
+only because it is decorative. Making it load-bearing would need ~3:1 (roughly
+`#888D83` on Leaf, 3.16), a distinctly grey stroke that contradicts the calm
+surface. So it stays decorative, and nothing depends on it.
 
 **Bounding a control is a different job.** An input needs a real boundary, and
 it gets one from a `{surface.recessed1}` fill plus an `{accent.action}` focus
@@ -977,7 +1107,7 @@ highlight — a focus ring, a blockquote rule. That is attention, not elevation.
   avatar, a toggle knob. Never a rectangle pretending to be soft.
 
 Why square, when the system is otherwise warm? Because **warmth is already
-carried by colour and typeface** — cream and forest surfaces, the celebratory
+carried by colour and typeface** — the Leaf page, forest ink, the celebratory
 gold, Fraunces' calligraphic curves, the script wordmark. A radius would
 be a _second_ mechanism for a job those already do, which is the same
 redundancy argument that rules out shadows. Warm palette, warm type, hard
@@ -1074,6 +1204,13 @@ this system.
 **Selected text:** `{state.selection}` — the derived resting-green wash, never
 the gold accent. Selection is a passive state, not an action.
 
+**Theme toggle:** one button cycling light → dark → system (sun · moon ·
+monitor), stored in the `theme` cookie. **System is the default** — a visitor
+who has never chosen sees the scheme their OS asks for. An inline `<head>`
+script resolves `system` to the `.dark` / `.light` class before first paint and
+follows OS changes live, so there is no wrong-scheme flash; `theme-color` ships
+as a `media`-qualified pair in system mode.
+
 ## Do's and Don'ts
 
 - Do keep `{accent.action}` scarce. It marks the thing to act on — a link, the
@@ -1096,10 +1233,10 @@ the gold accent. Selection is a passive state, not an action.
   light, 0.16 dark) — do not unify them, the light and dark canvases have
   measurably different headroom (see _Derived state_).
 - Do pair a `state.*` wash with `{ink.on_wash}` wherever you control the
-  foreground. Body ink on the light wash measures 3.70 — below AA — and
-  `ink.on_wash` is the token that fixes it. Leaving the foreground unset is only
-  correct when something else must show through, as syntax colour does under an
-  editor selection.
+  foreground. Today it resolves to `{ink.primary}` in both schemes (≥ 7.12 on
+  every wash), but naming the job keeps the pairing correct if the palette
+  moves. Leaving the foreground unset is only correct when something else must
+  show through, as syntax colour does under an editor selection.
 - Don't use shadows, blur, glows, or neon effects on any surface. Tone
   (`{surface.raised}`, `{surface.overlay}`) plus spacing already signal
   elevation; a shadow is a second mechanism for a job already done, which is
@@ -1108,10 +1245,11 @@ the gold accent. Selection is a passive state, not an action.
   side of the substrate edge. In dark every other surface is _lighter_ than base;
   in light every other surface is _darker_. A tone beyond the edge in either
   direction is off-ramp and drops text contrast below designed levels.
-- Don't set prose on light `{surface.raised}` or `{surface.overlay}` — every ink
-  tier falls below AA there (see _Measured contrast_). This is a **light-only**
-  constraint: the dark ramp clears AA on all five steps. Don't generalise it into
-  a shared rule, and don't relax the light side to match.
+- Don't set light `{ink.comment}` on `{surface.raised}`, `{surface.overlay}` or
+  a wash — it measures 4.43 / 4.07 / ≤ 3.81 there. Metadata in a popover takes
+  `{ink.secondary}`. This is a **light-only** limit; dark `ink.comment` clears
+  5.86 everywhere. (Cream used to bar _all_ light prose from raised/overlay;
+  the forest ink lifted that.)
 - Don't apply the accent to errors. The accent is the identity — errors always
   use `{status.danger}`.
 - Don't change `{ink.comment}` to anything brighter (dark) or darker (light).
@@ -1120,12 +1258,12 @@ the gold accent. Selection is a passive state, not an action.
 - Do validate color pairs against WCAG AA (4.5:1 normal text, 3:1 large text)
   and record the measured ratio next to the token, so the claim is checkable
   rather than asserted. Measure against the tightest ground a token actually
-  sits on — for ink tiers that is `{surface.recessed1}` (nav, code blocks), not
-  `{surface.base}`.
+  sits on, not just `{surface.base}` — the tables in _Measured contrast_ cover
+  all five surfaces and both washes for exactly this reason.
 - Known exemptions, stated rather than glossed: `{ink.faint}` (decorative and
-  positional), the `{surface.recessed2}` divider tone (decorative, 1.11:1 light /
-  1.13:1 dark), the light `{state.*}` washes where the foreground cannot be set
-  (2.37–3.70, see _Measured contrast_), and
+  positional), the `{surface.recessed2}` divider tone (decorative, 1.12:1 both
+  schemes), syntax colour under a light `{state.*}` wash where the foreground
+  cannot be set (2.36–3.02, see _Measured contrast_), and
   the `code.*` syntax palette, which targets **3:1**, not 4.5:1 — several light
   hues sit at 3.9–4.2:1 against the code ground and `code.operator` sits at
   3.21:1. Do not describe the syntax palette as AA; it isn't.

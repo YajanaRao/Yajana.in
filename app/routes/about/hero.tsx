@@ -9,15 +9,15 @@ import { ILLUSTRATION_TONE } from "./illustration-tone";
 
 function BrushPortrait() {
   return (
-    <div className="relative aspect-[464/431] w-full max-w-[416px]">
+    <div className="relative aspect-[909/928] w-full">
       <div
-        className={`absolute bottom-4 inset-y-0 left-[17%] w-[75%] ${ILLUSTRATION_TONE.bg}`}
+        className={`absolute inset-x-[14%] bottom-0 top-[6%] ${ILLUSTRATION_TONE.bg}`}
         aria-hidden="true"
       />
       <img
         src={brushPortrait}
         alt="Painted portrait of Yajana Rao"
-        className="absolute inset-x-0 bottom-0 h-[92%] w-full object-cover object-top"
+        className="absolute inset-0 h-full w-full object-contain object-bottom"
       />
     </div>
   );
@@ -26,7 +26,10 @@ function BrushPortrait() {
 const Hero = () => {
   return (
     <Container>
-      <section className="not-prose flex flex-col gap-16 pb-16 pt-10 lg:flex-row justify-between lg:items-end lg:gap-20 lg:pb-24 lg:pt-16">
+      <section className="not-prose flex flex-col gap-12 pb-16 pt-10 lg:flex-row-reverse lg:items-end lg:justify-between lg:gap-20 lg:pb-24 lg:pt-16">
+        <div className="mx-auto w-full max-w-[360px] shrink-0 lg:mx-0 lg:w-[380px] lg:max-w-none">
+          <BrushPortrait />
+        </div>
         <div className="flex flex-1 flex-col gap-10">
           <div className="flex flex-col gap-3">
             <Kicker>
@@ -41,8 +44,9 @@ const Hero = () => {
             I&apos;m a software engineer, seeker and a writer from India. I
             write about
             <Link to="/blog?q=tech" className="link ml-1">
-              programming,
+              programming
             </Link>
+            ,
             <Link to="/blog?q=finance" className="link ml-1">
               money
             </Link>
@@ -56,9 +60,6 @@ const Hero = () => {
             <LocationRow />
             <SocialRow />
           </div>
-        </div>
-        <div className="w-full max-w-[416px] shrink-0 lg:w-[416px]">
-          <BrushPortrait />
         </div>
       </section>
     </Container>

@@ -1,4 +1,4 @@
 export const ILLUSTRATION_TONE = {
-  bg: "bg-primary",
-  border: "border-primary",
+  bg: "bg-illustration",
+  border: "border-illustration",
 } as const;
