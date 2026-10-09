@@ -1,4 +1,5 @@
 import { useFetcher, useRouteLoaderData } from "react-router";
+import { isTheme, type Theme } from "@/lib/theme";
 
 export function MoonIcon() {
   return (
@@ -84,10 +85,54 @@ export function SunIcon() {
   );
 }
 
+export function MonitorIcon() {
+  return (
+    <svg
+      className="w-full"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.5 9.25C7.5 8.836 7.836 8.5 8.25 8.5H23.75C24.164 8.5 24.5 8.836 24.5 9.25V19.75C24.5 20.164 24.164 20.5 23.75 20.5H8.25C7.836 20.5 7.5 20.164 7.5 19.75V9.25M8.25 6.5C6.731 6.5 5.5 7.731 5.5 9.25V19.75C5.5 21.269 6.731 22.5 8.25 22.5H14.97V24.5H11.97C11.418 24.5 10.97 24.948 10.97 25.5C10.97 26.052 11.418 26.5 11.97 26.5H20.03C20.582 26.5 21.03 26.052 21.03 25.5C21.03 24.948 20.582 24.5 20.03 24.5H17.03V22.5H23.75C25.269 22.5 26.5 21.269 26.5 19.75V9.25C26.5 7.731 25.269 6.5 23.75 6.5H8.25"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+const NEXT: Record<Theme, Theme> = {
+  light: "dark",
+  dark: "system",
+  system: "light",
+};
+
+const LABEL: Record<Theme, string> = {
+  light: "Light theme",
+  dark: "Dark theme",
+  system: "System theme",
+};
+
+const ICONS: Array<[Theme, () => JSX.Element]> = [
+  ["light", SunIcon],
+  ["dark", MoonIcon],
+  ["system", MonitorIcon],
+];
+
 const iconTransformOrigin = { transformOrigin: "50% 100px" };
 function DarkModeToggle() {
-  const theme = (useRouteLoaderData("root") as string | undefined) ?? "light";
+  const loaded = useRouteLoaderData("root");
   const fetcher = useFetcher();
+  // Optimistic: show the pending choice before the loader revalidates.
+  const pending = fetcher.formData?.get("theme");
+  const theme: Theme = isTheme(pending)
+    ? pending
+    : isTheme(loaded)
+      ? loaded
+      : "system";
+  const next = NEXT[theme];
 
   const iconSpanClassName =
     "absolute inset-0 transform transition-transform duration-resting ease-out motion-reduce:duration-[0s]";
@@ -97,29 +142,25 @@ function DarkModeToggle() {
       <input
         type="hidden"
         name="theme"
-        value={theme === "light" ? "dark" : "light"}
+        value={next}
       />
       <button
-        aria-label="Toggle Dark Mode"
+        aria-label={`${LABEL[theme]}. Switch to ${LABEL[next].toLowerCase()}`}
+        title={`${LABEL[theme]} — click for ${LABEL[next].toLowerCase()}`}
         className="inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-primary p-1 text-primary transition-colors duration-action ease-action hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <div className="relative h-8 w-8">
-          <span
-            className={`${iconSpanClassName} ${
-              theme === "dark" ? "rotate-0" : "rotate-90"
-            }`}
-            style={iconTransformOrigin}
-          >
-            <MoonIcon />
-          </span>
-          <span
-            className={`${iconSpanClassName} ${
-              theme === "light" ? "rotate-0" : "rotate-90"
-            }`}
-            style={iconTransformOrigin}
-          >
-            <SunIcon />
-          </span>
+          {ICONS.map(([value, Icon]) => (
+            <span
+              key={value}
+              className={`${iconSpanClassName} ${
+                theme === value ? "rotate-0" : "rotate-90"
+              }`}
+              style={iconTransformOrigin}
+            >
+              <Icon />
+            </span>
+          ))}
         </div>
       </button>
     </fetcher.Form>

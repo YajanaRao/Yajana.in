@@ -70,7 +70,7 @@ export function NarrativeSection() {
           <h2 className="m-0 font-heading text-[32px] font-extrabold leading-none tracking-[-0.03em] text-ink-primary">
             How I got here
           </h2>
-          <div className="h-0.5 w-8 bg-primary" aria-hidden="true" />
+          <div className="h-0.5 w-8 bg-ink-primary" aria-hidden="true" />
           <NarrativeIllustration />
         </div>
         <div className="flex max-w-[720px] flex-col gap-6 font-content text-[19px] leading-[1.65] text-ink-primary">

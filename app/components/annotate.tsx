@@ -16,14 +16,14 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function readAccent(alpha = 1): string {
-  const fallback = alpha < 1 ? `rgba(255, 198, 0, ${alpha})` : "#FFC600";
+// Opaque container tone; a translucent accent wash turns muddy on the green page.
+function readAccent(solid: boolean): string {
+  const fallback = solid ? "#705800" : "#F4E7C6";
   if (typeof window === "undefined") return fallback;
   const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue("--primary")
+    .getPropertyValue(solid ? "--primary" : "--primary-container")
     .trim();
-  if (!raw) return fallback;
-  return alpha < 1 ? `hsl(${raw} / ${alpha})` : `hsl(${raw})`;
+  return raw ? `hsl(${raw})` : fallback;
 }
 
 function mulberry32(seed: number) {
@@ -84,12 +84,12 @@ function ensureKeyframes() {
 type HighlightOptions = {
   multiline?: boolean;
   roughness?: number;
-  alpha?: number;
+  solid?: boolean;
 };
 
 function useHighlight(
   ref: React.RefObject<HTMLElement>,
-  { multiline = false, roughness = DEFAULT_ROUGHNESS, alpha }: HighlightOptions
+  { multiline = false, roughness = DEFAULT_ROUGHNESS, solid = false }: HighlightOptions
 ) {
   const reducedMotion = usePrefersReducedMotion();
   const seedRef = React.useRef<number>();
@@ -127,7 +127,7 @@ function useHighlight(
       const rects = multiline
         ? Array.from(el.getClientRects())
         : [el.getBoundingClientRect()];
-      const color = readAccent(alpha ?? 0.4);
+      const color = readAccent(solid);
       const totalW = rects.reduce((sum, r) => sum + r.width, 0) || 1;
       const rand = mulberry32(seed);
       let delay = 0;
@@ -204,7 +204,7 @@ function useHighlight(
       cancelAnimationFrame(raf);
       svg.remove();
     };
-  }, [ref, multiline, roughness, alpha, reducedMotion]);
+  }, [ref, multiline, roughness, solid, reducedMotion]);
 }
 
 type WrapperProps = React.HTMLAttributes<HTMLSpanElement> & {
@@ -224,7 +224,7 @@ export function Highlight({
   useHighlight(ref, {
     roughness,
     multiline,
-    alpha: solid ? 1 : undefined,
+    solid,
   });
 
   return (

@@ -12,3 +12,8 @@ declare module "*.md" {
   export const frontmatter: any;
   export default MDXComponent;
 }
+
+interface Window {
+  // Defined by systemThemeScript in app/lib/theme.ts.
+  __applySystemTheme?: () => void;
+}

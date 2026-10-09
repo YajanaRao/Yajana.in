@@ -54,6 +54,7 @@
     --primary-foreground: var(--ink-on-action);
     --on-wash: var(--ink-on-wash);
     --primary-container: var(--accent-action-container);
+    --illustration: var(--illustration-backdrop);
 
     --resting: var(--accent-resting);
     --resting-container: var(--accent-resting-container);

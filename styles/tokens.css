@@ -1,40 +1,43 @@
-/* AUTO-GENERATED from design.md — do not edit by hand.
-   Regenerate with `bun run tokens`. Role aliases live in globals.css. */
+/* Mirrors the `schemes:` block in DESIGN.md — keep the two in sync.
+   Role aliases (shadcn names) live in globals.css. */
 
 :root {
     /* surface */
-    --surface-base: 43.8 86.7% 94.1%; /* #FDF6E3 */
-    --surface-recessed1: 51.1 55.1% 90.4%; /* #F4F0D9 */
-    --surface-recessed2: 51.1 45.8% 88.4%; /* #EFEBD4 */
-    --surface-raised: 50.8 34.2% 85.1%; /* #E6E2CC */
-    --surface-overlay: 51.4 29.8% 81.6%; /* #DEDAC2 */
+    --surface-base: 93.3 39.1% 95.5%; /* #F3F8EF */
+    --surface-recessed1: 93.3 24.3% 92.7%; /* #ECF1E8 */
+    --surface-recessed2: 93.3 19.1% 90.8%; /* #E7ECE3 */
+    --surface-raised: 93.3 13.8% 87.3%; /* #DEE3DA */
+    --surface-overlay: 93.3 11.1% 84.1%; /* #D6DBD2 */
 
     /* ink */
-    --ink-primary: 201.8 10.7% 40.4%; /* #5C6A72 */
-    --ink-secondary: 105.9 8.5% 39.4%; /* #606D5C */
-    --ink-comment: 112.5 7.8% 40%; /* #606E5E */
-    --ink-faint: 97.5 9.2% 65.9%; /* #A6B0A0 */
-    --ink-on-action: 43.8 86.7% 94.1%; /* #FDF6E3 */
-    --ink-on-wash: 200 12.6% 32.7%; /* #49575E */
+    --ink-primary: 94.3 12.7% 21.6%; /* #363E30 */
+    --ink-secondary: 96 9.1% 32.4%; /* #515A4B */
+    --ink-comment: 92 7.8% 37.8%; /* #606859 */
+    --ink-faint: 91.8 9.5% 64.9%; /* #A5AE9D */
+    --ink-on-action: 93.3 39.1% 95.5%; /* #F3F8EF */
+    --ink-on-wash: 94.3 12.7% 21.6%; /* #363E30 */
 
     /* accent */
-    --accent-action: 47.6 100% 21.8%; /* #6F5800 */
-    --accent-action-container: 31.5 83.3% 90.6%; /* #FBE8D3 */
-    --accent-resting: 79.4 76.9% 23.7%; /* #4D6B0E */
-    --accent-resting-container: 58.1 34.8% 82%; /* #E1E0C1 */
+    --accent-action: 47.1 100% 22%; /* #705800 */
+    --accent-action-container: 43 67.6% 86.7%; /* #F4E7C6 */
+    --accent-resting: 76.6 79.7% 23.1%; /* #506A0C */
+    --accent-resting-container: 73.8 33.3% 84.7%; /* #DFE5CB */
 
     /* status */
-    --status-danger: 3.2 62.6% 35.7%; /* #942822 */
-    --status-warning: 25.3 82.4% 33.3%; /* #9B4A0F */
-    --status-success: 79.4 76.9% 23.7%; /* #4D6B0E */
-    --status-info: 212.1 68.7% 32.5%; /* #1A4F8C */
+    --status-danger: 4.2 63.5% 35.5%; /* #942921 */
+    --status-warning: 26.9 86.7% 32.4%; /* #9A4B0B */
+    --status-success: 76.6 79.7% 23.1%; /* #506A0C */
+    --status-info: 200.5 100% 25.3%; /* #005581 */
+
+    /* illustration */
+    --illustration-backdrop: 208 54.5% 78.4%; /* #AACAE6 */
 
     /* state */
-    --state-selection: 63.2 30.6% 76.3%; /* #D3D5B0 */
-    --state-match-all: 46.3 39.3% 76.1%; /* #DACFAA */
-    --state-active: 47.6 100% 21.8%; /* #6F5800 */
-    --state-hover: 50.8 34.2% 85.1%; /* #E6E2CC */
-    --state-disabled: 97.5 9.2% 65.9%; /* #A6B0A0 */
+    --state-match-all: 56.1 25.6% 76.3%; /* #D2D0B3 */
+    --state-selection: 80.7 26.1% 78.2%; /* #CCD6B9 */
+    --state-active: 47.1 100% 22%; /* #705800 */
+    --state-hover: 93.3 13.8% 87.3%; /* #DEE3DA */
+    --state-disabled: 91.8 9.5% 64.9%; /* #A5AE9D */
 
     /* code */
     --code-keyword: 73.3 84.2% 27.3%; /* #66800B */
@@ -45,45 +48,48 @@
     --code-tag: 326 54.6% 40.6%; /* #A02F6F */
     --code-regex: 259.4 42.1% 43.3%; /* #5E409D */
     --code-number: 259.4 42.1% 43.3%; /* #5E409D */
-    --code-variable: 201.8 10.7% 40.4%; /* #5C6A72 */
-    --code-punctuation: 112.5 7.8% 40%; /* #606E5E */
-    --code-comment: 112.5 7.8% 40%; /* #606E5E */
+    --code-variable: 94.3 12.7% 21.6%; /* #363E30 */
+    --code-punctuation: 92 7.8% 37.8%; /* #606859 */
+    --code-comment: 92 7.8% 37.8%; /* #606859 */
 }
 
 .dark {
     /* surface */
-    --surface-base: 210 20.8% 9.4%; /* #13181D */
-    --surface-recessed1: 212.7 18% 12%; /* #191E24 */
-    --surface-recessed2: 210 17.1% 13.7%; /* #1D2329 */
-    --surface-raised: 210 14.6% 16.1%; /* #23292F */
-    --surface-overlay: 210 14% 19.6%; /* #2B3239 */
+    --surface-base: 0 0% 0%; /* #000000 */
+    --surface-recessed1: 0 0% 4.3%; /* #0B0B0B */
+    --surface-recessed2: 0 0% 7.1%; /* #121212 */
+    --surface-raised: 0 0% 9.4%; /* #181818 */
+    --surface-overlay: 0 0% 12.5%; /* #202020 */
 
     /* ink */
-    --ink-primary: 41 31.8% 74.7%; /* #D3C6AA */
-    --ink-secondary: 97.5 9.2% 65.9%; /* #A6B0A0 */
-    --ink-comment: 113.3 4.4% 60.2%; /* #969E95 */
-    --ink-faint: 110 4.8% 49.4%; /* #7A8478 */
-    --ink-on-action: 210 20.8% 9.4%; /* #13181D */
-    --ink-on-wash: 41 31.8% 74.7%; /* #D3C6AA */
+    --ink-primary: 95.3 18.7% 82.2%; /* #D0DAC9 */
+    --ink-secondary: 95.3 10.2% 67.3%; /* #AAB4A3 */
+    --ink-comment: 95.3 7.7% 56.7%; /* #8F9988 */
+    --ink-faint: 93.8 7% 44.7%; /* #717A6A */
+    --ink-on-action: 0 0% 0%; /* #000000 */
+    --ink-on-wash: 95.3 18.7% 82.2%; /* #D0DAC9 */
 
     /* accent */
-    --accent-action: 46.6 100% 50%; /* #FFC600 */
-    --accent-action-container: 40 43.8% 17.5%; /* #403319 */
-    --accent-resting: 68.8 41% 64.1%; /* #BEC97E */
-    --accent-resting-container: 133.5 36.5% 16.7%; /* #1B3A22 */
+    --accent-action: 47.5 99.2% 49.4%; /* #FBC701 */
+    --accent-action-container: 41.5 33.9% 22.5%; /* #4D4126 */
+    --accent-resting: 76.4 48.7% 61.8%; /* #B3CD6E */
+    --accent-resting-container: 75.5 29% 21%; /* #3D4526 */
 
     /* status */
-    --status-danger: 8.7 88.7% 75.7%; /* #F89A8A */
-    --status-warning: 25.4 91.5% 72.2%; /* #F9AE77 */
-    --status-success: 68.8 41% 64.1%; /* #BEC97E */
-    --status-info: 203 50.3% 71.6%; /* #92BFDB */
+    --status-danger: 8.4 100% 76.3%; /* #FF9786 */
+    --status-warning: 23.7 100% 72.7%; /* #FFAB74 */
+    --status-success: 76.4 48.7% 61.8%; /* #B3CD6E */
+    --status-info: 207.8 100% 72.9%; /* #75BFFF */
+
+    /* illustration */
+    --illustration-backdrop: 207.5 50.4% 76.3%; /* #A4C5E1 */
 
     /* state */
-    --state-selection: 111.4 7.2% 19%; /* #2E342D */
-    --state-match-all: 50.9 40.7% 15.9%; /* #393418 */
-    --state-active: 46.6 100% 50%; /* #FFC600 */
-    --state-hover: 210 14.6% 16.1%; /* #23292F */
-    --state-disabled: 110 4.8% 49.4%; /* #7A8478 */
+    --state-match-all: 48 100% 7.8%; /* #282000 */
+    --state-selection: 76 29.4% 10%; /* #1D2112 */
+    --state-active: 47.5 99.2% 49.4%; /* #FBC701 */
+    --state-hover: 0 0% 9.4%; /* #181818 */
+    --state-disabled: 93.8 7% 44.7%; /* #717A6A */
 
     /* code */
     --code-keyword: 69.9 36.3% 50.8%; /* #A0AF54 */
@@ -94,7 +100,7 @@
     --code-tag: 335 65.6% 69.2%; /* #E47DA8 */
     --code-regex: 254.2 36.9% 70.8%; /* #A699D0 */
     --code-number: 254.2 36.9% 70.8%; /* #A699D0 */
-    --code-variable: 41 31.8% 74.7%; /* #D3C6AA */
-    --code-punctuation: 113.3 4.4% 60.2%; /* #969E95 */
-    --code-comment: 113.3 4.4% 60.2%; /* #969E95 */
+    --code-variable: 95.3 18.7% 82.2%; /* #D0DAC9 */
+    --code-punctuation: 95.3 7.7% 56.7%; /* #8F9988 */
+    --code-comment: 95.3 7.7% 56.7%; /* #8F9988 */
 }
