@@ -251,10 +251,7 @@ const IntroLink = ({
   to: string;
   children: React.ReactNode;
 }) => (
-  <Link
-    to={to}
-    className="font-medium text-primary no-underline transition-colors duration-action ease-action hover:underline hover:underline-offset-4"
-  >
+  <Link to={to} className="link">
     {children}
   </Link>
 );
